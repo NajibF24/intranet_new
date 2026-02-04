@@ -48,6 +48,7 @@ export const SOPPage = () => {
           { label: 'Operational/Compliance', path: '/compliance' },
           { label: 'SOP' },
         ]}
+        category="compliance"
       >
         <SOPCategory 
           title="Production Operations" 
