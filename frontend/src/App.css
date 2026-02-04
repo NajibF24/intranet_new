@@ -1,34 +1,146 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Wave separator for page headers */
+.wave-separator {
+  position: relative;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.wave-separator::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+/* Noise texture overlay */
+.noise-overlay {
+  position: relative;
 }
 
-.App-link {
-    color: #61dafb;
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Hero gradient background */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(12, 118, 91, 0.95) 0%, rgba(12, 118, 91, 0.8) 50%, rgba(12, 118, 91, 0.7) 100%);
+}
+
+/* Steel Green shadows */
+.shadow-steel {
+  box-shadow: 0 4px 20px -4px rgba(12, 118, 91, 0.15);
+}
+
+.shadow-steel-lg {
+  box-shadow: 0 10px 40px -8px rgba(12, 118, 91, 0.2);
+}
+
+/* Card hover lift effect */
+.card-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px -8px rgba(12, 118, 91, 0.2);
+}
+
+/* Sticky header styles */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.sticky-header.scrolled {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(12, 118, 91, 0.1);
+}
+
+/* Admin sidebar styles */
+.admin-sidebar {
+  background: linear-gradient(180deg, #0C765B 0%, #074737 100%);
+}
+
+/* Button styles */
+.btn-steel {
+  background-color: #0C765B;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn-steel:hover {
+  background-color: #095E49;
+  transform: translateY(-1px);
+}
+
+.btn-steel:active {
+  transform: scale(0.98);
+}
+
+/* Input focus states */
+.input-steel:focus {
+  border-color: #0C765B;
+  box-shadow: 0 0 0 3px rgba(12, 118, 91, 0.15);
+}
+
+/* Stats card animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.stat-card-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.stat-card-float:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.stat-card-float:nth-child(3) {
+  animation-delay: 2s;
+}
+
+.stat-card-float:nth-child(4) {
+  animation-delay: 3s;
+}
+
+/* Sparkle separator for ticker */
+.sparkle::after {
+  content: '✦';
+  margin: 0 2rem;
+  color: #F59E0B;
+}
+
+/* Mega menu styles */
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mega-menu-trigger:hover .mega-menu {
+  opacity: 1;
+  visibility: visible;
 }
