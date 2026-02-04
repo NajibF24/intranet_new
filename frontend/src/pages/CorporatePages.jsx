@@ -2,7 +2,6 @@ import React from 'react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { PageContainer } from '../components/layout/PageContainer';
-import { PageContainer } from '../components/layout/PageContainer';
 import { Target, Eye, Lightbulb, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -40,6 +39,7 @@ export const VisionPage = () => {
           { label: 'Corporate Identity', path: '/corporate' },
           { label: 'Vision' },
         ]}
+        category="corporate"
       >
         <div className="prose prose-slate max-w-none">
           <motion.div
