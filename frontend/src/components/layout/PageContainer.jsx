@@ -3,24 +3,36 @@ import { motion } from 'framer-motion';
 import { ChevronRight, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export const PageContainer = ({ title, subtitle, breadcrumbs = [], children }) => {
+// Page header images based on category
+const pageImages = {
+  corporate: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1920&q=80',
+  compliance: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1920&q=80',
+  services: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1920&q=80',
+  news: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1920&q=80',
+  events: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=80',
+  gallery: 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80',
+  default: 'https://images.unsplash.com/photo-1697281679290-ad7be1b10682?w=1920&q=80',
+};
+
+export const PageContainer = ({ title, subtitle, breadcrumbs = [], category = 'default', children }) => {
+  const backgroundImage = pageImages[category] || pageImages.default;
+
   return (
     <div className="min-h-screen bg-white" data-testid="page-container">
-      {/* Hero Header with Wave */}
-      <div className="relative bg-[#0C765B] pt-32 pb-24 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#grid)" />
-          </svg>
+      {/* Hero Header with Image */}
+      <div className="relative pt-20 pb-24 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src={backgroundImage}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-12">
           {/* Breadcrumbs */}
           <motion.nav
             initial={{ opacity: 0, y: -10 }}
@@ -53,6 +65,7 @@ export const PageContainer = ({ title, subtitle, breadcrumbs = [], children }) =
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4"
+            style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
           >
             {title}
           </motion.h1>
@@ -63,7 +76,8 @@ export const PageContainer = ({ title, subtitle, breadcrumbs = [], children }) =
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg text-white/80 max-w-2xl"
+              className="text-lg text-white/90 max-w-2xl"
+              style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
             >
               {subtitle}
             </motion.p>
