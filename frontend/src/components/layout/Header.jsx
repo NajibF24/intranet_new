@@ -74,9 +74,11 @@ export const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3" data-testid="header-logo">
-            <div className="w-10 h-10 bg-[#0C765B] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">GYS</span>
-            </div>
+            <img 
+              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+              alt="GYS Logo"
+              className="h-12 w-auto object-contain"
+            />
             <div className="hidden sm:block">
               <p className={`font-bold text-lg tracking-tight ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
                 PT Garuda Yamato Steel

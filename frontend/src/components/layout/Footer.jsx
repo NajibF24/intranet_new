@@ -30,9 +30,11 @@ export const Footer = () => {
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-[#0C765B] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">GYS</span>
-              </div>
+              <img 
+                src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+                alt="GYS Logo"
+                className="h-14 w-auto object-contain bg-white rounded-lg p-1"
+              />
               <div>
                 <p className="font-bold text-lg">PT Garuda Yamato Steel</p>
                 <p className="text-slate-400 text-sm">Intranet Portal</p>
