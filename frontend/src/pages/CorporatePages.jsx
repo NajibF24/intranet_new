@@ -213,6 +213,8 @@ export const JourneyPage = () => {
     </div>
   );
 };
+
+export const AboutPage = () => {
   return (
     <div className="min-h-screen bg-white" data-testid="about-page">
       <Header />
