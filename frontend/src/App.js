@@ -5,9 +5,12 @@ import { AuthProvider } from "./context/AuthContext";
 
 // Public Pages
 import { HomePage } from "./pages/HomePage";
-import { VisionPage, MissionPage, AboutPage } from "./pages/CorporatePages";
+import { VisionPage, MissionPage, JourneyPage, AboutPage } from "./pages/CorporatePages";
 import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
 import { ITServicesPage, HRServicesPage, FAServicesPage } from "./pages/ServicePages";
+import { NewsPage } from "./pages/NewsPage";
+import { EventsPage } from "./pages/EventsPage";
+import { GalleryPage } from "./pages/GalleryPage";
 
 // Admin Pages
 import { AdminLogin } from "./pages/AdminLogin";
@@ -17,6 +20,7 @@ import { AdminNews } from "./pages/AdminNews";
 import { AdminEvents } from "./pages/AdminEvents";
 import { AdminGallery } from "./pages/AdminGallery";
 import { AdminEmployees } from "./pages/AdminEmployees";
+import { AdminHero } from "./pages/AdminHero";
 
 function App() {
   return (
@@ -30,6 +34,7 @@ function App() {
             {/* Corporate Routes */}
             <Route path="/corporate/vision" element={<VisionPage />} />
             <Route path="/corporate/mission" element={<MissionPage />} />
+            <Route path="/corporate/journey" element={<JourneyPage />} />
             <Route path="/corporate/about" element={<AboutPage />} />
             
             {/* Compliance Routes */}
@@ -42,6 +47,11 @@ function App() {
             <Route path="/services/hr" element={<HRServicesPage />} />
             <Route path="/services/fa" element={<FAServicesPage />} />
             
+            {/* Communication Routes */}
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminLayout />}>
@@ -50,6 +60,7 @@ function App() {
               <Route path="events" element={<AdminEvents />} />
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="employees" element={<AdminEmployees />} />
+              <Route path="hero" element={<AdminHero />} />
             </Route>
           </Routes>
         </BrowserRouter>
