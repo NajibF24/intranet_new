@@ -10,6 +10,7 @@ const menuItems = [
     children: [
       { label: 'Company Vision', path: '/corporate/vision' },
       { label: 'Company Mission', path: '/corporate/mission' },
+      { label: 'GYS Journey', path: '/corporate/journey' },
       { label: 'About GYS', path: '/corporate/about' },
     ],
   },
@@ -35,9 +36,9 @@ const menuItems = [
     label: 'Communication',
     icon: MessageSquare,
     children: [
-      { label: 'News & Announcements', path: '/#news' },
-      { label: 'Events Calendar', path: '/#events' },
-      { label: 'Photo Gallery', path: '/#gallery' },
+      { label: 'News & Announcements', path: '/news' },
+      { label: 'Events Calendar', path: '/events' },
+      { label: 'Photo Gallery', path: '/gallery' },
     ],
   },
 ];
@@ -73,14 +74,14 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3" data-testid="header-logo">
+          <Link to="/" className="flex items-center space-x-3 flex-shrink-0" data-testid="header-logo">
             <img 
-              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" 
               alt="GYS Logo"
               className="h-12 w-auto object-contain"
             />
-            <div className="hidden sm:block">
-              <p className={`font-bold text-lg tracking-tight ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
+            <div className="hidden md:block">
+              <p className={`font-bold text-base tracking-tight whitespace-nowrap ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
                 PT Garuda Yamato Steel
               </p>
               <p className={`text-xs ${isScrolled ? 'text-slate-500' : 'text-white/70'}`}>
@@ -90,7 +91,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1" data-testid="desktop-nav">
+          <nav className="hidden lg:flex items-center space-x-1 flex-shrink-0" data-testid="desktop-nav">
             {menuItems.map((item, index) => (
               <div
                 key={index}
@@ -99,7 +100,7 @@ export const Header = () => {
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <button
-                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ${
                     isScrolled
                       ? 'text-slate-700 hover:text-[#0C765B] hover:bg-[#0C765B]/5'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
@@ -140,10 +141,10 @@ export const Header = () => {
           </nav>
 
           {/* Admin Link & Mobile Toggle */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 flex-shrink-0">
             <Link
               to="/admin"
-              className={`hidden sm:block px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+              className={`hidden sm:block px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                 isScrolled
                   ? 'bg-[#0C765B] text-white hover:bg-[#095E49]'
                   : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
