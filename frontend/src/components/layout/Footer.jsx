@@ -31,9 +31,9 @@ export const Footer = () => {
           <div>
             <div className="flex items-center space-x-3 mb-6">
               <img 
-                src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+                src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" 
                 alt="GYS Logo"
-                className="h-14 w-auto object-contain bg-white rounded-lg p-1"
+                className="h-14 w-auto object-contain"
               />
               <div>
                 <p className="font-bold text-lg">PT Garuda Yamato Steel</p>
