@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { PageContainer } from '../components/layout/PageContainer';
+import { PageContainer } from '../components/layout/PageContainer';
 import { Target, Eye, Lightbulb, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -149,7 +150,69 @@ export const MissionPage = () => {
   );
 };
 
-export const AboutPage = () => {
+export const JourneyPage = () => {
+  const milestones = [
+    { year: '1994', title: 'Foundation', description: 'PT Garuda Yamato Steel established as a joint venture between Indonesian and Japanese investors.' },
+    { year: '1996', title: 'First Production', description: 'Commenced commercial production with initial capacity of 100,000 metric tons annually.' },
+    { year: '2000', title: 'Expansion Phase I', description: 'Doubled production capacity with new hot rolling mill installation.' },
+    { year: '2005', title: 'ISO Certification', description: 'Achieved ISO 9001:2000 certification for quality management systems.' },
+    { year: '2010', title: 'Environmental Leadership', description: 'Implemented comprehensive environmental management system and received ISO 14001 certification.' },
+    { year: '2015', title: 'Technology Upgrade', description: 'Major modernization program with state-of-the-art Japanese technology integration.' },
+    { year: '2020', title: 'Safety Milestone', description: 'Achieved 500 consecutive days without lost-time incidents.' },
+    { year: '2024', title: 'Carbon Neutral Initiative', description: 'Launched ambitious sustainability program targeting carbon neutrality by 2030.' },
+    { year: '2025', title: 'Record Production', description: 'Achieved historic production milestone of 500,000 metric tons.' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white" data-testid="journey-page">
+      <Header />
+      <PageContainer
+        title="GYS Journey"
+        subtitle="Three decades of excellence in steel manufacturing - our story of growth, innovation, and commitment."
+        breadcrumbs={[
+          { label: 'Corporate Identity', path: '/corporate' },
+          { label: 'GYS Journey' },
+        ]}
+        category="corporate"
+      >
+        <div className="relative">
+          {/* Timeline Line */}
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[#0C765B]/20 hidden md:block" />
+          
+          {/* Milestones */}
+          <div className="space-y-12">
+            {milestones.map((milestone, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative flex gap-8"
+              >
+                {/* Year Dot */}
+                <div className="hidden md:flex flex-col items-center">
+                  <div className="w-16 h-16 bg-[#0C765B] rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-[#0C765B]/30">
+                    {milestone.year}
+                  </div>
+                </div>
+                
+                {/* Content Card */}
+                <div className="flex-1 bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                  <span className="md:hidden inline-block px-3 py-1 bg-[#0C765B] text-white text-sm font-bold rounded mb-3">
+                    {milestone.year}
+                  </span>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">{milestone.title}</h3>
+                  <p className="text-slate-600">{milestone.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </PageContainer>
+      <Footer />
+    </div>
+  );
+};
   return (
     <div className="min-h-screen bg-white" data-testid="about-page">
       <Header />
