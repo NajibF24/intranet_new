@@ -7,45 +7,6 @@ import { motion } from 'framer-motion';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 
 export const SOPPage = () => {
-  const sopCategories = [
-    {
-      title: 'Production Operations',
-      items: [
-        'Hot Rolling Mill Standard Operating Procedure',
-        'Cold Rolling Mill Standard Operating Procedure',
-        'Quality Control Inspection Procedure',
-        'Material Handling and Storage Guidelines',
-      ],
-    },
-    {
-      title: 'Safety & Emergency',
-      items: [
-        'Emergency Evacuation Procedure',
-        'Fire Safety Protocol',
-        'Chemical Handling Guidelines',
-        'Personal Protective Equipment (PPE) Requirements',
-      ],
-    },
-    {
-      title: 'Administrative',
-      items: [
-        'Document Control Procedure',
-        'Visitor Management Protocol',
-        'Asset Management Guidelines',
-        'Procurement Request Process',
-      ],
-    },
-    {
-      title: 'Environmental',
-      items: [
-        'Waste Management Procedure',
-        'Emission Monitoring Protocol',
-        'Water Treatment Guidelines',
-        'Environmental Incident Reporting',
-      ],
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-white" data-testid="sop-page">
       <Header />
@@ -58,39 +19,101 @@ export const SOPPage = () => {
         ]}
       >
         <Accordion type="single" collapsible className="space-y-4">
-          {sopCategories.map((category, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-            >
-              <AccordionItem value={`item-${index}`} className="border border-slate-200 rounded-xl overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-slate-50">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="w-5 h-5 text-[#0C765B]" />
-                    <span className="font-semibold text-slate-900">{category.title}</span>
-                    <span className="text-sm text-slate-500">({category.items.length} documents)</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  <ul className="space-y-3">
-                    {category.items.map((item, itemIndex) => (
-                      <li
-                        key={itemIndex}
-                        className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
-                      >
-                        <span className="text-slate-700">{item}</span>
-                        <button className="text-[#0C765B] text-sm font-medium hover:underline">
-                          View Document
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            </motion.div>
-          ))}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+            <AccordionItem value="item-0" className="border border-slate-200 rounded-xl overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-slate-50">
+                <div className="flex items-center space-x-3">
+                  <FileText className="w-5 h-5 text-[#0C765B]" />
+                  <span className="font-semibold text-slate-900">Production Operations</span>
+                  <span className="text-sm text-slate-500">(4 documents)</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
+                <ul className="space-y-3">
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Hot Rolling Mill Standard Operating Procedure</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Cold Rolling Mill Standard Operating Procedure</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Quality Control Inspection Procedure</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Material Handling and Storage Guidelines</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
+            <AccordionItem value="item-1" className="border border-slate-200 rounded-xl overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-slate-50">
+                <div className="flex items-center space-x-3">
+                  <FileText className="w-5 h-5 text-[#0C765B]" />
+                  <span className="font-semibold text-slate-900">Safety & Emergency</span>
+                  <span className="text-sm text-slate-500">(4 documents)</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
+                <ul className="space-y-3">
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Emergency Evacuation Procedure</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Fire Safety Protocol</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Chemical Handling Guidelines</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Personal Protective Equipment (PPE) Requirements</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
+            <AccordionItem value="item-2" className="border border-slate-200 rounded-xl overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-slate-50">
+                <div className="flex items-center space-x-3">
+                  <FileText className="w-5 h-5 text-[#0C765B]" />
+                  <span className="font-semibold text-slate-900">Administrative</span>
+                  <span className="text-sm text-slate-500">(4 documents)</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
+                <ul className="space-y-3">
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Document Control Procedure</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Visitor Management Protocol</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Asset Management Guidelines</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                  <li className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span className="text-slate-700">Procurement Request Process</span>
+                    <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </motion.div>
         </Accordion>
       </PageContainer>
       <Footer />
@@ -99,33 +122,6 @@ export const SOPPage = () => {
 };
 
 export const PoliciesPage = () => {
-  const policies = [
-    {
-      icon: Shield,
-      title: 'Information Security Policy',
-      description: 'Guidelines for protecting company data and information systems from unauthorized access.',
-      lastUpdated: 'January 2026',
-    },
-    {
-      icon: AlertTriangle,
-      title: 'Health & Safety Policy',
-      description: 'Our commitment to maintaining a safe and healthy workplace for all employees.',
-      lastUpdated: 'December 2025',
-    },
-    {
-      icon: FileText,
-      title: 'Code of Conduct',
-      description: 'Standards of behavior and ethical guidelines for all GYS employees and partners.',
-      lastUpdated: 'November 2025',
-    },
-    {
-      icon: CheckCircle,
-      title: 'Quality Assurance Policy',
-      description: 'Our framework for ensuring consistent product quality and continuous improvement.',
-      lastUpdated: 'October 2025',
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-white" data-testid="policies-page">
       <Header />
@@ -138,27 +134,53 @@ export const PoliciesPage = () => {
         ]}
       >
         <div className="grid md:grid-cols-2 gap-6">
-          {policies.map((policy, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
-                <policy.icon className="w-6 h-6 text-[#0C765B]" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{policy.title}</h3>
-              <p className="text-slate-600 text-sm mb-4">{policy.description}</p>
-              <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                <span className="text-xs text-slate-500">Last updated: {policy.lastUpdated}</span>
-                <button className="text-[#0C765B] text-sm font-medium hover:underline">
-                  Read Policy
-                </button>
-              </div>
-            </motion.div>
-          ))}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
+              <Shield className="w-6 h-6 text-[#0C765B]" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Information Security Policy</h3>
+            <p className="text-slate-600 text-sm mb-4">Guidelines for protecting company data and information systems from unauthorized access.</p>
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+              <span className="text-xs text-slate-500">Last updated: January 2026</span>
+              <button className="text-[#0C765B] text-sm font-medium hover:underline">Read Policy</button>
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
+              <AlertTriangle className="w-6 h-6 text-[#0C765B]" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Health & Safety Policy</h3>
+            <p className="text-slate-600 text-sm mb-4">Our commitment to maintaining a safe and healthy workplace for all employees.</p>
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+              <span className="text-xs text-slate-500">Last updated: December 2025</span>
+              <button className="text-[#0C765B] text-sm font-medium hover:underline">Read Policy</button>
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
+              <FileText className="w-6 h-6 text-[#0C765B]" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Code of Conduct</h3>
+            <p className="text-slate-600 text-sm mb-4">Standards of behavior and ethical guidelines for all GYS employees and partners.</p>
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+              <span className="text-xs text-slate-500">Last updated: November 2025</span>
+              <button className="text-[#0C765B] text-sm font-medium hover:underline">Read Policy</button>
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
+              <CheckCircle className="w-6 h-6 text-[#0C765B]" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Quality Assurance Policy</h3>
+            <p className="text-slate-600 text-sm mb-4">Our framework for ensuring consistent product quality and continuous improvement.</p>
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+              <span className="text-xs text-slate-500">Last updated: October 2025</span>
+              <button className="text-[#0C765B] text-sm font-medium hover:underline">Read Policy</button>
+            </div>
+          </motion.div>
         </div>
       </PageContainer>
       <Footer />
@@ -196,7 +218,7 @@ export const SafetyPage = () => {
               <h3 className="font-bold text-amber-900 mb-2">Safety First</h3>
               <p className="text-amber-800">
                 At PT Garuda Yamato Steel, we believe that every accident is preventable. 
-                Safety is not just a policy – it&apos;s a core value that guides everything we do.
+                Safety is not just a policy - it&apos;s a core value that guides everything we do.
               </p>
             </div>
           </div>

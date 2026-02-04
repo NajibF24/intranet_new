@@ -1,33 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Facebook, Twitter, Linkedin, Youtube, Mail, Phone, MapPin, Sparkles } from 'lucide-react';
 import { apiService } from '../../lib/api';
-
-const footerLinks = {
-  corporate: [
-    { label: 'Company Vision', path: '/corporate/vision' },
-    { label: 'Company Mission', path: '/corporate/mission' },
-    { label: 'About GYS', path: '/corporate/about' },
-  ],
-  compliance: [
-    { label: 'Standard Operating Procedures', path: '/compliance/sop' },
-    { label: 'Company Policies', path: '/compliance/policies' },
-    { label: 'Safety Guidelines', path: '/compliance/safety' },
-  ],
-  services: [
-    { label: 'IT Global Services', path: '/services/it' },
-    { label: 'HR Darwinbox', path: '/services/hr' },
-    { label: 'FA E-Asset', path: '/services/fa' },
-  ],
-};
-
-const socialLinks = [
-  { icon: Facebook, url: '#', label: 'Facebook' },
-  { icon: Twitter, url: '#', label: 'Twitter' },
-  { icon: Linkedin, url: '#', label: 'LinkedIn' },
-  { icon: Youtube, url: '#', label: 'YouTube' },
-];
 
 export const Footer = () => {
   const [news, setNews] = useState([]);
@@ -45,7 +19,7 @@ export const Footer = () => {
   }, []);
 
   const tickerContent = news.length > 0
-    ? news.map(n => n.title).join(' ✦ ')
+    ? news.map(n => n.title).join(' * ')
     : 'Loading latest news...';
 
   return (
@@ -88,16 +62,21 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-6">Corporate Identity</h3>
             <ul className="space-y-3">
-              {footerLinks.corporate.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    to={link.path}
-                    className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/corporate/vision" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  Company Vision
+                </Link>
+              </li>
+              <li>
+                <Link to="/corporate/mission" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  Company Mission
+                </Link>
+              </li>
+              <li>
+                <Link to="/corporate/about" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  About GYS
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -105,16 +84,21 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-6">Operational/Compliance</h3>
             <ul className="space-y-3">
-              {footerLinks.compliance.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    to={link.path}
-                    className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/compliance/sop" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  Standard Operating Procedures
+                </Link>
+              </li>
+              <li>
+                <Link to="/compliance/policies" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  Company Policies
+                </Link>
+              </li>
+              <li>
+                <Link to="/compliance/safety" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  Safety Guidelines
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -122,30 +106,37 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-6">Employee Services</h3>
             <ul className="space-y-3 mb-8">
-              {footerLinks.services.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    to={link.path}
-                    className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/services/it" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  IT Global Services
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/hr" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  HR Darwinbox
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/fa" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                  FA E-Asset
+                </Link>
+              </li>
             </ul>
 
             <h3 className="font-semibold text-lg mb-4">Follow Us</h3>
             <div className="flex space-x-4">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.url}
-                  className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-[#0C765B] transition-colors"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+              <a href="#" className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-[#0C765B] transition-colors" aria-label="Facebook">
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-[#0C765B] transition-colors" aria-label="Twitter">
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-[#0C765B] transition-colors" aria-label="LinkedIn">
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-[#0C765B] transition-colors" aria-label="YouTube">
+                <Youtube className="w-5 h-5" />
+              </a>
             </div>
           </div>
         </div>
@@ -176,14 +167,11 @@ export const Footer = () => {
             <span className="text-white font-semibold text-sm">Latest News</span>
           </div>
           <div className="overflow-hidden flex-1">
-            <motion.div
-              className="ticker-animate whitespace-nowrap"
-              style={{ display: 'inline-block' }}
-            >
+            <div className="ticker-animate whitespace-nowrap inline-block">
               <span className="text-white/90 text-sm px-8">
-                {tickerContent} ✦ {tickerContent}
+                {tickerContent} * {tickerContent}
               </span>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
