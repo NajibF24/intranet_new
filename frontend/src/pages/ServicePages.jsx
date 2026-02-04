@@ -9,7 +9,7 @@ const ServicePageTemplate = ({ title, subtitle, breadcrumbs, services, contacts 
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <PageContainer title={title} subtitle={subtitle} breadcrumbs={breadcrumbs}>
+      <PageContainer title={title} subtitle={subtitle} breadcrumbs={breadcrumbs} category="services">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {services.map((service, index) => (
             <motion.div
