@@ -67,7 +67,7 @@ export const AdminLayout = () => {
         </button>
         <div className="flex items-center space-x-2">
           <img 
-            src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+            src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" 
             alt="GYS Logo"
             className="h-8 w-auto object-contain"
           />
@@ -97,9 +97,9 @@ export const AdminLayout = () => {
         <div className="h-20 flex items-center px-6 border-b border-white/10">
           <Link to="/" className="flex items-center space-x-3">
             <img 
-              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" 
               alt="GYS Logo"
-              className="h-10 w-auto object-contain bg-white rounded-lg p-1"
+              className="h-10 w-auto object-contain"
             />
             <div>
               <p className="text-white font-semibold">GYS Admin</p>
