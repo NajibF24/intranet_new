@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Factory, Shield, Users, TrendingUp } from 'lucide-react';
 
 const stats = [
@@ -31,12 +31,19 @@ const stats = [
 
 export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { scrollY } = useScroll();
+  
+  // Parallax transforms based on scroll
+  const backgroundY = useTransform(scrollY, [0, 500], [0, 150]);
+  const contentY = useTransform(scrollY, [0, 500], [0, -50]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const scale = useTransform(scrollY, [0, 500], [1, 1.2]);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
+        x: (e.clientX / window.innerWidth - 0.5) * 30,
+        y: (e.clientY / window.innerHeight - 0.5) * 30,
       });
     };
     window.addEventListener('mousemove', handleMouseMove);
@@ -48,39 +55,69 @@ export const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       data-testid="hero-section"
     >
-      {/* Background Image with Parallax */}
+      {/* Background Image with Dramatic Parallax */}
       <motion.div
         className="absolute inset-0 z-0"
         style={{
-          x: mousePosition.x,
-          y: mousePosition.y,
+          y: backgroundY,
+          scale: scale,
         }}
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+        <motion.div
+          className="absolute inset-0"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80')`,
+            x: mousePosition.x,
+            y: mousePosition.y,
           }}
-        />
+        >
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80')`,
+            }}
+          />
+        </motion.div>
       </motion.div>
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0C765B]/95 via-[#0C765B]/85 to-[#074737]/90 z-10" />
+      {/* Bottom Gradient Only - No full overlay */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      
+      {/* Left Side Gradient for Text Readability */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
-      {/* Animated Grid Pattern */}
-      <div className="absolute inset-0 z-10 opacity-10">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="heroGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#heroGrid)" />
-        </svg>
+      {/* Animated Particles/Sparks Effect */}
+      <div className="absolute inset-0 z-10 overflow-hidden">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-amber-400 rounded-full"
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: window.innerHeight + 10,
+              opacity: 0,
+            }}
+            animate={{
+              y: -10,
+              opacity: [0, 1, 1, 0],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 3,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "linear",
+            }}
+            style={{
+              left: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
       </div>
 
       {/* Content */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+      <motion.div 
+        className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20"
+        style={{ y: contentY, opacity }}
+      >
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div>
@@ -89,8 +126,12 @@ export const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2 animate-pulse" />
+              <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6 border border-white/20">
+                <motion.span 
+                  className="w-2 h-2 bg-amber-400 rounded-full mr-2"
+                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
                 Welcome to GYS Intranet
               </span>
             </motion.div>
@@ -100,17 +141,31 @@ export const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6"
+              style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
             >
               Building Indonesia&apos;s
               <br />
-              <span className="text-amber-400">Steel Future</span>
+              <motion.span 
+                className="text-amber-400"
+                animate={{ 
+                  textShadow: [
+                    '0 0 10px rgba(251,191,36,0.5)',
+                    '0 0 20px rgba(251,191,36,0.8)',
+                    '0 0 10px rgba(251,191,36,0.5)',
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                Steel Future
+              </motion.span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg text-white/80 leading-relaxed mb-8 max-w-lg"
+              className="text-lg text-white/90 leading-relaxed mb-8 max-w-lg"
+              style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
             >
               PT Garuda Yamato Steel is committed to excellence in steel manufacturing, 
               delivering premium quality products while prioritizing safety and sustainability.
@@ -122,20 +177,24 @@ export const HeroSection = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-wrap gap-4"
             >
-              <a
+              <motion.a
                 href="#news"
-                className="px-8 py-4 bg-white text-[#0C765B] font-semibold rounded-xl hover:bg-slate-100 transition-all hover:-translate-y-1 hover:shadow-xl"
+                className="px-8 py-4 bg-[#0C765B] text-white font-semibold rounded-xl hover:bg-[#095E49] transition-all shadow-lg shadow-[#0C765B]/30"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 data-testid="hero-cta-news"
               >
                 Latest News
-              </a>
-              <a
+              </motion.a>
+              <motion.a
                 href="#directory"
-                className="px-8 py-4 bg-white/10 text-white font-semibold rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all hover:-translate-y-1 border border-white/20"
+                className="px-8 py-4 bg-white/10 text-white font-semibold rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all border border-white/30"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 data-testid="hero-cta-directory"
               >
                 Employee Directory
-              </a>
+              </motion.a>
             </motion.div>
           </div>
 
@@ -144,31 +203,50 @@ export const HeroSection = () => {
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                initial={{ opacity: 0, y: 50, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="glass p-6 rounded-2xl cursor-default stat-card-float"
-                style={{ animationDelay: `${index * 1.5}s` }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: 0.4 + index * 0.15,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  y: -10, 
+                  scale: 1.05,
+                  transition: { duration: 0.2 }
+                }}
+                className="bg-white/95 backdrop-blur-md p-6 rounded-2xl cursor-default shadow-xl"
                 data-testid={`hero-stat-${index}`}
               >
-                <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
+                <motion.div 
+                  className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4"
+                  whileHover={{ rotate: 10 }}
+                >
                   <stat.icon className="w-6 h-6 text-[#0C765B]" />
-                </div>
-                <p className="text-3xl font-bold text-slate-900 tracking-tight">{stat.value}</p>
+                </motion.div>
+                <motion.p 
+                  className="text-3xl font-bold text-slate-900 tracking-tight"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                >
+                  {stat.value}
+                </motion.p>
                 <p className="text-sm font-semibold text-slate-700">{stat.label}</p>
                 <p className="text-xs text-slate-500">{stat.subLabel}</p>
               </motion.div>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
+        style={{ opacity }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
       >
         <motion.div
@@ -176,7 +254,11 @@ export const HeroSection = () => {
           transition={{ duration: 1.5, repeat: Infinity }}
           className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2"
         >
-          <div className="w-1.5 h-3 bg-white/70 rounded-full" />
+          <motion.div 
+            className="w-1.5 h-3 bg-white/70 rounded-full"
+            animate={{ opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
         </motion.div>
       </motion.div>
     </section>
