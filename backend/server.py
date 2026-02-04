@@ -432,6 +432,74 @@ async def delete_employee(employee_id: str, current_user: dict = Depends(get_cur
         raise HTTPException(status_code=404, detail="Employee not found")
     return {"message": "Employee deleted successfully"}
 
+# ===================== HERO SETTINGS =====================
+
+class HeroSettingsUpdate(BaseModel):
+    hero_image_url: Optional[str] = None
+    hero_title_line1: Optional[str] = None
+    hero_title_line2: Optional[str] = None
+    hero_subtitle: Optional[str] = None
+    hero_cta1_text: Optional[str] = None
+    hero_cta1_link: Optional[str] = None
+    hero_cta2_text: Optional[str] = None
+    hero_cta2_link: Optional[str] = None
+
+class HeroSettingsResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    hero_image_url: str
+    hero_title_line1: str
+    hero_title_line2: str
+    hero_subtitle: str
+    hero_cta1_text: str
+    hero_cta1_link: str
+    hero_cta2_text: str
+    hero_cta2_link: str
+
+@api_router.get("/settings/hero", response_model=HeroSettingsResponse)
+async def get_hero_settings():
+    settings = await db.settings.find_one({"type": "hero"}, {"_id": 0})
+    if not settings:
+        # Return defaults
+        return HeroSettingsResponse(
+            id="hero-settings",
+            hero_image_url="https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80",
+            hero_title_line1="Building Indonesia's",
+            hero_title_line2="Steel Future",
+            hero_subtitle="PT Garuda Yamato Steel is committed to excellence in steel manufacturing, delivering premium quality products while prioritizing safety and sustainability.",
+            hero_cta1_text="Latest News",
+            hero_cta1_link="#news",
+            hero_cta2_text="Employee Directory",
+            hero_cta2_link="#directory"
+        )
+    return HeroSettingsResponse(**settings)
+
+@api_router.put("/settings/hero", response_model=HeroSettingsResponse)
+async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict = Depends(get_current_user)):
+    update_data = {k: v for k, v in settings.model_dump().items() if v is not None}
+    
+    existing = await db.settings.find_one({"type": "hero"})
+    if existing:
+        await db.settings.update_one({"type": "hero"}, {"$set": update_data})
+    else:
+        default_settings = {
+            "id": "hero-settings",
+            "type": "hero",
+            "hero_image_url": "https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80",
+            "hero_title_line1": "Building Indonesia's",
+            "hero_title_line2": "Steel Future",
+            "hero_subtitle": "PT Garuda Yamato Steel is committed to excellence in steel manufacturing, delivering premium quality products while prioritizing safety and sustainability.",
+            "hero_cta1_text": "Latest News",
+            "hero_cta1_link": "#news",
+            "hero_cta2_text": "Employee Directory",
+            "hero_cta2_link": "#directory"
+        }
+        default_settings.update(update_data)
+        await db.settings.insert_one(default_settings)
+    
+    updated = await db.settings.find_one({"type": "hero"}, {"_id": 0})
+    return HeroSettingsResponse(**updated)
+
 # ===================== SEED DATA =====================
 
 @api_router.post("/seed")
