@@ -190,6 +190,7 @@ export const SafetyPage = () => {
           { label: 'Operational/Compliance', path: '/compliance' },
           { label: 'Safety Guidelines' },
         ]}
+        category="compliance"
       >
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
           <div className="flex items-start space-x-4">
