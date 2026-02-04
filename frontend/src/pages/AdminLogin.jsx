@@ -41,7 +41,7 @@ export const AdminLogin = () => {
           {/* Logo */}
           <div className="text-center mb-8">
             <img 
-              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" 
               alt="GYS Logo"
               className="h-16 w-auto object-contain mx-auto mb-4"
             />
