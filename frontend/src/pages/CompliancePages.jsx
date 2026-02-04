@@ -127,6 +127,7 @@ export const PoliciesPage = () => {
           { label: 'Operational/Compliance', path: '/compliance' },
           { label: 'Policies' },
         ]}
+        category="compliance"
       >
         <div className="grid md:grid-cols-2 gap-6">
           <PolicyCard 
