@@ -64,9 +64,11 @@ export const AdminLayout = () => {
           {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-[#0C765B] rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">GYS</span>
-          </div>
+          <img 
+            src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+            alt="GYS Logo"
+            className="h-8 w-auto object-contain"
+          />
           <span className="font-semibold text-slate-900">Admin</span>
         </div>
         <Link to="/" className="p-2 hover:bg-slate-100 rounded-lg">
@@ -92,9 +94,11 @@ export const AdminLayout = () => {
         {/* Logo */}
         <div className="h-20 flex items-center px-6 border-b border-white/10">
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">GYS</span>
-            </div>
+            <img 
+              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/lc8pshlu_Logo%20GYS.jpg" 
+              alt="GYS Logo"
+              className="h-10 w-auto object-contain bg-white rounded-lg p-1"
+            />
             <div>
               <p className="text-white font-semibold">GYS Admin</p>
               <p className="text-white/60 text-xs">Content Management</p>
