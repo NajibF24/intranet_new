@@ -273,12 +273,12 @@ class GYSIntranetAPITester:
         old_token = self.token
         self.token = None
         success, _ = self.run_test("Unauthorized Access", "POST", "/api/news", 401, data={"title": "test"})
-        results.append(not success)  # Should fail (401)
+        results.append(success)  # Should succeed in getting 401
         
         # Test with invalid token
         self.token = "invalid_token"
         success, _ = self.run_test("Invalid Token", "POST", "/api/news", 401, data={"title": "test"})
-        results.append(not success)  # Should fail (401)
+        results.append(success)  # Should succeed in getting 401
         
         # Restore valid token
         self.token = old_token
