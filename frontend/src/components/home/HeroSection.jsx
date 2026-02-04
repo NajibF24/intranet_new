@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Factory, Shield, Users, TrendingUp } from 'lucide-react';
+import { apiService } from '../../lib/api';
 
 const stats = [
   {
@@ -31,6 +32,16 @@ const stats = [
 
 export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [heroSettings, setHeroSettings] = useState({
+    hero_image_url: 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80',
+    hero_title_line1: "Building Indonesia's",
+    hero_title_line2: 'Steel Future',
+    hero_subtitle: 'PT Garuda Yamato Steel is committed to excellence in steel manufacturing, delivering premium quality products while prioritizing safety and sustainability.',
+    hero_cta1_text: 'Latest News',
+    hero_cta1_link: '#news',
+    hero_cta2_text: 'Employee Directory',
+    hero_cta2_link: '#directory',
+  });
   const { scrollY } = useScroll();
   
   // Parallax transforms based on scroll
@@ -38,6 +49,19 @@ export const HeroSection = () => {
   const contentY = useTransform(scrollY, [0, 500], [0, -50]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.2]);
+
+  useEffect(() => {
+    // Fetch hero settings
+    const fetchSettings = async () => {
+      try {
+        const response = await apiService.getHeroSettings();
+        setHeroSettings(response.data);
+      } catch (error) {
+        // Use defaults
+      }
+    };
+    fetchSettings();
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -73,7 +97,7 @@ export const HeroSection = () => {
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80')`,
+              backgroundImage: `url('${heroSettings.hero_image_url}')`,
             }}
           />
         </motion.div>
@@ -86,18 +110,18 @@ export const HeroSection = () => {
       <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
       {/* Animated Particles/Sparks Effect */}
-      <div className="absolute inset-0 z-10 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+      <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-amber-400 rounded-full"
             initial={{
-              x: Math.random() * window.innerWidth,
-              y: window.innerHeight + 10,
+              x: `${Math.random() * 100}%`,
+              y: '100%',
               opacity: 0,
             }}
             animate={{
-              y: -10,
+              y: '-10%',
               opacity: [0, 1, 1, 0],
             }}
             transition={{
@@ -105,9 +129,6 @@ export const HeroSection = () => {
               repeat: Infinity,
               delay: Math.random() * 5,
               ease: "linear",
-            }}
-            style={{
-              left: `${Math.random() * 100}%`,
             }}
           />
         ))}
@@ -143,7 +164,7 @@ export const HeroSection = () => {
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6"
               style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
             >
-              Building Indonesia&apos;s
+              {heroSettings.hero_title_line1}
               <br />
               <motion.span 
                 className="text-amber-400"
@@ -156,7 +177,7 @@ export const HeroSection = () => {
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                Steel Future
+                {heroSettings.hero_title_line2}
               </motion.span>
             </motion.h1>
 
@@ -167,8 +188,7 @@ export const HeroSection = () => {
               className="text-lg text-white/90 leading-relaxed mb-8 max-w-lg"
               style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
             >
-              PT Garuda Yamato Steel is committed to excellence in steel manufacturing, 
-              delivering premium quality products while prioritizing safety and sustainability.
+              {heroSettings.hero_subtitle}
             </motion.p>
 
             <motion.div
@@ -178,27 +198,27 @@ export const HeroSection = () => {
               className="flex flex-wrap gap-4"
             >
               <motion.a
-                href="#news"
+                href={heroSettings.hero_cta1_link}
                 className="px-8 py-4 bg-[#0C765B] text-white font-semibold rounded-xl hover:bg-[#095E49] transition-all shadow-lg shadow-[#0C765B]/30"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 data-testid="hero-cta-news"
               >
-                Latest News
+                {heroSettings.hero_cta1_text}
               </motion.a>
               <motion.a
-                href="#directory"
+                href={heroSettings.hero_cta2_link}
                 className="px-8 py-4 bg-white/10 text-white font-semibold rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all border border-white/30"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 data-testid="hero-cta-directory"
               >
-                Employee Directory
+                {heroSettings.hero_cta2_text}
               </motion.a>
             </motion.div>
           </div>
 
-          {/* Right Content - Stats Cards */}
+          {/* Right Content - Stats Cards (More Transparent) */}
           <div className="grid grid-cols-2 gap-4">
             {stats.map((stat, index) => (
               <motion.div
@@ -216,25 +236,26 @@ export const HeroSection = () => {
                   scale: 1.05,
                   transition: { duration: 0.2 }
                 }}
-                className="bg-white/95 backdrop-blur-md p-6 rounded-2xl cursor-default shadow-xl"
+                className="bg-white/20 backdrop-blur-md p-6 rounded-2xl cursor-default shadow-xl border border-white/30"
                 data-testid={`hero-stat-${index}`}
               >
                 <motion.div 
-                  className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4"
+                  className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4"
                   whileHover={{ rotate: 10 }}
                 >
-                  <stat.icon className="w-6 h-6 text-[#0C765B]" />
+                  <stat.icon className="w-6 h-6 text-white" />
                 </motion.div>
                 <motion.p 
-                  className="text-3xl font-bold text-slate-900 tracking-tight"
+                  className="text-3xl font-bold text-white tracking-tight"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8 + index * 0.1 }}
+                  style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.3)' }}
                 >
                   {stat.value}
                 </motion.p>
-                <p className="text-sm font-semibold text-slate-700">{stat.label}</p>
-                <p className="text-xs text-slate-500">{stat.subLabel}</p>
+                <p className="text-sm font-semibold text-white/90">{stat.label}</p>
+                <p className="text-xs text-white/70">{stat.subLabel}</p>
               </motion.div>
             ))}
           </div>
