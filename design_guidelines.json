@@ -1,0 +1,138 @@
+{
+  "project_name": "PT Garuda Yamato Steel Intranet",
+  "identity": {
+    "persona": "E1",
+    "tone": "Professional, Industrial, Fluid, Secure",
+    "aesthetic": "Steel & Glass - Minimalist Corporate with Industrial Weight"
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Inter, sans-serif",
+      "body": "Inter, sans-serif",
+      "notes": "Strict adherence to Inter. Use weight and tracking to create hierarchy."
+    },
+    "scale": {
+      "h1": "text-5xl font-bold tracking-tight",
+      "h2": "text-4xl font-bold tracking-tight",
+      "h3": "text-2xl font-semibold tracking-normal",
+      "body_large": "text-lg font-medium leading-relaxed",
+      "body": "text-base font-normal leading-relaxed",
+      "caption": "text-sm font-medium tracking-wide uppercase text-muted-foreground"
+    }
+  },
+  "colors": {
+    "primary": {
+      "DEFAULT": "#0C765B",
+      "foreground": "#FFFFFF",
+      "50": "#F2F9F7",
+      "100": "#E6F3EF",
+      "200": "#C0E1D6",
+      "300": "#9ACFBD",
+      "400": "#4EAB8E",
+      "500": "#0C765B",
+      "600": "#095E49",
+      "700": "#074737",
+      "800": "#042F25",
+      "900": "#021812"
+    },
+    "secondary": {
+      "DEFAULT": "#F1F5F9",
+      "foreground": "#0F172A"
+    },
+    "background": {
+      "DEFAULT": "#FFFFFF",
+      "subtle": "#F8FAFC"
+    },
+    "surface": {
+      "glass": "bg-white/70 backdrop-blur-xl border border-white/20 shadow-sm",
+      "glass_dark": "bg-black/40 backdrop-blur-xl border border-white/10 shadow-lg",
+      "card": "bg-white border border-slate-100 shadow-sm"
+    },
+    "accent": {
+      "DEFAULT": "#F59E0B",
+      "foreground": "#FFFFFF"
+    },
+    "forbidden": [
+      "#7351B7",
+      "#1B93A4"
+    ]
+  },
+  "layout": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "grid_system": "grid grid-cols-1 md:grid-cols-12 gap-6",
+    "spacing": {
+      "section_padding": "py-16 md:py-24",
+      "element_gap": "gap-6 md:gap-8"
+    },
+    "modes": {
+      "dashboard": "Bento Grid - High density but breathable",
+      "marketing": "Asymmetric Tetris Grid"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#0C765B] text-white hover:bg-[#095E49] rounded-lg shadow-sm transition-all duration-200 active:scale-95",
+      "ghost": "bg-transparent text-[#0C765B] hover:bg-[#0C765B]/10 rounded-lg transition-colors"
+    },
+    "cards": {
+      "glass": "bg-white/80 backdrop-blur-md border border-white/40 shadow-sm rounded-xl hover:shadow-md transition-all duration-300",
+      "solid": "bg-white border border-slate-200 shadow-sm rounded-xl"
+    },
+    "inputs": {
+      "default": "bg-slate-50 border-slate-200 focus:ring-2 focus:ring-[#0C765B]/20 focus:border-[#0C765B] rounded-md"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": "Use extensively for overlays, sticky headers, and modal backgrounds. Key: High blur (backdrop-blur-xl), slight transparency (bg-white/80), and delicate white borders.",
+    "shadows": "shadow-[0_4px_20px_-4px_rgba(12,118,91,0.1)]",
+    "gradients": "Use subtle mesh gradients of Steel Green (#0C765B) fading into white/slate for hero backgrounds. NO full-screen solid primary colors.",
+    "textures": "Subtle noise overlay on solid backgrounds to reduce digital sterility."
+  },
+  "motion": {
+    "default_transition": "transition-all duration-300 ease-out",
+    "hover_lift": "hover:-translate-y-1 hover:shadow-lg",
+    "page_transition": "initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}"
+  },
+  "images": {
+    "hero_background": {
+      "url": "https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwxfHxzdGVlbCUyMG1hbnVmYWN0dXJpbmclMjBmYWN0b3J5JTIwaW50ZXJpb3IlMjBtb2Rlcm4lMjBoaWdoJTIwdGVjaHxlbnwwfHx8fDE3NzAxOTc1MDB8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Modern steel factory interior with pipes and machinery",
+      "category": "hero"
+    },
+    "news_featured": {
+      "url": "https://images.unsplash.com/photo-1735494032948-14ef288fc9d3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHw0fHxpbmR1c3RyaWFsJTIwc3RlZWwlMjB3b3JrZXJzJTIwcHJvZmVzc2lvbmFsJTIwc2FmZXR5JTIwZ2VhcnxlbnwwfHx8fDE3NzAxOTc1MDF8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Factory worker in hard hat",
+      "category": "news"
+    },
+    "event_calendar": {
+      "url": "https://images.unsplash.com/photo-1697281679290-ad7be1b10682?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwxfHxzdGVlbCUyMG1pbGwlMjBzcGFya3MlMjBwcm9kdWN0aW9uJTIwbGluZSUyMGhpZ2glMjBxdWFsaXR5fGVufDB8fHx8MTc3MDE5NzUwMXww&ixlib=rb-4.1.0&q=85",
+      "alt": "Steel production line with sparks",
+      "category": "events"
+    },
+    "gallery_sample_1": {
+      "url": "https://images.unsplash.com/photo-1727504172743-08f14448fab8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwyfHxzdGVlbCUyMG1hbnVmYWN0dXJpbmclMjBmYWN0b3J5JTIwaW50ZXJpb3IlMjBtb2Rlcm4lMjBoaWdoJTIwdGVjaHxlbnwwfHx8fDE3NzAxOTc1MDB8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Man working on machinery",
+      "category": "gallery"
+    },
+    "gallery_sample_2": {
+      "url": "https://images.unsplash.com/photo-1720036236694-d0a231c52563?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHw0fHxzdGVlbCUyMG1hbnVmYWN0dXJpbmclMjBmYWN0b3J5JTIwaW50ZXJpb3IlMjBtb2Rlcm4lMjBoaWdoJTIwdGVjaHxlbnwwfHx8fDE3NzAxOTc1MDB8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Factory with machines",
+      "category": "gallery"
+    }
+  },
+  "accessibility": {
+    "contrast_check": "Ensure #0C765B text is never on dark backgrounds without white backing. Use white text on #0C765B backgrounds.",
+    "interactive_elements": "All interactive elements must have a :focus-visible ring offset.",
+    "motion_preference": "Respect prefers-reduced-motion media query."
+  },
+  "universal_guidelines": [
+    "Do NOT use 'Inter' for everything blindly; use tight tracking for headings to give it a 'Display' feel.",
+    "Avoid generic centered layouts. Use asymmetry to create visual interest.",
+    "Use glassmorphism effects with backdrop filters (12-24px blur).",
+    "Never use AI assistant emoji characters.",
+    "Every interaction needs micro-animations.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "All interactive elements MUST include data-testid attribute."
+  ],
+  "instructions_to_main_agent": "You are building the PT Garuda Yamato Steel Intranet. Use the colors and images defined here. Strictly follow the glassmorphism aesthetic for the dashboard cards. Implement the News Ticker at the footer as requested. Use Shadcn components for complex interactions but style them to match the Steel Green identity."
+}
