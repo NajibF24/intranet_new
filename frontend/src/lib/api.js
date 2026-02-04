@@ -57,6 +57,10 @@ export const apiService = {
   updateEmployee: (id, data) => api.put(`/employees/${id}`, data),
   deleteEmployee: (id) => api.delete(`/employees/${id}`),
 
+  // Hero Settings
+  getHeroSettings: () => api.get('/settings/hero'),
+  updateHeroSettings: (data) => api.put('/settings/hero', data),
+
   // Seed data
   seedData: () => api.post('/seed'),
 };
