@@ -632,6 +632,23 @@ class HeroSettingsResponse(BaseModel):
     show_gradient_overlay: bool = True
     show_floating_cards: bool = True
 
+# Ticker Settings Model
+class TickerSettingsUpdate(BaseModel):
+    mode: Optional[str] = None  # 'default' or 'manual'
+    manual_text: Optional[str] = None
+    icon: Optional[str] = None  # icon name from lucide-react
+    badge_text: Optional[str] = None
+    is_enabled: Optional[bool] = None
+
+class TickerSettingsResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    mode: str = "default"
+    manual_text: str = ""
+    icon: str = "sparkles"
+    badge_text: str = "Latest News"
+    is_enabled: bool = True
+
 @api_router.get("/settings/hero", response_model=HeroSettingsResponse)
 async def get_hero_settings():
     settings = await db.settings.find_one({"type": "hero"}, {"_id": 0})
