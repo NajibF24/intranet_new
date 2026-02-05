@@ -66,6 +66,7 @@ function App() {
               <Route path="employees" element={<AdminEmployees />} />
               <Route path="hero" element={<AdminHero />} />
               <Route path="users" element={<AdminUsers />} />
+              <Route path="ticker" element={<AdminTicker />} />
             </Route>
           </Routes>
         </BrowserRouter>
