@@ -1,32 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X } from 'lucide-react';
+import { Sparkles, X, Bell, Megaphone, Zap, Info, AlertCircle, Radio } from 'lucide-react';
 import { apiService } from '../../lib/api';
+
+const ICONS = {
+  sparkles: Sparkles,
+  bell: Bell,
+  megaphone: Megaphone,
+  zap: Zap,
+  info: Info,
+  'alert-circle': AlertCircle,
+  radio: Radio,
+};
 
 export const StickyNewsBanner = () => {
   const [news, setNews] = useState([]);
+  const [tickerSettings, setTickerSettings] = useState({
+    mode: 'default',
+    manual_text: '',
+    icon: 'sparkles',
+    badge_text: 'Latest News',
+    is_enabled: true,
+  });
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchData = async () => {
       try {
-        const response = await apiService.getNews({ limit: 5 });
-        setNews(response.data);
+        const [newsRes, tickerRes] = await Promise.all([
+          apiService.getNews({ limit: 5 }),
+          apiService.getTickerSettings(),
+        ]);
+        setNews(newsRes.data);
+        setTickerSettings(tickerRes.data);
       } catch (error) {
-        console.error('Error fetching news:', error);
+        console.error('Error fetching data:', error);
       }
     };
-    fetchNews();
+    fetchData();
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show banner after scrolling past hero (approximately 100vh)
       const heroHeight = window.innerHeight;
       const scrollPosition = window.scrollY;
       
-      // Show when scrolled past hero, hide when back at hero
       if (scrollPosition > heroHeight * 0.8) {
         setIsVisible(true);
       } else {
@@ -38,12 +57,23 @@ export const StickyNewsBanner = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const tickerContent = news.length > 0
-    ? news.map(n => n.title).join(' ✦ ')
-    : 'Loading latest news...';
+  // Get ticker content based on mode
+  const getTickerContent = () => {
+    if (tickerSettings.mode === 'manual' && tickerSettings.manual_text) {
+      return tickerSettings.manual_text;
+    }
+    // Default mode: show news titles
+    if (news.length > 0) {
+      return news.map(n => n.title).join(' ✦ ');
+    }
+    return 'Welcome to PT Garuda Yamato Steel Intranet';
+  };
 
-  // Don't show if dismissed or no news
-  if (isDismissed) return null;
+  const tickerContent = getTickerContent();
+  const IconComponent = ICONS[tickerSettings.icon] || Sparkles;
+
+  // Don't show if disabled, dismissed, or no content
+  if (!tickerSettings.is_enabled || isDismissed) return null;
 
   return (
     <AnimatePresence>
@@ -57,10 +87,12 @@ export const StickyNewsBanner = () => {
           data-testid="sticky-news-banner"
         >
           <div className="flex items-center">
-            {/* Latest News Badge */}
+            {/* Badge */}
             <div className="flex-shrink-0 bg-amber-500 px-4 py-3 flex items-center space-x-2">
-              <Sparkles className="w-4 h-4 text-white" />
-              <span className="text-white font-semibold text-sm whitespace-nowrap">Latest News</span>
+              <IconComponent className="w-4 h-4 text-white" />
+              <span className="text-white font-semibold text-sm whitespace-nowrap">
+                {tickerSettings.badge_text || 'Latest News'}
+              </span>
             </div>
             
             {/* Ticker Content */}
