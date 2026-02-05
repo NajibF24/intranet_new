@@ -112,7 +112,9 @@ export const AdminLayout = () => {
 
         {/* Navigation */}
         <nav className="p-4 space-y-2">
-          {sidebarItems.map((item, index) => {
+          {sidebarItems
+            .filter((item) => !item.adminOnly || user.role === 'admin')
+            .map((item, index) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
@@ -124,7 +126,7 @@ export const AdminLayout = () => {
                     ? 'bg-white text-[#0C765B]'
                     : 'text-white/80 hover:bg-white/10 hover:text-white'
                 }`}
-                data-testid={`sidebar-${item.label.toLowerCase()}`}
+                data-testid={`sidebar-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 <item.icon className="w-5 h-5" />
                 <span className="font-medium">{item.label}</span>
