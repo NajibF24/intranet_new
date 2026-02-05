@@ -614,6 +614,9 @@ class HeroSettingsUpdate(BaseModel):
     hero_cta1_link: Optional[str] = None
     hero_cta2_text: Optional[str] = None
     hero_cta2_link: Optional[str] = None
+    show_particles: Optional[bool] = None
+    show_gradient_overlay: Optional[bool] = None
+    show_floating_cards: Optional[bool] = None
 
 class HeroSettingsResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -626,6 +629,9 @@ class HeroSettingsResponse(BaseModel):
     hero_cta1_link: str
     hero_cta2_text: str
     hero_cta2_link: str
+    show_particles: bool = True
+    show_gradient_overlay: bool = True
+    show_floating_cards: bool = True
 
 @api_router.get("/settings/hero", response_model=HeroSettingsResponse)
 async def get_hero_settings():
@@ -641,7 +647,10 @@ async def get_hero_settings():
             hero_cta1_text="Latest News",
             hero_cta1_link="#news",
             hero_cta2_text="Employee Directory",
-            hero_cta2_link="#directory"
+            hero_cta2_link="#directory",
+            show_particles=True,
+            show_gradient_overlay=True,
+            show_floating_cards=True
         )
     return HeroSettingsResponse(**settings)
 
@@ -663,7 +672,10 @@ async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict 
             "hero_cta1_text": "Latest News",
             "hero_cta1_link": "#news",
             "hero_cta2_text": "Employee Directory",
-            "hero_cta2_link": "#directory"
+            "hero_cta2_link": "#directory",
+            "show_particles": True,
+            "show_gradient_overlay": True,
+            "show_floating_cards": True
         }
         default_settings.update(update_data)
         await db.settings.insert_one(default_settings)
