@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Home,
   Palette,
+  UserCog,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,6 +24,7 @@ const sidebarItems = [
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: Image, label: 'Gallery', path: '/admin/gallery' },
   { icon: Users, label: 'Employees', path: '/admin/employees' },
+  { icon: UserCog, label: 'User Management', path: '/admin/users', adminOnly: true },
 ];
 
 export const AdminLayout = () => {

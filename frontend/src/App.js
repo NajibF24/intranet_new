@@ -9,6 +9,7 @@ import { VisionPage, MissionPage, JourneyPage, AboutPage } from "./pages/Corpora
 import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
 import { ITServicesPage, HRServicesPage, FAServicesPage } from "./pages/ServicePages";
 import { NewsPage } from "./pages/NewsPage";
+import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { EventsPage } from "./pages/EventsPage";
 import { GalleryPage } from "./pages/GalleryPage";
 
@@ -21,6 +22,7 @@ import { AdminEvents } from "./pages/AdminEvents";
 import { AdminGallery } from "./pages/AdminGallery";
 import { AdminEmployees } from "./pages/AdminEmployees";
 import { AdminHero } from "./pages/AdminHero";
+import { AdminUsers } from "./pages/AdminUsers";
 
 function App() {
   return (
@@ -49,6 +51,7 @@ function App() {
             
             {/* Communication Routes */}
             <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:id" element={<NewsDetailPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             
@@ -61,6 +64,7 @@ function App() {
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="employees" element={<AdminEmployees />} />
               <Route path="hero" element={<AdminHero />} />
+              <Route path="users" element={<AdminUsers />} />
             </Route>
           </Routes>
         </BrowserRouter>
