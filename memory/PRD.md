@@ -94,7 +94,8 @@ A professional intranet website for PT Garuda Yamato Steel (GYS) with content ma
 - Hero visual effects toggles
 - File upload support in all Admin sections
 - Custom category option for News
-- Events Add button restricted to admin users only
+- **Removed** Add Calendar button from public Events page (admin only can add events in Admin panel)
+- **Added** "Add to Outlook" button for each event - downloads .ics file for Outlook/Google Calendar
 
 ## Future Enhancements (Backlog)
 - P2: Additional user permissions granularity
