@@ -149,13 +149,13 @@ class PhotoCreate(BaseModel):
     title: str
     description: Optional[str] = None
     image_url: str
-    category: str = "general"
+    album_id: Optional[str] = None
 
 class PhotoUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     image_url: Optional[str] = None
-    category: Optional[str] = None
+    album_id: Optional[str] = None
 
 class PhotoResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -163,7 +163,8 @@ class PhotoResponse(BaseModel):
     title: str
     description: Optional[str] = None
     image_url: str
-    category: str
+    album_id: Optional[str] = None
+    album_title: Optional[str] = None
     created_at: str
 
 # Employee Model
