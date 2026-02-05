@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Pencil, Trash2, Search, User, Shield, Key } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, User } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Switch } from '../components/ui/switch';
 import { apiService } from '../lib/api';
 import { toast } from 'sonner';
 
@@ -236,98 +233,110 @@ export const AdminUsers = () => {
         </div>
       )}
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{editingUser ? 'Edit User' : 'Add User'}</DialogTitle>
-            <DialogDescription>Manage user access and permissions</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Name *</label>
-              <Input
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Full name"
-                data-testid="user-name-input"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Email *</label>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="email@gys.co.id"
-                data-testid="user-email-input"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">
-                Password {editingUser ? '(leave blank to keep current)' : '*'}
-              </label>
-              <Input
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder="••••••••"
-                data-testid="user-password-input"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Role</label>
-              <Select
-                value={formData.role}
-                onValueChange={(value) => setFormData({ ...formData, role: value })}
-              >
-                <SelectTrigger data-testid="user-role-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {roles.map((role) => (
-                    <SelectItem key={role.value} value={role.value}>
-                      <div>
-                        <span className="font-medium">{role.label}</span>
-                        <span className="text-xs text-slate-500 ml-2">{role.description}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {formData.role !== 'admin' && (
+      {/* Add/Edit Dialog - Using native modal instead */}
+      {isDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setIsDialogOpen(false)} />
+          <div className="relative bg-white rounded-xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-xl">
+            <h2 className="text-xl font-bold text-slate-900 mb-1">
+              {editingUser ? 'Edit User' : 'Add User'}
+            </h2>
+            <p className="text-slate-500 text-sm mb-6">Manage user access and permissions</p>
+            
+            <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-3 block">Permissions</label>
-                <div className="space-y-3">
-                  {permissionsList.map((perm) => (
-                    <div key={perm.id} className="flex items-center justify-between">
-                      <span className="text-sm text-slate-700">{perm.label}</span>
-                      <Switch
-                        checked={formData.permissions.includes(perm.id)}
-                        onCheckedChange={() => handlePermissionToggle(perm.id)}
-                      />
-                    </div>
-                  ))}
-                </div>
+                <label className="text-sm font-medium text-slate-700 mb-1 block">Name *</label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Full name"
+                  data-testid="user-name-input"
+                />
               </div>
-            )}
+              <div>
+                <label className="text-sm font-medium text-slate-700 mb-1 block">Email *</label>
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="email@gys.co.id"
+                  data-testid="user-email-input"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-slate-700 mb-1 block">
+                  Password {editingUser ? '(leave blank to keep current)' : '*'}
+                </label>
+                <Input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="••••••••"
+                  data-testid="user-password-input"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-slate-700 mb-1 block">Role</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0C765B]/20 focus:border-[#0C765B]"
+                  data-testid="user-role-select"
+                >
+                  {roles.map((role) => (
+                    <option key={role.value} value={role.value}>
+                      {role.label} - {role.description}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {formData.role !== 'admin' && (
+                <div>
+                  <label className="text-sm font-medium text-slate-700 mb-3 block">Permissions</label>
+                  <div className="space-y-3">
+                    {permissionsList.map((perm) => (
+                      <div key={perm.id} className="flex items-center justify-between">
+                        <span className="text-sm text-slate-700">{perm.label}</span>
+                        <button
+                          type="button"
+                          onClick={() => handlePermissionToggle(perm.id)}
+                          className={`w-10 h-6 rounded-full transition-colors ${
+                            formData.permissions.includes(perm.id)
+                              ? 'bg-[#0C765B]'
+                              : 'bg-slate-200'
+                          }`}
+                        >
+                          <div
+                            className={`w-4 h-4 bg-white rounded-full transition-transform shadow ${
+                              formData.permissions.includes(perm.id)
+                                ? 'translate-x-5'
+                                : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex justify-end gap-3 mt-6">
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="bg-[#0C765B] hover:bg-[#095E49]"
+                data-testid="save-user-btn"
+              >
+                {saving ? 'Saving...' : 'Save'}
+              </Button>
+            </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-[#0C765B] hover:bg-[#095E49]"
-              data-testid="save-user-btn"
-            >
-              {saving ? 'Saving...' : 'Save'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   );
 };
