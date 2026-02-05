@@ -22,7 +22,7 @@ import { AdminEvents } from "./pages/AdminEvents";
 import { AdminGallery } from "./pages/AdminGallery";
 import { AdminEmployees } from "./pages/AdminEmployees";
 import { AdminHero } from "./pages/AdminHero";
-// import { AdminUsers } from "./pages/AdminUsers";
+import { AdminUsers } from "./pages/AdminUsers";
 
 function App() {
   return (
@@ -64,7 +64,7 @@ function App() {
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="employees" element={<AdminEmployees />} />
               <Route path="hero" element={<AdminHero />} />
-              {/* <Route path="users" element={<AdminUsers />} /> */}
+              <Route path="users" element={<AdminUsers />} />
             </Route>
           </Routes>
         </BrowserRouter>
