@@ -237,10 +237,11 @@ async def register(user: UserCreate):
         "password": hash_password(user.password),
         "name": user.name,
         "role": user.role,
+        "permissions": user.permissions,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.users.insert_one(user_doc)
-    return UserResponse(id=user_id, email=user.email, name=user.name, role=user.role)
+    return UserResponse(id=user_id, email=user.email, name=user.name, role=user.role, permissions=user.permissions)
 
 @api_router.post("/auth/login")
 async def login(credentials: UserLogin):
