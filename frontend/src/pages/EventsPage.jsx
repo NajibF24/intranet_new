@@ -187,6 +187,7 @@ export const EventsPage = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                       className="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition-shadow"
+                      data-testid={`event-card-${index}`}
                     >
                       <div className="flex items-start gap-4">
                         <div className="w-16 h-16 bg-slate-100 rounded-xl flex flex-col items-center justify-center flex-shrink-0">
@@ -207,11 +208,21 @@ export const EventsPage = () => {
                           <h4 className="font-semibold text-slate-900 mb-1">{event.title}</h4>
                           <p className="text-slate-600 text-sm mb-2">{event.description}</p>
                           {event.location && (
-                            <p className="text-slate-500 text-sm flex items-center">
+                            <p className="text-slate-500 text-sm flex items-center mb-3">
                               <MapPin className="w-4 h-4 mr-1" />
                               {event.location}
                             </p>
                           )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleAddToOutlook(event)}
+                            className="text-[#0C765B] border-[#0C765B]/30 hover:bg-[#0C765B]/10"
+                            data-testid={`add-to-outlook-${index}`}
+                          >
+                            <CalendarPlus className="w-4 h-4 mr-2" />
+                            Add to Outlook
+                          </Button>
                         </div>
                       </div>
                     </motion.div>
