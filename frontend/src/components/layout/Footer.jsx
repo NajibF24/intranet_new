@@ -145,16 +145,16 @@ export const Footer = () => {
       </div>
 
       {/* Copyright Bar */}
-      <div className="border-t border-slate-800">
+      <div className="border-t border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between">
-          <p className="text-slate-500 text-sm">
+          <p className="text-white/70 text-sm">
             © {new Date().getFullYear()} PT Garuda Yamato Steel. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link to="/privacy" className="text-slate-500 hover:text-slate-300 text-sm">
+            <Link to="/privacy" className="text-white/70 hover:text-white text-sm">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-slate-500 hover:text-slate-300 text-sm">
+            <Link to="/terms" className="text-white/70 hover:text-white text-sm">
               Terms of Use
             </Link>
           </div>
@@ -162,7 +162,7 @@ export const Footer = () => {
       </div>
 
       {/* News Ticker */}
-      <div className="bg-[#0C765B] py-3 overflow-hidden" data-testid="news-ticker">
+      <div className="bg-[#095E49] py-3 overflow-hidden" data-testid="news-ticker">
         <div className="flex items-center">
           <div className="flex-shrink-0 bg-amber-500 px-4 py-1 flex items-center space-x-2">
             <Sparkles className="w-4 h-4 text-white" />
