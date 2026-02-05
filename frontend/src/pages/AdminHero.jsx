@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Image as ImageIcon, Type, Link as LinkIcon, Eye } from 'lucide-react';
+import { Save, Image as ImageIcon, Type, Link as LinkIcon, Eye, Sparkles, Upload } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Switch } from '../components/ui/switch';
 import { apiService } from '../lib/api';
 import { toast } from 'sonner';
 
@@ -16,9 +17,13 @@ export const AdminHero = () => {
     hero_cta1_link: '',
     hero_cta2_text: '',
     hero_cta2_link: '',
+    show_particles: true,
+    show_gradient_overlay: true,
+    show_floating_cards: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchSettings();
