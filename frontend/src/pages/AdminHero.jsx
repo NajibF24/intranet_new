@@ -124,17 +124,84 @@ export const AdminHero = () => {
               <ImageIcon className="w-5 h-5 mr-2 text-[#0C765B]" />
               Background Image
             </h3>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Image URL</label>
-              <Input
-                value={settings.hero_image_url}
-                onChange={(e) => setSettings({ ...settings, hero_image_url: e.target.value })}
-                placeholder="https://example.com/hero-image.jpg"
-                data-testid="hero-image-input"
-              />
-              <p className="text-xs text-slate-500 mt-2">
-                Recommended: High-resolution steel/industrial image (1920x1080 or larger)
-              </p>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-slate-700 mb-1 block">Upload Image</label>
+                <div className="flex gap-2">
+                  <label className="flex-1 cursor-pointer">
+                    <div className="flex items-center justify-center px-4 py-3 border-2 border-dashed border-slate-200 rounded-lg hover:border-[#0C765B]/50 transition-colors">
+                      <Upload className="w-5 h-5 mr-2 text-slate-400" />
+                      <span className="text-sm text-slate-500">
+                        {uploading ? 'Uploading...' : 'Click to upload image'}
+                      </span>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      disabled={uploading}
+                      data-testid="hero-image-upload"
+                    />
+                  </label>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Recommended: 1920x1080px, max 5MB (JPG, PNG, WebP)
+                </p>
+              </div>
+              <div className="text-center text-xs text-slate-400">— or use URL —</div>
+              <div>
+                <label className="text-sm font-medium text-slate-700 mb-1 block">Image URL</label>
+                <Input
+                  value={settings.hero_image_url}
+                  onChange={(e) => setSettings({ ...settings, hero_image_url: e.target.value })}
+                  placeholder="https://example.com/hero-image.jpg"
+                  data-testid="hero-image-input"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Visual Effects */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+            <h3 className="font-semibold text-slate-900 mb-4 flex items-center">
+              <Sparkles className="w-5 h-5 mr-2 text-[#0C765B]" />
+              Visual Effects
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-medium text-slate-700">Animated Particles</span>
+                  <p className="text-xs text-slate-500">Floating particles animation effect</p>
+                </div>
+                <Switch
+                  checked={settings.show_particles}
+                  onCheckedChange={(checked) => setSettings({ ...settings, show_particles: checked })}
+                  data-testid="toggle-particles"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-medium text-slate-700">Gradient Overlay</span>
+                  <p className="text-xs text-slate-500">Dark gradient for better text visibility</p>
+                </div>
+                <Switch
+                  checked={settings.show_gradient_overlay}
+                  onCheckedChange={(checked) => setSettings({ ...settings, show_gradient_overlay: checked })}
+                  data-testid="toggle-gradient"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-medium text-slate-700">Floating Stats Cards</span>
+                  <p className="text-xs text-slate-500">Animated statistics cards on hero</p>
+                </div>
+                <Switch
+                  checked={settings.show_floating_cards}
+                  onCheckedChange={(checked) => setSettings({ ...settings, show_floating_cards: checked })}
+                  data-testid="toggle-cards"
+                />
+              </div>
             </div>
           </div>
 
