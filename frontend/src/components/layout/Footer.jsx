@@ -1,27 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Linkedin, Youtube, Mail, Phone, MapPin, Sparkles } from 'lucide-react';
-import { apiService } from '../../lib/api';
+import { Facebook, Twitter, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 
 export const Footer = () => {
-  const [news, setNews] = useState([]);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await apiService.getNews({ limit: 5 });
-        setNews(response.data);
-      } catch (error) {
-        console.error('Error fetching news for ticker:', error);
-      }
-    };
-    fetchNews();
-  }, []);
-
-  const tickerContent = news.length > 0
-    ? news.map(n => n.title).join(' * ')
-    : 'Loading latest news...';
-
   return (
     <footer className="bg-[#0C765B] text-white" data-testid="main-footer">
       {/* Main Footer Content */}
