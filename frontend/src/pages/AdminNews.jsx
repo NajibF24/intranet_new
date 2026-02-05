@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Pencil, Trash2, Search, Star, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Star, X, Upload } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../components/ui/dialog';
@@ -9,6 +9,8 @@ import { Switch } from '../components/ui/switch';
 import { apiService } from '../lib/api';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+
+const PRESET_CATEGORIES = ['general', 'production', 'safety', 'hr', 'business', 'sustainability'];
 
 const emptyNews = {
   title: '',
