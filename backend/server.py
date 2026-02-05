@@ -495,7 +495,6 @@ async def get_photos(album_id: Optional[str] = None, limit: int = 50):
             photo["album_title"] = album.get("title") if album else None
         result.append(PhotoResponse(**photo))
     return result
-    return photos
 
 @api_router.get("/photos/{photo_id}", response_model=PhotoResponse)
 async def get_photo_by_id(photo_id: str):
