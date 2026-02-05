@@ -160,23 +160,6 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-
-      {/* News Ticker */}
-      <div className="bg-[#095E49] py-3 overflow-hidden" data-testid="news-ticker">
-        <div className="flex items-center">
-          <div className="flex-shrink-0 bg-amber-500 px-4 py-1 flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-white" />
-            <span className="text-white font-semibold text-sm">Latest News</span>
-          </div>
-          <div className="overflow-hidden flex-1">
-            <div className="ticker-animate whitespace-nowrap inline-block">
-              <span className="text-white/90 text-sm px-8">
-                {tickerContent} * {tickerContent}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
     </footer>
   );
 };
