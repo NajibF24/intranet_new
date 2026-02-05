@@ -1,32 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CalendarDays, MapPin, Cake, PartyPopper, Plus, Filter } from 'lucide-react';
+import { CalendarDays, MapPin, Cake, PartyPopper, CalendarPlus } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Calendar } from '../components/ui/calendar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '../components/ui/dialog';
 import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { apiService } from '../lib/api';
 import { format, parseISO, isSameDay, isSameMonth } from 'date-fns';
-import { useAuth } from '../context/AuthContext';
 
 export const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filterType, setFilterType] = useState('all');
-  const [newEvent, setNewEvent] = useState({
-    title: '',
-    description: '',
-    event_date: format(new Date(), 'yyyy-MM-dd'),
-    event_type: 'event',
-    location: '',
-  });
-  const { user } = useAuth();
 
   useEffect(() => {
     fetchEvents();
@@ -43,21 +30,44 @@ export const EventsPage = () => {
     }
   };
 
-  const handleAddEvent = async () => {
-    try {
-      await apiService.createEvent(newEvent);
-      await fetchEvents();
-      setIsDialogOpen(false);
-      setNewEvent({
-        title: '',
-        description: '',
-        event_date: format(new Date(), 'yyyy-MM-dd'),
-        event_type: 'event',
-        location: '',
-      });
-    } catch (error) {
-      console.error('Error creating event:', error);
-    }
+  // Generate ICS file content for Outlook/Calendar
+  const generateICSContent = (event) => {
+    const eventDate = parseISO(event.event_date);
+    const startDate = format(eventDate, "yyyyMMdd");
+    const endDate = format(eventDate, "yyyyMMdd");
+    
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//PT Garuda Yamato Steel//GYS Intranet//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `DTSTART;VALUE=DATE:${startDate}`,
+      `DTEND;VALUE=DATE:${endDate}`,
+      `SUMMARY:${event.title}`,
+      `DESCRIPTION:${event.description || ''}`,
+      `LOCATION:${event.location || 'PT Garuda Yamato Steel'}`,
+      `UID:${event.id}@gys-intranet`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+    
+    return icsContent;
+  };
+
+  // Download ICS file for adding to Outlook
+  const handleAddToOutlook = (event) => {
+    const icsContent = generateICSContent(event);
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${event.title.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   const filteredEvents = events.filter(e => filterType === 'all' || e.event_type === filterType);
