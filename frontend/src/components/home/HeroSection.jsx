@@ -107,35 +107,40 @@ export const HeroSection = () => {
       </motion.div>
 
       {/* Bottom Gradient Only - No full overlay */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-      
-      {/* Left Side Gradient for Text Readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+      {heroSettings.show_gradient_overlay && (
+        <>
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          {/* Left Side Gradient for Text Readability */}
+          <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+        </>
+      )}
 
       {/* Animated Particles/Sparks Effect */}
-      <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-amber-400 rounded-full"
-            initial={{
-              x: `${Math.random() * 100}%`,
-              y: '100%',
-              opacity: 0,
-            }}
-            animate={{
-              y: '-10%',
-              opacity: [0, 1, 1, 0],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
+      {heroSettings.show_particles && (
+        <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-amber-400 rounded-full"
+              initial={{
+                x: `${Math.random() * 100}%`,
+                y: '100%',
+                opacity: 0,
+              }}
+              animate={{
+                y: '-10%',
+                opacity: [0, 1, 1, 0],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 3,
+                repeat: Infinity,
+                delay: Math.random() * 5,
+                ease: "linear",
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Content */}
       <motion.div 
