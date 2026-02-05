@@ -50,12 +50,27 @@ export const apiService = {
   updatePhoto: (id, data) => api.put(`/photos/${id}`, data),
   deletePhoto: (id) => api.delete(`/photos/${id}`),
 
+  // Albums
+  getAlbums: (params) => api.get('/albums', { params }),
+  getAlbumById: (id) => api.get(`/albums/${id}`),
+  getAlbumPhotos: (id) => api.get(`/albums/${id}/photos`),
+  createAlbum: (data) => api.post('/albums', data),
+  updateAlbum: (id, data) => api.put(`/albums/${id}`, data),
+  deleteAlbum: (id) => api.delete(`/albums/${id}`),
+
   // Employees
   getEmployees: (params) => api.get('/employees', { params }),
   getEmployeeById: (id) => api.get(`/employees/${id}`),
   createEmployee: (data) => api.post('/employees', data),
   updateEmployee: (id, data) => api.put(`/employees/${id}`, data),
   deleteEmployee: (id) => api.delete(`/employees/${id}`),
+
+  // Users (Admin only)
+  getUsers: () => api.get('/users'),
+  getUserById: (id) => api.get(`/users/${id}`),
+  createUser: (data) => api.post('/users', data),
+  updateUser: (id, data) => api.put(`/users/${id}`, data),
+  deleteUser: (id) => api.delete(`/users/${id}`),
 
   // Hero Settings
   getHeroSettings: () => api.get('/settings/hero'),
