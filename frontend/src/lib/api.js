@@ -76,6 +76,10 @@ export const apiService = {
   getHeroSettings: () => api.get('/settings/hero'),
   updateHeroSettings: (data) => api.put('/settings/hero', data),
 
+  // Ticker Settings
+  getTickerSettings: () => api.get('/settings/ticker'),
+  updateTickerSettings: (data) => api.put('/settings/ticker', data),
+
   // Seed data
   seedData: () => api.post('/seed'),
 };
