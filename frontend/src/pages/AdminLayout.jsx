@@ -14,12 +14,14 @@ import {
   Home,
   Palette,
   UserCog,
+  Radio,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
   { icon: Palette, label: 'Hero Settings', path: '/admin/hero' },
+  { icon: Radio, label: 'Ticker Banner', path: '/admin/ticker' },
   { icon: Newspaper, label: 'News', path: '/admin/news' },
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: Image, label: 'Gallery', path: '/admin/gallery' },
