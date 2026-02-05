@@ -41,6 +41,9 @@ export const HeroSection = () => {
     hero_cta1_link: '#news',
     hero_cta2_text: 'Employee Directory',
     hero_cta2_link: '#directory',
+    show_particles: true,
+    show_gradient_overlay: true,
+    show_floating_cards: true,
   });
   const { scrollY } = useScroll();
   
