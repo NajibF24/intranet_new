@@ -51,19 +51,48 @@ export const AdminNews = () => {
   const handleOpenDialog = (newsItem = null) => {
     if (newsItem) {
       setEditingNews(newsItem);
+      const isCustom = !PRESET_CATEGORIES.includes(newsItem.category);
+      setUseCustomCategory(isCustom);
+      setCustomCategory(isCustom ? newsItem.category : '');
       setFormData({
         title: newsItem.title,
         summary: newsItem.summary,
         content: newsItem.content,
         image_url: newsItem.image_url || '',
-        category: newsItem.category,
+        category: isCustom ? 'other' : newsItem.category,
         is_featured: newsItem.is_featured,
       });
     } else {
       setEditingNews(null);
       setFormData(emptyNews);
+      setUseCustomCategory(false);
+      setCustomCategory('');
     }
     setIsDialogOpen(true);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const response = await apiService.uploadPhoto(fd);
+      setFormData({ ...formData, image_url: response.data.image_url });
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async () => {
