@@ -699,6 +699,45 @@ async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict 
     updated = await db.settings.find_one({"type": "hero"}, {"_id": 0})
     return HeroSettingsResponse(**updated)
 
+# ===================== TICKER SETTINGS =====================
+
+@api_router.get("/settings/ticker", response_model=TickerSettingsResponse)
+async def get_ticker_settings():
+    settings = await db.settings.find_one({"type": "ticker"}, {"_id": 0})
+    if not settings:
+        return TickerSettingsResponse(
+            id="ticker-settings",
+            mode="default",
+            manual_text="",
+            icon="sparkles",
+            badge_text="Latest News",
+            is_enabled=True
+        )
+    return TickerSettingsResponse(**settings)
+
+@api_router.put("/settings/ticker", response_model=TickerSettingsResponse)
+async def update_ticker_settings(settings: TickerSettingsUpdate, current_user: dict = Depends(get_current_user)):
+    update_data = {k: v for k, v in settings.model_dump().items() if v is not None}
+    
+    existing = await db.settings.find_one({"type": "ticker"})
+    if existing:
+        await db.settings.update_one({"type": "ticker"}, {"$set": update_data})
+    else:
+        default_settings = {
+            "id": "ticker-settings",
+            "type": "ticker",
+            "mode": "default",
+            "manual_text": "",
+            "icon": "sparkles",
+            "badge_text": "Latest News",
+            "is_enabled": True
+        }
+        default_settings.update(update_data)
+        await db.settings.insert_one(default_settings)
+    
+    updated = await db.settings.find_one({"type": "ticker"}, {"_id": 0})
+    return TickerSettingsResponse(**updated)
+
 # ===================== SEED DATA =====================
 
 @api_router.post("/seed")
