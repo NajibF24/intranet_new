@@ -22,7 +22,7 @@ import { AdminEvents } from "./pages/AdminEvents";
 import { AdminGallery } from "./pages/AdminGallery";
 import { AdminEmployees } from "./pages/AdminEmployees";
 import { AdminHero } from "./pages/AdminHero";
-import { AdminUsers } from "./pages/AdminUsers";
+// import { AdminUsers } from "./pages/AdminUsers";
 
 function App() {
   return (
