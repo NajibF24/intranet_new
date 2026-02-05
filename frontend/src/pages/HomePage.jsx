@@ -7,6 +7,7 @@ import { EventsSection } from '../components/home/EventsSection';
 import { GallerySection } from '../components/home/GallerySection';
 import { ServicesHub } from '../components/home/ServicesHub';
 import { DirectorySection } from '../components/home/DirectorySection';
+import { StickyNewsBanner } from '../components/home/StickyNewsBanner';
 import { apiService } from '../lib/api';
 
 export const HomePage = () => {
@@ -34,6 +35,7 @@ export const HomePage = () => {
         <DirectorySection />
       </main>
       <Footer />
+      <StickyNewsBanner />
     </div>
   );
 };
