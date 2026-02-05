@@ -37,24 +37,24 @@ export const Footer = () => {
               />
               <div>
                 <p className="font-bold text-lg">PT Garuda Yamato Steel</p>
-                <p className="text-slate-400 text-sm">Intranet Portal</p>
+                <p className="text-white/70 text-sm">Intranet Portal</p>
               </div>
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+            <p className="text-white/80 text-sm leading-relaxed mb-6">
               A leading steel manufacturer committed to quality, innovation, and sustainability. 
               Building Indonesia&apos;s future with premium steel products.
             </p>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-slate-400 text-sm">
-                <MapPin className="w-4 h-4 text-[#0C765B]" />
+              <div className="flex items-center space-x-3 text-white/80 text-sm">
+                <MapPin className="w-4 h-4 text-amber-400" />
                 <span>Jl. Industri Raya No. 123, Cikarang, Bekasi</span>
               </div>
-              <div className="flex items-center space-x-3 text-slate-400 text-sm">
-                <Phone className="w-4 h-4 text-[#0C765B]" />
+              <div className="flex items-center space-x-3 text-white/80 text-sm">
+                <Phone className="w-4 h-4 text-amber-400" />
                 <span>+62 21 8900 1234</span>
               </div>
-              <div className="flex items-center space-x-3 text-slate-400 text-sm">
-                <Mail className="w-4 h-4 text-[#0C765B]" />
+              <div className="flex items-center space-x-3 text-white/80 text-sm">
+                <Mail className="w-4 h-4 text-amber-400" />
                 <span>info@gys.co.id</span>
               </div>
             </div>
@@ -65,17 +65,17 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-6">Corporate Identity</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/corporate/vision" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/corporate/vision" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   Company Vision
                 </Link>
               </li>
               <li>
-                <Link to="/corporate/mission" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/corporate/mission" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   Company Mission
                 </Link>
               </li>
               <li>
-                <Link to="/corporate/about" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/corporate/about" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   About GYS
                 </Link>
               </li>
@@ -87,17 +87,17 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-6">Operational/Compliance</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/compliance/sop" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/compliance/sop" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   Standard Operating Procedures
                 </Link>
               </li>
               <li>
-                <Link to="/compliance/policies" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/compliance/policies" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   Company Policies
                 </Link>
               </li>
               <li>
-                <Link to="/compliance/safety" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/compliance/safety" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   Safety Guidelines
                 </Link>
               </li>
@@ -109,17 +109,17 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-6">Employee Services</h3>
             <ul className="space-y-3 mb-8">
               <li>
-                <Link to="/services/it" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/services/it" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   IT Global Services
                 </Link>
               </li>
               <li>
-                <Link to="/services/hr" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/services/hr" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   HR Darwinbox
                 </Link>
               </li>
               <li>
-                <Link to="/services/fa" className="text-slate-400 hover:text-[#0C765B] transition-colors text-sm">
+                <Link to="/services/fa" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
                   FA E-Asset
                 </Link>
               </li>
