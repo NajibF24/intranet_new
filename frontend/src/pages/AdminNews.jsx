@@ -29,6 +29,9 @@ export const AdminNews = () => {
   const [editingNews, setEditingNews] = useState(null);
   const [formData, setFormData] = useState(emptyNews);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [useCustomCategory, setUseCustomCategory] = useState(false);
+  const [customCategory, setCustomCategory] = useState('');
 
   useEffect(() => {
     fetchNews();
