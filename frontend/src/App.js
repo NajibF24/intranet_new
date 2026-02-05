@@ -23,6 +23,7 @@ import { AdminGallery } from "./pages/AdminGallery";
 import { AdminEmployees } from "./pages/AdminEmployees";
 import { AdminHero } from "./pages/AdminHero";
 import { AdminUsers } from "./pages/AdminUsers";
+import { AdminTicker } from "./pages/AdminTicker";
 
 function App() {
   return (
