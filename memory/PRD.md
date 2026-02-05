@@ -96,6 +96,12 @@ A professional intranet website for PT Garuda Yamato Steel (GYS) with content ma
 - Custom category option for News
 - **Removed** Add Calendar button from public Events page (admin only can add events in Admin panel)
 - **Added** "Add to Outlook" button for each event - downloads .ics file for Outlook/Google Calendar
+- **Added** Ticker Banner Settings in Admin panel with:
+  - Enable/Disable toggle
+  - Default Mode (shows featured news titles automatically)
+  - Manual Mode (custom text input)
+  - Badge text customization
+  - Icon selection (7 options)
 
 ## Future Enhancements (Backlog)
 - P2: Additional user permissions granularity
