@@ -64,7 +64,7 @@ function App() {
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="employees" element={<AdminEmployees />} />
               <Route path="hero" element={<AdminHero />} />
-              <Route path="users" element={<AdminUsers />} />
+              {/* <Route path="users" element={<AdminUsers />} /> */}
             </Route>
           </Routes>
         </BrowserRouter>
