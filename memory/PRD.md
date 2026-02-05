@@ -1,86 +1,104 @@
-# PT Garuda Yamato Steel (GYS) Intranet - Product Requirements Document
+# PT Garuda Yamato Steel - Intranet CMS
 
-## Original Problem Statement
-Build a professional, high-performance Intranet for PT Garuda Yamato Steel (GYS) using React and SharePoint Framework (SPFx) principles with:
-- CMS-based content management
-- Employee directory searchable by name, department, email, position
-- Functional calendar with add/edit events
-- Role-based authentication for CMS (admin access)
-- Admin photo upload functionality
+## Project Overview
+A professional intranet website for PT Garuda Yamato Steel (GYS) with content management capabilities.
 
-## User Personas
-1. **GYS Employees** - View news, events, gallery, directory, access services
-2. **Admin/Content Manager** - Manage all content via CMS (news, events, photos, employees)
+## Original Requirements
+- Public-facing intranet website without authentication
+- CMS for admins to manage News, Calendar, Photos, and Employee Directory
+- Role-based access control for different content sections
+- Hero section with manageable content and visual effects
+- Searchable Employee Directory
+- Events Calendar
+- Photo Gallery with album organization
+- News section with full article pages
 
-## Core Requirements (Static)
-- Inter font family throughout
-- Primary color: #0C765B (Steel Green)
-- Glassmorphism effects for cards and overlays
-- Framer Motion animations
-- SharePoint-like modern experience
+## Current Status: COMPLETE
 
-## What's Been Implemented ✅
+## Implemented Features
 
-### Date: Feb 4, 2026
+### Public Website
+- [x] Homepage with hero section, news, events, gallery preview
+- [x] News & Announcements page with category filters
+- [x] Individual News Detail pages with full content
+- [x] Events Calendar page
+- [x] Photo Gallery with album view support
+- [x] Employee Directory with search
+- [x] Corporate Identity pages (Vision, Mission, Journey, About)
+- [x] Compliance pages (SOP, Policies, Safety)
+- [x] Service pages (IT, HR, Finance)
+- [x] Sticky news banner that appears on scroll
+- [x] Responsive design with GYS branding
 
-#### Backend (FastAPI + MongoDB)
-- [x] News CRUD API with featured flag
-- [x] Events CRUD API (events, holidays, birthdays)
-- [x] Photos CRUD API with upload
-- [x] Employees CRUD API with search
-- [x] Admin authentication (JWT)
-- [x] Auto-seed demo data
+### Admin CMS
+- [x] JWT Authentication with admin login
+- [x] Dashboard with content statistics
+- [x] News Management (CRUD with file upload, custom categories)
+- [x] Events Management (CRUD)
+- [x] Gallery Management with Albums
+  - Create/Edit/Delete albums
+  - Assign photos to albums
+  - File upload support
+- [x] Employee Directory Management
+- [x] Hero Settings with visual toggles
+  - Background image upload/URL
+  - Animated Particles toggle
+  - Gradient Overlay toggle
+  - Floating Stats Cards toggle
+- [x] User Management
+  - Create/Edit/Delete admin users
+  - Role assignment (Admin, Editor, Viewer)
 
-#### Frontend (React + Tailwind + shadcn/ui)
-- [x] **Homepage Sections:**
-  - Sticky header with mega-menu navigation
-  - Full-screen hero with parallax, gradient overlay, animated stats
-  - News & Announcements (featured + grid)
-  - Events & Calendar (holidays, birthdays, calendar widget)
-  - Photo Gallery (4-column masonry with lightbox)
-  - Employee Services Hub (IT, HR, FA cards)
-  - Employee Directory (searchable, filterable)
-  - Footer with 3-column sitemap + news ticker
+### Technical Features
+- [x] File upload with 5MB limit
+- [x] Recommended image dimensions displayed
+- [x] Role-based route protection
+- [x] Add Calendar button hidden for non-admin users
 
-- [x] **Sub-pages:**
-  - /corporate/vision, /mission, /about
-  - /compliance/sop, /policies, /safety
-  - /services/it, /hr, /fa
+## Architecture
 
-- [x] **Admin CMS:**
-  - Login with demo credentials
-  - Dashboard with stats
-  - News management (CRUD)
-  - Events management (CRUD)
-  - Gallery management (CRUD + upload)
-  - Employee directory management (CRUD)
+### Frontend (React + Tailwind CSS)
+- `/app/frontend/src/pages/` - Main page components
+- `/app/frontend/src/components/` - Reusable components
+- `/app/frontend/src/lib/api.js` - API service
 
-## Prioritized Backlog
+### Backend (FastAPI + MongoDB)
+- `/app/backend/server.py` - Main API server
+- JWT authentication
+- File upload handling
 
-### P0 (Critical) - DONE
-- ✅ Core homepage sections
-- ✅ Admin authentication
-- ✅ Content management CRUD
+## Test Credentials
+- Email: admin@gys.co.id
+- Password: admin123
 
-### P1 (High) - Future
-- [ ] Rich text editor for news content
-- [ ] Event RSVP functionality
-- [ ] Document upload for SOP/Policies
+## API Endpoints
+- Auth: POST /api/auth/login, GET /api/auth/me
+- Users: GET/POST/PUT/DELETE /api/users
+- News: GET/POST/PUT/DELETE /api/news
+- Events: GET/POST/PUT/DELETE /api/events
+- Albums: GET/POST/PUT/DELETE /api/albums
+- Photos: GET/POST/PUT/DELETE /api/photos
+- Hero: GET/PUT /api/settings/hero
+- Employees: GET/POST/PUT/DELETE /api/employees
 
-### P2 (Medium) - Future
-- [ ] User roles (viewer, editor, admin)
-- [ ] Comments on news articles
-- [ ] Photo album categorization
-- [ ] Push notifications
+## Recommended Image Dimensions
+- Hero Background: 1920x1080px (16:9), max 5MB
+- News Images: 800x450px (16:9), max 5MB
+- Gallery Photos: 800x800px (1:1), max 5MB
+- Album Covers: 800x600px (4:3), max 5MB
 
-### P3 (Low) - Future
-- [ ] Dark mode toggle
-- [ ] Multi-language support
-- [ ] Analytics dashboard
-- [ ] SSO integration
+## Completed in This Session
+- User Management system with roles
+- News Detail page for full article view
+- Photo Albums in Gallery management
+- Hero visual effects toggles
+- File upload support in all Admin sections
+- Custom category option for News
+- Events Add button restricted to admin users only
 
-## Next Tasks
-1. Add rich text editor (TipTap/Quill) for news content
-2. Implement document upload for SOP/Policies sections
-3. Add event RSVP with attendance tracking
-4. Consider user role hierarchy
+## Future Enhancements (Backlog)
+- P2: Additional user permissions granularity
+- P2: Bulk photo upload
+- P3: Email notifications for events
+- P3: Analytics dashboard
+- P3: Multi-language support
