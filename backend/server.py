@@ -502,7 +502,10 @@ async def get_photo_by_id(photo_id: str):
     photo = await db.photos.find_one({"id": photo_id}, {"_id": 0})
     if not photo:
         raise HTTPException(status_code=404, detail="Photo not found")
-    return photo
+    if photo.get("album_id"):
+        album = await db.albums.find_one({"id": photo["album_id"]}, {"_id": 0})
+        photo["album_title"] = album.get("title") if album else None
+    return PhotoResponse(**photo)
 
 @api_router.post("/photos", response_model=PhotoResponse)
 async def create_photo(photo: PhotoCreate, current_user: dict = Depends(get_current_user)):
@@ -513,7 +516,14 @@ async def create_photo(photo: PhotoCreate, current_user: dict = Depends(get_curr
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.photos.insert_one(photo_doc)
-    return PhotoResponse(**photo_doc)
+    
+    # Add album title if exists
+    album_title = None
+    if photo.album_id:
+        album = await db.albums.find_one({"id": photo.album_id}, {"_id": 0})
+        album_title = album.get("title") if album else None
+    
+    return PhotoResponse(**photo_doc, album_title=album_title)
 
 @api_router.post("/photos/upload")
 async def upload_photo(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
