@@ -275,20 +275,59 @@ export const AdminNews = () => {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Image URL</label>
-              <Input
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://example.com/image.jpg"
-                data-testid="news-image-input"
-              />
+              <label className="text-sm font-medium text-slate-700 mb-1 block">Image</label>
+              <div className="space-y-3">
+                <label className="cursor-pointer block">
+                  <div className="flex items-center justify-center px-4 py-3 border-2 border-dashed border-slate-200 rounded-lg hover:border-[#0C765B]/50 transition-colors">
+                    <Upload className="w-5 h-5 mr-2 text-slate-400" />
+                    <span className="text-sm text-slate-500">
+                      {uploading ? 'Uploading...' : 'Click to upload image'}
+                    </span>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={uploading}
+                    data-testid="news-image-upload"
+                  />
+                </label>
+                <p className="text-xs text-slate-500">Recommended: 800x450px (16:9 ratio), max 5MB</p>
+                <div className="text-center text-xs text-slate-400">— or use URL —</div>
+                <Input
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  placeholder="https://example.com/image.jpg"
+                  data-testid="news-image-input"
+                />
+                {formData.image_url && (
+                  <div className="mt-2 relative">
+                    <img src={formData.image_url} alt="Preview" className="w-full h-32 object-cover rounded-lg" />
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, image_url: '' })}
+                      className="absolute top-2 right-2 p-1 bg-white/90 rounded-full hover:bg-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1 block">Category</label>
                 <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  value={useCustomCategory ? 'other' : formData.category}
+                  onValueChange={(value) => {
+                    if (value === 'other') {
+                      setUseCustomCategory(true);
+                    } else {
+                      setUseCustomCategory(false);
+                      setFormData({ ...formData, category: value });
+                    }
+                  }}
                 >
                   <SelectTrigger data-testid="news-category-select">
                     <SelectValue />
@@ -300,8 +339,18 @@ export const AdminNews = () => {
                     <SelectItem value="hr">HR</SelectItem>
                     <SelectItem value="business">Business</SelectItem>
                     <SelectItem value="sustainability">Sustainability</SelectItem>
+                    <SelectItem value="other">Other (Custom)</SelectItem>
                   </SelectContent>
                 </Select>
+                {useCustomCategory && (
+                  <Input
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="Enter custom category"
+                    className="mt-2"
+                    data-testid="news-custom-category"
+                  />
+                )}
               </div>
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1 block">Featured</label>
