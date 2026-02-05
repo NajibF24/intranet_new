@@ -141,22 +141,24 @@ export const NewsSection = () => {
                 className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                 data-testid={`news-card-${index}`}
               >
-                <div className="image-zoom aspect-[16/9]">
-                  <img
-                    src={article.image_url || 'https://images.unsplash.com/photo-1735494032948-14ef288fc9d3?w=400'}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center text-xs text-slate-500 mb-2">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {format(new Date(article.created_at), 'MMM d, yyyy')}
+                <Link to={`/news/${article.id}`}>
+                  <div className="image-zoom aspect-[16/9]">
+                    <img
+                      src={article.image_url || 'https://images.unsplash.com/photo-1735494032948-14ef288fc9d3?w=400'}
+                      alt={article.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <h4 className="font-semibold text-slate-900 line-clamp-2 group-hover:text-[#0C765B] transition-colors">
-                    {article.title}
-                  </h4>
-                </div>
+                  <div className="p-4">
+                    <div className="flex items-center text-xs text-slate-500 mb-2">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      {format(new Date(article.created_at), 'MMM d, yyyy')}
+                    </div>
+                    <h4 className="font-semibold text-slate-900 line-clamp-2 group-hover:text-[#0C765B] transition-colors">
+                      {article.title}
+                    </h4>
+                  </div>
+                </Link>
               </motion.article>
             ))}
           </div>
