@@ -101,13 +101,18 @@ export const AdminNews = () => {
       return;
     }
 
+    const dataToSave = {
+      ...formData,
+      category: useCustomCategory ? customCategory : formData.category,
+    };
+
     setSaving(true);
     try {
       if (editingNews) {
-        await apiService.updateNews(editingNews.id, formData);
+        await apiService.updateNews(editingNews.id, dataToSave);
         toast.success('News updated successfully');
       } else {
-        await apiService.createNews(formData);
+        await apiService.createNews(dataToSave);
         toast.success('News created successfully');
       }
       await fetchNews();
