@@ -110,10 +110,10 @@ export const EventsPage = () => {
               </button>
             ))}
           </div>
-          {user && (
+          {user && user.role === 'admin' && (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-[#0C765B] hover:bg-[#095E49] text-white">
+                <Button className="bg-[#0C765B] hover:bg-[#095E49] text-white" data-testid="add-event-btn">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Event
                 </Button>
