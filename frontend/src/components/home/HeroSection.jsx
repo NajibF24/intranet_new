@@ -227,46 +227,48 @@ export const HeroSection = () => {
           </div>
 
           {/* Right Content - Stats Cards (More Transparent) */}
-          <div className="grid grid-cols-2 gap-4">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50, scale: 0.8 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: 0.4 + index * 0.15,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                whileHover={{ 
-                  y: -10, 
-                  scale: 1.05,
-                  transition: { duration: 0.2 }
-                }}
-                className="bg-white/20 backdrop-blur-md p-6 rounded-2xl cursor-default shadow-xl border border-white/30"
-                data-testid={`hero-stat-${index}`}
-              >
-                <motion.div 
-                  className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4"
-                  whileHover={{ rotate: 10 }}
+          {heroSettings.show_floating_cards && (
+            <div className="grid grid-cols-2 gap-4">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.4 + index * 0.15,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  whileHover={{ 
+                    y: -10, 
+                    scale: 1.05,
+                    transition: { duration: 0.2 }
+                  }}
+                  className="bg-white/20 backdrop-blur-md p-6 rounded-2xl cursor-default shadow-xl border border-white/30"
+                  data-testid={`hero-stat-${index}`}
                 >
-                  <stat.icon className="w-6 h-6 text-white" />
+                  <motion.div 
+                    className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4"
+                    whileHover={{ rotate: 10 }}
+                  >
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </motion.div>
+                  <motion.p 
+                    className="text-3xl font-bold text-white tracking-tight"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                    style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.3)' }}
+                  >
+                    {stat.value}
+                  </motion.p>
+                  <p className="text-sm font-semibold text-white/90">{stat.label}</p>
+                  <p className="text-xs text-white/70">{stat.subLabel}</p>
                 </motion.div>
-                <motion.p 
-                  className="text-3xl font-bold text-white tracking-tight"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                  style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.3)' }}
-                >
-                  {stat.value}
-                </motion.p>
-                <p className="text-sm font-semibold text-white/90">{stat.label}</p>
-                <p className="text-xs text-white/70">{stat.subLabel}</p>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
 
