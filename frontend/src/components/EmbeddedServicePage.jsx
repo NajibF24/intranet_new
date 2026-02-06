@@ -226,7 +226,7 @@ const EmbeddedServicePage = ({
           <iframe
             id="service-iframe"
             src={externalUrl}
-            className={`w-full h-[70vh] ${!iframeLoaded || iframeError ? 'hidden' : ''}`}
+            className={`w-full h-[70vh] ${(!iframeLoaded && !loadTimeout) || iframeError || loadTimeout ? 'hidden' : ''}`}
             title={title}
             onLoad={handleIframeLoad}
             onError={handleIframeError}
