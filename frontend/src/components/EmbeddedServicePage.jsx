@@ -16,6 +16,17 @@ const EmbeddedServicePage = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [iframeError, setIframeError] = useState(false);
+  const [loadTimeout, setLoadTimeout] = useState(false);
+
+  // Set a timeout for iframe loading - if it doesn't load in 10 seconds, show fallback
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!iframeLoaded) {
+        setLoadTimeout(true);
+      }
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [iframeLoaded]);
 
   const handleIframeLoad = () => {
     setIframeLoaded(true);
