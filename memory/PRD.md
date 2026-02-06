@@ -102,6 +102,12 @@ A professional intranet website for PT Garuda Yamato Steel (GYS) with content ma
   - Manual Mode (custom text input)
   - Badge text customization
   - Icon selection (7 options)
+- **Added** Service Hub iframe embedding:
+  - IT Global Services → https://globalservices.gyssteel.com (fallback if blocked)
+  - GYS Darwinbox → https://gys.darwinbox.com
+  - FA E-Asset → https://garudayamatosteel.outsystemsenterprise.com/eAsset_Web/ (working!)
+  - Features: Refresh, Fullscreen, Open in New Tab buttons
+  - Graceful fallback if iframe blocked by security headers
 
 ## Future Enhancements (Backlog)
 - P2: Additional user permissions granularity
