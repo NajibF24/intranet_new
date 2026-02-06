@@ -191,7 +191,7 @@ const EmbeddedServicePage = ({
           className="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200"
         >
           {/* Loading State */}
-          {!iframeLoaded && (
+          {!iframeLoaded && !loadTimeout && (
             <div className="h-[70vh] flex items-center justify-center bg-slate-50">
               <div className="text-center">
                 <div className="w-12 h-12 border-4 border-[#0C765B]/20 border-t-[#0C765B] rounded-full animate-spin mx-auto mb-4" />
@@ -200,21 +200,24 @@ const EmbeddedServicePage = ({
             </div>
           )}
 
-          {/* Error State */}
-          {iframeError && (
+          {/* Timeout/Error State - Show graceful fallback */}
+          {(iframeError || loadTimeout) && !iframeLoaded && (
             <div className="h-[70vh] flex items-center justify-center bg-slate-50">
               <div className="text-center max-w-md px-6">
-                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <AlertCircle className="w-8 h-8 text-amber-600" />
+                <div className="w-16 h-16 bg-[#0C765B]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  {Icon && <Icon className="w-8 h-8 text-[#0C765B]" />}
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">Unable to Load in Frame</h3>
+                <h3 className="text-xl font-semibold text-slate-900 mb-2">Access {title}</h3>
                 <p className="text-slate-600 mb-6">
-                  {fallbackMessage || `This service cannot be embedded. Please click the button below to access ${title} directly.`}
+                  {fallbackMessage || `Click the button below to access ${title} directly in a new tab.`}
                 </p>
                 <Button onClick={handleOpenExternal} className="bg-[#0C765B] hover:bg-[#095E49]">
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Open {title}
                 </Button>
+                <p className="text-xs text-slate-400 mt-4">
+                  For security reasons, some external services cannot be embedded directly.
+                </p>
               </div>
             </div>
           )}
