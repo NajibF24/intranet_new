@@ -116,9 +116,6 @@ export const HeroSection = () => {
       fetchSettings();
     }
   }, []);
-        setIsLoaded(true);
-      }
-    };
     fetchSettings();
   }, []);
 
