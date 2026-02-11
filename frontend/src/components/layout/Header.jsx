@@ -3,195 +3,156 @@ import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronRight, Menu, X, Building2, FileText, Users, MessageSquare } from 'lucide-react';
 import { apiService } from '../../lib/api';
 
-const iconMap = {
-  'building': Building2,
-  'file-text': FileText,
-  'users': Users,
-  'message-square': MessageSquare,
-};
+function getIcon(name) {
+  const icons = { 'building': Building2, 'file-text': FileText, 'users': Users, 'message-square': MessageSquare };
+  const Icon = icons[name];
+  if (!Icon) return null;
+  return React.createElement(Icon, { className: 'w-4 h-4' });
+}
 
-const NavIcon = ({ name }) => {
-  const Icon = iconMap[name];
-  return Icon ? <Icon className="w-4 h-4" /> : null;
-};
-
-// Level 3 fly-out menu
-const FlyoutMenu = ({ items }) => (
-  <div className="absolute left-full top-0 ml-0.5 min-w-[220px] bg-white rounded-lg shadow-xl border border-slate-100 py-2 z-[60]">
-    {items.map((item) => (
-      <MenuLink key={item.id} item={item} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-[#0C765B]/5 hover:text-[#0C765B] transition-colors" />
-    ))}
-  </div>
-);
-
-// Level 2 dropdown item (may have Level 3 children)
-const DropdownItem = ({ item }) => {
-  const [showFlyout, setShowFlyout] = useState(false);
-  const hasChildren = item.children && item.children.length > 0;
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => hasChildren && setShowFlyout(true)}
-      onMouseLeave={() => setShowFlyout(false)}
-    >
-      <div className="flex items-center justify-between">
-        <MenuLink
-          item={item}
-          className="flex-1 block px-4 py-2.5 text-sm text-slate-700 hover:bg-[#0C765B]/5 hover:text-[#0C765B] transition-colors"
-        />
-        {hasChildren && <ChevronRight className="w-3.5 h-3.5 text-slate-400 mr-3" />}
-      </div>
-      {hasChildren && showFlyout && <FlyoutMenu items={item.children} />}
-    </div>
-  );
-};
-
-// Generic menu link (handles internal/external/anchor links)
-const MenuLink = ({ item, className, children }) => {
-  const path = item.path || '#';
+function MenuLink(props) {
+  const { item, className, children } = props;
+  const path = item.path || '';
   const isExternal = path.startsWith('http');
-  const target = item.open_in_new_tab ? '_blank' : undefined;
 
   if (isExternal || item.open_in_new_tab) {
-    return (
-      <a href={path} target={target} rel="noopener noreferrer" className={className}>
-        {children || item.label}
-      </a>
-    );
+    return React.createElement('a', { href: path || '#', target: '_blank', rel: 'noopener noreferrer', className }, children || item.label);
   }
+  if (!path || path === '#') {
+    return React.createElement('span', { className }, children || item.label);
+  }
+  return React.createElement(Link, { to: path, className }, children || item.label);
+}
 
-  if (path.startsWith('#') || !path) {
-    return <span className={className}>{children || item.label}</span>;
-  }
+function Level3Flyout(props) {
+  const items = props.items || [];
+  return (
+    <div className="absolute left-full top-0 ml-0.5 min-w-[220px] bg-white rounded-lg shadow-xl border border-slate-100 py-2 z-[60]">
+      {items.map(function(item) {
+        return (
+          <MenuLink key={item.id} item={item} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors" />
+        );
+      })}
+    </div>
+  );
+}
+
+function DropdownChild(props) {
+  const item = props.item;
+  const [flyout, setFlyout] = useState(false);
+  const kids = item.children || [];
+  const hasKids = kids.length > 0;
 
   return (
-    <Link to={path} className={className}>
-      {children || item.label}
-    </Link>
+    <div className="relative" onMouseEnter={function() { if (hasKids) setFlyout(true); }} onMouseLeave={function() { setFlyout(false); }}>
+      <div className="flex items-center">
+        <MenuLink item={item} className="flex-1 block px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors" />
+        {hasKids && <ChevronRight className="w-3.5 h-3.5 text-slate-400 mr-3 flex-shrink-0" />}
+      </div>
+      {hasKids && flyout && <Level3Flyout items={kids} />}
+    </div>
   );
-};
+}
 
-// Level 1 nav item with dropdown
-const NavItem = ({ item }) => {
+function NavItem(props) {
+  const item = props.item;
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
-  const hasChildren = item.children && item.children.length > 0;
-  const location = useLocation();
+  const kids = item.children || [];
+  const hasKids = kids.length > 0;
 
-  const isActive = item.path && location.pathname.startsWith(item.path) && item.path !== '';
-
-  useEffect(() => {
-    const handleClick = (e) => {
+  useEffect(function() {
+    function handleClick(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    return function() { document.removeEventListener('mousedown', handleClick); };
   }, []);
 
-  if (!hasChildren) {
+  if (!hasKids) {
     return (
-      <MenuLink
-        item={item}
-        className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-md ${
-          isActive ? 'text-[#0C765B]' : 'text-slate-700 hover:text-[#0C765B]'
-        }`}
-      >
-        {item.icon && <NavIcon name={item.icon} />}
+      <MenuLink item={item} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-700 hover:text-emerald-700 transition-colors rounded-md">
+        {item.icon ? getIcon(item.icon) : null}
         {item.label}
       </MenuLink>
     );
   }
 
   return (
-    <div
-      ref={ref}
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    <div ref={ref} className="relative" onMouseEnter={function() { setOpen(true); }} onMouseLeave={function() { setOpen(false); }}>
       <button
-        className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-md ${
-          isActive || open ? 'text-[#0C765B]' : 'text-slate-700 hover:text-[#0C765B]'
-        }`}
-        data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+        className={'flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-md ' + (open ? 'text-emerald-700' : 'text-slate-700 hover:text-emerald-700')}
+        data-testid={'nav-' + item.label.toLowerCase().replace(/\s+/g, '-')}
       >
-        {item.icon && <NavIcon name={item.icon} />}
+        {item.icon ? getIcon(item.icon) : null}
         <span>{item.label}</span>
-        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={'w-3.5 h-3.5 transition-transform ' + (open ? 'rotate-180' : '')} />
       </button>
-
       {open && (
         <div className="absolute top-full left-0 mt-1 min-w-[240px] bg-white rounded-lg shadow-xl border border-slate-100 py-2 z-50">
-          {item.children.map((child) => (
-            <DropdownItem key={child.id} item={child} />
-          ))}
+          {kids.map(function(child) {
+            return <DropdownChild key={child.id} item={child} />;
+          })}
         </div>
       )}
     </div>
   );
-};
+}
 
-// Mobile menu item with expandable children
-const MobileNavItem = ({ item, depth = 0, onClose }) => {
+function MobileItem(props) {
+  const item = props.item;
+  const depth = props.depth || 0;
   const [expanded, setExpanded] = useState(false);
-  const hasChildren = item.children && item.children.length > 0;
+  const kids = item.children || [];
+  const hasKids = kids.length > 0;
+  var padLeft = depth > 0 ? (16 + depth * 16) + 'px' : undefined;
 
   return (
     <div>
-      <div className="flex items-center">
-        {hasChildren ? (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className={`flex-1 flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50 ${depth > 0 ? 'pl-' + (4 + depth * 4) : ''}`}
-            style={{ paddingLeft: depth > 0 ? `${16 + depth * 16}px` : undefined }}
-          >
-            <span className="flex items-center gap-2">
-              {item.icon && <NavIcon name={item.icon} />}
-              {item.label}
-            </span>
-            <ChevronDown className={`w-4 h-4 transition-transform ${expanded ? 'rotate-180' : ''}`} />
-          </button>
-        ) : (
-          <MenuLink
-            item={item}
-            className={`flex-1 flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 hover:text-[#0C765B]`}
-          >
-            {item.icon && <NavIcon name={item.icon} />}
+      {hasKids ? (
+        <button
+          onClick={function() { setExpanded(!expanded); }}
+          className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
+          style={{ paddingLeft: padLeft }}
+        >
+          <span className="flex items-center gap-2">
+            {item.icon ? getIcon(item.icon) : null}
             {item.label}
-          </MenuLink>
-        )}
-      </div>
-      {hasChildren && expanded && (
+          </span>
+          <ChevronDown className={'w-4 h-4 transition-transform ' + (expanded ? 'rotate-180' : '')} />
+        </button>
+      ) : (
+        <MenuLink
+          item={item}
+          className="w-full flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 hover:text-emerald-700"
+        >
+          {item.icon ? getIcon(item.icon) : null}
+          {item.label}
+        </MenuLink>
+      )}
+      {hasKids && expanded && (
         <div className="bg-slate-50/50">
-          {item.children.map((child) => (
-            <MobileNavItem key={child.id} item={child} depth={depth + 1} onClose={onClose} />
-          ))}
+          {kids.map(function(child) {
+            return <MobileItem key={child.id} item={child} depth={depth + 1} />;
+          })}
         </div>
       )}
     </div>
   );
-};
+}
 
-export const Header = () => {
+export function Header() {
   const [menuItems, setMenuItems] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const res = await apiService.getMenus({ visible_only: true });
-        setMenuItems(res.data);
-      } catch (err) {
-        console.error('Failed to fetch menu:', err);
-      }
-    };
-    fetchMenu();
+  useEffect(function() {
+    apiService.getMenus({ visible_only: true })
+      .then(function(res) { setMenuItems(res.data); })
+      .catch(function() {});
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
+  useEffect(function() {
     setMobileOpen(false);
   }, [location.pathname]);
 
@@ -199,9 +160,8 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm" data-testid="header">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-3" data-testid="header-logo">
-            <div className="w-10 h-10 bg-[#0C765B] rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-emerald-700 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">GYS</span>
             </div>
             <div className="hidden sm:block">
@@ -210,17 +170,15 @@ export const Header = () => {
             </div>
           </Link>
 
-          {/* Desktop Nav — dynamic from CMS */}
           <nav className="hidden lg:flex items-center gap-1" data-testid="desktop-nav">
-            {menuItems.map((item) => (
-              <NavItem key={item.id} item={item} />
-            ))}
+            {menuItems.map(function(item) {
+              return <NavItem key={item.id} item={item} />;
+            })}
           </nav>
 
-          {/* Mobile toggle */}
           <button
             className="lg:hidden p-2 text-slate-600 hover:text-slate-900"
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={function() { setMobileOpen(!mobileOpen); }}
             data-testid="mobile-menu-toggle"
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -228,16 +186,15 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Nav */}
       {mobileOpen && (
         <div className="lg:hidden bg-white border-t border-slate-100 shadow-lg max-h-[80vh] overflow-y-auto" data-testid="mobile-nav">
-          {menuItems.map((item) => (
-            <MobileNavItem key={item.id} item={item} onClose={() => setMobileOpen(false)} />
-          ))}
+          {menuItems.map(function(item) {
+            return <MobileItem key={item.id} item={item} />;
+          })}
         </div>
       )}
     </header>
   );
-};
+}
 
 export default Header;
