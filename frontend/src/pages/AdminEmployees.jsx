@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Pencil, Trash2, Search, User } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, User, Upload, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../components/ui/dialog';
@@ -28,6 +28,7 @@ const departments = [
   'Logistics',
   'Engineering',
   'Administration',
+  'Other',
 ];
 
 export const AdminEmployees = () => {
@@ -38,6 +39,9 @@ export const AdminEmployees = () => {
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [formData, setFormData] = useState(emptyEmployee);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [useCustomDept, setUseCustomDept] = useState(false);
+  const [customDept, setCustomDept] = useState('');
 
   useEffect(() => {
     fetchEmployees();
@@ -57,10 +61,13 @@ export const AdminEmployees = () => {
   const handleOpenDialog = (employee = null) => {
     if (employee) {
       setEditingEmployee(employee);
+      const isCustomDept = !departments.slice(0, -1).includes(employee.department);
+      setUseCustomDept(isCustomDept);
+      setCustomDept(isCustomDept ? employee.department : '');
       setFormData({
         name: employee.name,
         email: employee.email,
-        department: employee.department,
+        department: isCustomDept ? 'Other' : employee.department,
         position: employee.position,
         phone: employee.phone || '',
         avatar_url: employee.avatar_url || '',
@@ -68,8 +75,34 @@ export const AdminEmployees = () => {
     } else {
       setEditingEmployee(null);
       setFormData(emptyEmployee);
+      setUseCustomDept(false);
+      setCustomDept('');
     }
     setIsDialogOpen(true);
+  };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSize) {
+      toast.error('Image size should be less than 2MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const response = await apiService.uploadPhoto(fd);
+      setFormData({ ...formData, avatar_url: response.data.image_url });
+      toast.success('Avatar uploaded successfully!');
+    } catch (error) {
+      toast.error('Failed to upload avatar');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async () => {
@@ -78,13 +111,18 @@ export const AdminEmployees = () => {
       return;
     }
 
+    const dataToSave = {
+      ...formData,
+      department: useCustomDept ? customDept : formData.department,
+    };
+
     setSaving(true);
     try {
       if (editingEmployee) {
-        await apiService.updateEmployee(editingEmployee.id, formData);
+        await apiService.updateEmployee(editingEmployee.id, dataToSave);
         toast.success('Employee updated successfully');
       } else {
-        await apiService.createEmployee(formData);
+        await apiService.createEmployee(dataToSave);
         toast.success('Employee added successfully');
       }
       await fetchEmployees();
@@ -212,12 +250,59 @@ export const AdminEmployees = () => {
 
       {/* Add/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingEmployee ? 'Edit Employee' : 'Add Employee'}</DialogTitle>
             <DialogDescription>Fill in the employee details.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
+            {/* Avatar Upload */}
+            <div>
+              <label className="text-sm font-medium text-slate-700 mb-2 block">Profile Photo</label>
+              <div className="flex items-center gap-4">
+                {formData.avatar_url ? (
+                  <div className="relative">
+                    <img
+                      src={formData.avatar_url}
+                      alt="Avatar preview"
+                      className="w-20 h-20 rounded-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, avatar_url: '' })}
+                      className="absolute -top-1 -right-1 p-1 bg-red-500 text-white rounded-full"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center">
+                    <User className="w-8 h-8 text-slate-400" />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <label className="cursor-pointer">
+                    <div className="flex items-center justify-center px-4 py-2 border-2 border-dashed border-slate-200 rounded-lg hover:border-[#0C765B]/50 transition-colors">
+                      <Upload className="w-4 h-4 mr-2 text-slate-400" />
+                      <span className="text-sm text-slate-500">
+                        {uploading ? 'Uploading...' : 'Upload Photo'}
+                      </span>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Recommended: 400x400px, max 2MB
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Name *</label>
               <Input
@@ -249,8 +334,15 @@ export const AdminEmployees = () => {
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Department</label>
               <Select
-                value={formData.department}
-                onValueChange={(value) => setFormData({ ...formData, department: value })}
+                value={useCustomDept ? 'Other' : formData.department}
+                onValueChange={(value) => {
+                  if (value === 'Other') {
+                    setUseCustomDept(true);
+                  } else {
+                    setUseCustomDept(false);
+                    setFormData({ ...formData, department: value });
+                  }
+                }}
               >
                 <SelectTrigger data-testid="employee-department-select">
                   <SelectValue />
@@ -263,6 +355,15 @@ export const AdminEmployees = () => {
                   ))}
                 </SelectContent>
               </Select>
+              {useCustomDept && (
+                <Input
+                  value={customDept}
+                  onChange={(e) => setCustomDept(e.target.value)}
+                  placeholder="Enter custom department"
+                  className="mt-2"
+                  data-testid="employee-custom-dept"
+                />
+              )}
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Phone</label>
@@ -271,15 +372,6 @@ export const AdminEmployees = () => {
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+62 812-3456-7890"
                 data-testid="employee-phone-input"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Avatar URL</label>
-              <Input
-                value={formData.avatar_url}
-                onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-                placeholder="https://example.com/avatar.jpg"
-                data-testid="employee-avatar-input"
               />
             </div>
           </div>
