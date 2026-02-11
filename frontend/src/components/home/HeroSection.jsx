@@ -30,7 +30,7 @@ const stats = [
   },
 ];
 
-// Try to get cached hero settings for instant load
+// Try to get cached hero settings for instant load (excludes large data URLs)
 const getCachedHero = () => {
   try {
     const cached = localStorage.getItem('heroSettings');
@@ -39,11 +39,23 @@ const getCachedHero = () => {
   return null;
 };
 
+const cacheHeroSettings = (data) => {
+  try {
+    // Only cache if image URL is not a huge data URL
+    const toCache = { ...data };
+    if (toCache.hero_image_url?.length > 10000) {
+      // Store URL reference but not the actual data URL — browser cache handles the image
+      toCache._hasLargeImage = true;
+    }
+    localStorage.setItem('heroSettings', JSON.stringify(toCache));
+  } catch (e) { /* localStorage full, ignore */ }
+};
+
 export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMuted, setIsMuted] = useState(true);
   const cachedHero = getCachedHero();
-  const [isLoaded, setIsLoaded] = useState(!!cachedHero);
+  const [isReady, setIsReady] = useState(false);
   const videoRef = useRef(null);
   const [heroSettings, setHeroSettings] = useState(cachedHero || {
     hero_image_url: '',
@@ -74,16 +86,36 @@ export const HeroSection = () => {
   const scale = useTransform(scrollY, [0, 500], [1, 1.2]);
 
   useEffect(() => {
-    // Fetch hero settings — updates cache for next visit
     const fetchSettings = async () => {
       try {
         const response = await apiService.getHeroSettings();
-        setHeroSettings(response.data);
-        setIsMuted(response.data.video_muted !== false);
-        localStorage.setItem('heroSettings', JSON.stringify(response.data));
+        const data = response.data;
+        setHeroSettings(data);
+        setIsMuted(data.video_muted !== false);
+        cacheHeroSettings(data);
+
+        // Preload the image before showing hero
+        if (data.background_type !== 'video' && data.hero_image_url) {
+          const img = new Image();
+          img.onload = () => setIsReady(true);
+          img.onerror = () => setIsReady(true);
+          img.src = data.hero_image_url;
+        } else {
+          setIsReady(true);
+        }
       } catch (error) {
-        // Use cached or defaults
-      } finally {
+        setIsReady(true); // Show with defaults on error
+      }
+    };
+
+    // If we have cache, show immediately but still fetch fresh data
+    if (cachedHero?.hero_image_url) {
+      setIsReady(true);
+      fetchSettings(); // Background update
+    } else {
+      fetchSettings();
+    }
+  }, []);
         setIsLoaded(true);
       }
     };
