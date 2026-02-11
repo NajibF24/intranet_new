@@ -1,129 +1,60 @@
-# PT Garuda Yamato Steel - Intranet CMS
+# GYS Corporate Intranet CMS - PRD
 
-## Project Overview
-A professional intranet website for PT Garuda Yamato Steel (GYS) with content management capabilities.
-
-## Original Requirements
-- Public-facing intranet website without authentication
-- CMS for admins to manage News, Calendar, Photos, and Employee Directory
-- Role-based access control for different content sections
-- Hero section with manageable content and visual effects
-- Searchable Employee Directory
-- Events Calendar
-- Photo Gallery with album organization
-- News section with full article pages
-
-## Current Status: COMPLETE
-
-## Implemented Features
-
-### Public Website
-- [x] Homepage with hero section, news, events, gallery preview
-- [x] News & Announcements page with category filters
-- [x] Individual News Detail pages with full content
-- [x] Events Calendar page
-- [x] Photo Gallery with album view support
-- [x] Employee Directory with search
-- [x] Corporate Identity pages (Vision, Mission, Journey, About)
-- [x] Compliance pages (SOP, Policies, Safety)
-- [x] Service pages (IT, HR, Finance)
-- [x] Sticky news banner that appears on scroll
-- [x] Responsive design with GYS branding
-
-### Admin CMS
-- [x] JWT Authentication with admin login
-- [x] Dashboard with content statistics
-- [x] News Management (CRUD with file upload, custom categories)
-- [x] Events Management (CRUD)
-- [x] Gallery Management with Albums
-  - Create/Edit/Delete albums
-  - Assign photos to albums
-  - File upload support
-- [x] Employee Directory Management
-- [x] Hero Settings with visual toggles
-  - Background image upload/URL
-  - Animated Particles toggle
-  - Gradient Overlay toggle
-  - Floating Stats Cards toggle
-- [x] User Management
-  - Create/Edit/Delete admin users
-  - Role assignment (Admin, Editor, Viewer)
-
-### Technical Features
-- [x] File upload with 5MB limit
-- [x] Recommended image dimensions displayed
-- [x] Role-based route protection
-- [x] Add Calendar button hidden for non-admin users
+## Original Problem Statement
+Build and improve a corporate intranet website for PT Garuda Yamato Steel with a comprehensive Content Management System (CMS).
 
 ## Architecture
+- **Frontend:** React (CRA), Tailwind CSS, Framer Motion, Shadcn/UI
+- **Backend:** FastAPI (Python), Motor (async MongoDB)
+- **Database:** MongoDB
+- **Auth:** JWT-based admin authentication
 
-### Frontend (React + Tailwind CSS)
-- `/app/frontend/src/pages/` - Main page components
-- `/app/frontend/src/components/` - Reusable components
-- `/app/frontend/src/lib/api.js` - API service
+## What's Been Implemented
 
-### Backend (FastAPI + MongoDB)
-- `/app/backend/server.py` - Main API server
-- JWT authentication
-- File upload handling
+### Phase 1 - Quick Fixes & UI Updates (COMPLETE)
+- Hidden "Admin Portal" button from public hero section
+- Restructured "Corporate Identity" menu with sub-pages
 
-## Test Credentials
+### Phase 2 - CMS Enhancements (COMPLETE)
+- Hero CMS with video/image backgrounds, visibility toggles
+- Employee CMS with image upload
+- News CMS with file upload only
+
+### Phase 3 - Homepage Rework (COMPLETE)
+- ArcelorMittal-style news section (1 large + 2 small featured stories)
+- Events page with "Add to Outlook" ICS download
+- Ticker banner with manual/default modes
+- Service Hub with iframe embedding and fallback
+
+### Phase 4 - Full Page & Menu CMS (COMPLETE - Feb 11, 2026)
+- **Page Management** (`/admin/pages`): List, create, duplicate, publish/unpublish, delete pages
+- **Page Editor** (`/admin/pages/:id/edit`): Block-based editor with 8 block types (Hero, Text, Image, Two Columns, Cards, Features, CTA, Accordion/FAQ)
+- **Menu Management** (`/admin/menus`): Add/edit/delete/reorder menu items, submenus, visibility toggle, link to CMS pages or custom URLs
+- **Dynamic Page Rendering** (`/page/:slug`): Public-facing pages rendered from CMS blocks
+- **Page Templates**: 5 predefined templates (Blank, Content, Landing, About, Service)
+- **Route fix**: Reorder endpoint moved before parameterized routes
+
+## Admin Credentials
 - Email: admin@gys.co.id
 - Password: admin123
 
-## API Endpoints
-- Auth: POST /api/auth/login, GET /api/auth/me
-- Users: GET/POST/PUT/DELETE /api/users
-- News: GET/POST/PUT/DELETE /api/news
-- Events: GET/POST/PUT/DELETE /api/events
-- Albums: GET/POST/PUT/DELETE /api/albums
-- Photos: GET/POST/PUT/DELETE /api/photos
-- Hero: GET/PUT /api/settings/hero
-- Employees: GET/POST/PUT/DELETE /api/employees
+## Key API Endpoints
+- Pages: GET/POST `/api/pages`, GET/PUT/DELETE `/api/pages/:id`, GET `/api/pages/slug/:slug`
+- Menus: GET `/api/menus`, GET `/api/menus/flat`, POST `/api/menus`, PUT `/api/menus/reorder`, PUT/DELETE `/api/menus/:id`
+- Templates: GET `/api/templates`
+- Settings: GET/PUT `/api/settings/hero`, GET/PUT `/api/settings/ticker`
+- Content: `/api/news`, `/api/events`, `/api/photos`, `/api/albums`, `/api/employees`, `/api/users`
 
-## Recommended Image Dimensions
-- Hero Background: 1920x1080px (16:9), max 5MB
-- News Images: 800x450px (16:9), max 5MB
-- Gallery Photos: 800x800px (1:1), max 5MB
-- Album Covers: 800x600px (4:3), max 5MB
+## Prioritized Backlog
 
-## Completed in This Session
-- User Management system with roles
-- News Detail page for full article view
-- Photo Albums in Gallery management
-- Hero visual effects toggles
-- File upload support in all Admin sections
-- Custom category option for News
-- **Removed** Add Calendar button from public Events page (admin only can add events in Admin panel)
-- **Added** "Add to Outlook" button for each event - downloads .ics file for Outlook/Google Calendar
-- **Added** Ticker Banner Settings in Admin panel with:
-  - Enable/Disable toggle
-  - Default Mode (shows featured news titles automatically)
-  - Manual Mode (custom text input)
-  - Badge text customization
-  - Icon selection (7 options)
-- **Added** Service Hub iframe embedding for IT, HR, E-Asset
-- **Phase 1-3 CMS Improvements:**
-  - Removed Admin Portal button from public header (admin-only via /admin URL)
-  - Updated Corporate Identity menu with new submenus:
-    - Corporate Overview
-    - Corporate Philosophy
-    - Corporate History & Group Structure
-  - **Hero CMS** now has:
-    - Show/Hide toggles for Title, Subtitle, CTA Buttons
-    - Show/Hide toggles for Particles, Gradient, Stats Cards
-    - Image/Video background tabs with file upload only (no URL)
-    - Video mute/unmute control
-  - **Employee CMS** has file upload for avatar (no URL), "Other" department option
-  - **News CMS** has file upload only for images (no URL)
-  - **ArcelorMittal-style News Section:**
-    - Main featured article with large image left, dark content right
-    - Secondary featured cards with fluid animations
-    - "More News" grid below
+### P1 - Improvements
+- Replace static corporate placeholder pages with dynamic CMS-rendered pages
+- Page preview/draft mode in editor
+- Make public Header navigation dynamic (driven by CMS menu items instead of hardcoded)
 
-## Future Enhancements (Backlog)
-- P2: Additional user permissions granularity
-- P2: Bulk photo upload
-- P3: Email notifications for events
-- P3: Analytics dashboard
-- P3: Multi-language support
+### P2 - Enhancements
+- Rich text editing for text blocks (WYSIWYG)
+- Page version history / undo
+- Image gallery block type
+- Embed block type (for iframes)
+- SEO metadata preview
