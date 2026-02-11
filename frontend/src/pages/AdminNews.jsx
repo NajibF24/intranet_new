@@ -294,20 +294,13 @@ export const AdminNews = () => {
                   />
                 </label>
                 <p className="text-xs text-slate-500">Recommended: 800x450px (16:9 ratio), max 5MB</p>
-                <div className="text-center text-xs text-slate-400">— or use URL —</div>
-                <Input
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                  data-testid="news-image-input"
-                />
                 {formData.image_url && (
                   <div className="mt-2 relative">
                     <img src={formData.image_url} alt="Preview" className="w-full h-32 object-cover rounded-lg" />
                     <button
                       type="button"
                       onClick={() => setFormData({ ...formData, image_url: '' })}
-                      className="absolute top-2 right-2 p-1 bg-white/90 rounded-full hover:bg-white"
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
                     >
                       <X className="w-4 h-4" />
                     </button>
