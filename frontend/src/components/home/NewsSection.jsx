@@ -23,131 +23,107 @@ export const NewsSection = () => {
     fetchNews();
   }, []);
 
-  // Only show news marked as featured in CMS
   const featuredNews = news.filter(n => n.is_featured);
   const otherNews = news.filter(n => !n.is_featured).slice(0, 4);
 
   if (loading) {
     return (
-      <section className="bg-[#6E6F72]" id="news">
+      <section style={{ backgroundColor: '#6E6F72' }} id="news">
         <div className="animate-pulse max-w-7xl mx-auto px-4 py-16">
-          <div className="h-8 bg-white/10 w-48 rounded mb-10" />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="aspect-square bg-white/10 rounded-xl" />
-            ))}
+          <div className="grid grid-cols-2 gap-0">
+            <div className="h-[400px] bg-white/10" />
+            <div className="h-[400px] bg-white/5" />
+            <div className="h-[350px] bg-white/5" />
+            <div className="h-[350px] bg-white/10" />
           </div>
         </div>
       </section>
     );
   }
 
-  if (news.length === 0) {
-    return null;
-  }
+  if (news.length === 0) return null;
+
+  // Build the staggered rows: each featured news gets a row
+  // Odd rows: image LEFT, text RIGHT — slide from left
+  // Even rows: text LEFT, image RIGHT — slide from right
+  const renderFeaturedRow = (article, index) => {
+    const isEven = index % 2 === 1;
+    const slideFrom = isEven ? 80 : -80;
+
+    const imageBlock = (
+      <motion.div
+        initial={{ opacity: 0, x: slideFrom }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="relative overflow-hidden"
+        data-testid={`featured-image-${index}`}
+      >
+        <img
+          src={article.image_url || 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1200'}
+          alt={article.title}
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
+    );
+
+    const textBlock = (
+      <motion.div
+        initial={{ opacity: 0, x: -slideFrom }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="flex flex-col justify-center px-8 lg:px-14 py-10 lg:py-16"
+        data-testid={`featured-text-${index}`}
+      >
+        <span className="text-white/50 text-sm font-medium mb-4">
+          {format(new Date(article.created_at), 'MMMM d, yyyy')}
+        </span>
+        <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-5 leading-tight">
+          {article.title}
+        </h2>
+        <p className="text-white/70 text-base mb-8 line-clamp-3 leading-relaxed">
+          {article.summary}
+        </p>
+        <Link
+          to={`/news/${article.id}`}
+          className="inline-flex items-center self-start text-white font-semibold border border-white/40 px-6 py-3 rounded-sm hover:bg-white hover:text-slate-900 transition-all duration-300 group"
+          data-testid={`featured-link-${index}`}
+        >
+          <span>Find out more</span>
+          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </motion.div>
+    );
+
+    return (
+      <div
+        key={article.id}
+        className={`grid md:grid-cols-2 ${index === 0 ? 'min-h-[450px]' : 'min-h-[380px]'}`}
+        data-testid={`featured-row-${index}`}
+      >
+        {isEven ? (
+          <>
+            {textBlock}
+            {imageBlock}
+          </>
+        ) : (
+          <>
+            {imageBlock}
+            {textBlock}
+          </>
+        )}
+      </div>
+    );
+  };
 
   return (
     <section id="news" data-testid="news-section">
-      {/* Featured News Section */}
+      {/* Featured News — ArcelorMittal staggered layout */}
       {featuredNews.length > 0 && (
-        <div className="py-16" style={{ backgroundColor: '#6E6F72' }} data-testid="featured-news-section">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center justify-between mb-10"
-            >
-              <h3 className="text-2xl font-bold text-white">Featured News</h3>
-              <Link
-                to="/news"
-                className="hidden sm:flex items-center text-white/80 font-semibold hover:text-white transition-colors"
-                data-testid="view-all-news"
-              >
-                <span>View All</span>
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Link>
-            </motion.div>
-
-            <div className={`grid gap-8 ${
-              featuredNews.length === 1 ? 'grid-cols-1 max-w-lg mx-auto' :
-              featuredNews.length === 2 ? 'sm:grid-cols-2' :
-              'sm:grid-cols-2 lg:grid-cols-3'
-            }`}>
-              {featuredNews.map((article, index) => (
-                <motion.article
-                  key={article.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.12,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  className="group"
-                  data-testid={`featured-card-${index}`}
-                >
-                  <Link to={`/news/${article.id}`} className="block">
-                    <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
-                      {/* Square Image */}
-                      <div className="relative aspect-square overflow-hidden">
-                        <motion.img
-                          src={article.image_url || 'https://images.unsplash.com/photo-1735494032948-14ef288fc9d3?w=800'}
-                          alt={article.title}
-                          className="w-full h-full object-cover"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.6 }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                        {/* Date Badge */}
-                        <div className="absolute bottom-4 left-4">
-                          <span className="text-amber-400 font-semibold text-sm">
-                            {format(new Date(article.created_at), 'MMMM d, yyyy')}
-                          </span>
-                        </div>
-
-                        {/* Featured Badge */}
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full uppercase tracking-wide">
-                            Featured
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-5">
-                        <span className="px-3 py-1 bg-[#0C765B]/10 text-[#0C765B] text-xs font-semibold rounded-full uppercase">
-                          {article.category}
-                        </span>
-                        <h4 className="text-lg font-bold text-slate-900 mt-3 mb-2 group-hover:text-[#0C765B] transition-colors line-clamp-2">
-                          {article.title}
-                        </h4>
-                        <p className="text-slate-600 text-sm line-clamp-2 mb-4">
-                          {article.summary}
-                        </p>
-                        <span className="inline-flex items-center text-[#0C765B] font-semibold text-sm group-hover:underline">
-                          Read More
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.article>
-              ))}
-            </div>
-
-            {/* Mobile View All */}
-            <Link
-              to="/news"
-              className="sm:hidden flex items-center justify-center text-white font-semibold mt-8"
-            >
-              <span>View All News</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Link>
+        <div style={{ backgroundColor: '#6E6F72' }} data-testid="featured-news-section">
+          <div className="max-w-[1400px] mx-auto">
+            {featuredNews.map((article, index) => renderFeaturedRow(article, index))}
           </div>
         </div>
       )}
@@ -156,14 +132,22 @@ export const NewsSection = () => {
       {otherNews.length > 0 && (
         <div className="bg-slate-50 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.h3
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-2xl font-bold text-slate-900 mb-10"
+              className="flex items-center justify-between mb-10"
             >
-              More News
-            </motion.h3>
+              <h3 className="text-2xl font-bold text-slate-900">More News</h3>
+              <Link
+                to="/news"
+                className="hidden sm:flex items-center text-[#0C765B] font-semibold hover:underline"
+                data-testid="view-all-news"
+              >
+                <span>View All</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </motion.div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {otherNews.map((article, index) => (
