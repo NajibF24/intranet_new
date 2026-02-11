@@ -30,12 +30,22 @@ const stats = [
   },
 ];
 
+// Try to get cached hero settings for instant load
+const getCachedHero = () => {
+  try {
+    const cached = localStorage.getItem('heroSettings');
+    if (cached) return JSON.parse(cached);
+  } catch (e) { /* ignore */ }
+  return null;
+};
+
 export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMuted, setIsMuted] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const cachedHero = getCachedHero();
+  const [isLoaded, setIsLoaded] = useState(!!cachedHero);
   const videoRef = useRef(null);
-  const [heroSettings, setHeroSettings] = useState({
+  const [heroSettings, setHeroSettings] = useState(cachedHero || {
     hero_image_url: '',
     hero_video_url: '',
     background_type: 'image',
@@ -64,14 +74,15 @@ export const HeroSection = () => {
   const scale = useTransform(scrollY, [0, 500], [1, 1.2]);
 
   useEffect(() => {
-    // Fetch hero settings
+    // Fetch hero settings — updates cache for next visit
     const fetchSettings = async () => {
       try {
         const response = await apiService.getHeroSettings();
         setHeroSettings(response.data);
         setIsMuted(response.data.video_muted !== false);
+        localStorage.setItem('heroSettings', JSON.stringify(response.data));
       } catch (error) {
-        // Use defaults
+        // Use cached or defaults
       } finally {
         setIsLoaded(true);
       }
