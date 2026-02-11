@@ -80,6 +80,25 @@ export const apiService = {
   getTickerSettings: () => api.get('/settings/ticker'),
   updateTickerSettings: (data) => api.put('/settings/ticker', data),
 
+  // Page Management
+  getPages: (params) => api.get('/pages', { params }),
+  getPage: (id) => api.get(`/pages/${id}`),
+  getPageBySlug: (slug) => api.get(`/pages/slug/${slug}`),
+  createPage: (data) => api.post('/pages', data),
+  updatePage: (id, data) => api.put(`/pages/${id}`, data),
+  deletePage: (id) => api.delete(`/pages/${id}`),
+
+  // Menu Management
+  getMenus: (params) => api.get('/menus', { params }),
+  getMenusFlat: () => api.get('/menus/flat'),
+  createMenuItem: (data) => api.post('/menus', data),
+  updateMenuItem: (id, data) => api.put(`/menus/${id}`, data),
+  deleteMenuItem: (id) => api.delete(`/menus/${id}`),
+  reorderMenus: (items) => api.put('/menus/reorder', items),
+
+  // Templates
+  getTemplates: () => api.get('/templates'),
+
   // Seed data
   seedData: () => api.post('/seed'),
 };
