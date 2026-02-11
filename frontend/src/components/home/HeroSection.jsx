@@ -182,6 +182,7 @@ export const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
           {/* Left Content - Text */}
           <div>
+            {heroSettings.show_welcome_badge !== false && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -191,6 +192,7 @@ export const HeroSection = () => {
               <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" />
               <span className="text-white text-sm font-medium">Welcome to GYS Intranet</span>
             </motion.div>
+            )}
 
             {heroSettings.show_title && (
               <>
