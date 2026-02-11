@@ -768,7 +768,8 @@ async def get_hero_settings():
             show_cta_buttons=True,
             show_particles=True,
             show_gradient_overlay=True,
-            show_floating_cards=True
+            show_floating_cards=True,
+            show_welcome_badge=True
         )
     return HeroSettingsResponse(**settings)
 
@@ -799,7 +800,8 @@ async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict 
             "show_cta_buttons": True,
             "show_particles": True,
             "show_gradient_overlay": True,
-            "show_floating_cards": True
+            "show_floating_cards": True,
+            "show_welcome_badge": True
         }
         default_settings.update(update_data)
         await db.settings.insert_one(default_settings)
