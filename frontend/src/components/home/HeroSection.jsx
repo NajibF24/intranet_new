@@ -142,7 +142,7 @@ export const HeroSection = () => {
 
   return (
     <section className="relative h-screen min-h-[700px] overflow-hidden bg-slate-900" data-testid="hero-section">
-      {isLoaded && (
+      {isReady && (
         <>
         {/* Background Media with Parallax */}
         <motion.div
