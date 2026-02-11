@@ -101,11 +101,14 @@ export const HeroSection = () => {
   const isVideo = heroSettings.background_type === 'video' && heroSettings.hero_video_url;
 
   return (
-    <section className="relative h-screen min-h-[700px] overflow-hidden" data-testid="hero-section">
-      {/* Background Media with Parallax */}
+    <section className="relative h-screen min-h-[700px] overflow-hidden bg-slate-900" data-testid="hero-section">
+      {/* Background Media with Parallax — fades in when loaded */}
       <motion.div
         className="absolute inset-0 z-0"
         style={{ y: backgroundY, scale }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
+        transition={{ duration: 0.4 }}
       >
         {isVideo ? (
           <video
