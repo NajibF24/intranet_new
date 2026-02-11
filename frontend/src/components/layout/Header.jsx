@@ -139,20 +139,8 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Admin Link & Mobile Toggle */}
+          {/* Mobile Toggle */}
           <div className="flex items-center space-x-3 flex-shrink-0">
-            <Link
-              to="/admin"
-              className={`hidden sm:block px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
-                isScrolled
-                  ? 'bg-[#0C765B] text-white hover:bg-[#095E49]'
-                  : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
-              }`}
-              data-testid="admin-link"
-            >
-              Admin Portal
-            </Link>
-
             <button
               className={`lg:hidden p-2 rounded-lg ${isScrolled ? 'text-slate-700' : 'text-white'}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
