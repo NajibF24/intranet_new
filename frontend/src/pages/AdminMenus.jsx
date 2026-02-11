@@ -373,12 +373,19 @@ export function AdminMenus() {
                 <SelectContent>
                   <SelectItem value="root">Top Level (No Parent)</SelectItem>
                   {flatMenus
-                    .filter(m => !m.parent_id && m.id !== editingItem?.id)
-                    .map((menu) => (
-                      <SelectItem key={menu.id} value={menu.id}>
-                        {menu.label}
-                      </SelectItem>
-                    ))}
+                    .filter(m => m.id !== editingItem?.id)
+                    .map((menu) => {
+                      const isL1 = !menu.parent_id;
+                      const parentLabel = !isL1 ? flatMenus.find(p => p.id === menu.parent_id)?.label : null;
+                      const depth = isL1 ? 0 : parentLabel ? 1 : 0;
+                      // Only allow L1 and L2 as parents (max 3 levels deep)
+                      if (depth > 1) return null;
+                      return (
+                        <SelectItem key={menu.id} value={menu.id}>
+                          {isL1 ? menu.label : `  └ ${menu.label}`}
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
             </div>
