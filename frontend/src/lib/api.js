@@ -94,7 +94,7 @@ export const apiService = {
   createMenuItem: (data) => api.post('/menus', data),
   updateMenuItem: (id, data) => api.put(`/menus/${id}`, data),
   deleteMenuItem: (id) => api.delete(`/menus/${id}`),
-  reorderMenus: (items) => api.put('/menus/reorder', items),
+  reorderMenus: (items) => api.put('/menus/reorder', { items }),
 
   // Templates
   getTemplates: () => api.get('/templates'),
