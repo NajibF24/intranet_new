@@ -52,6 +52,7 @@ export const HeroSection = () => {
     show_particles: true,
     show_gradient_overlay: true,
     show_floating_cards: true,
+    show_welcome_badge: true,
   });
   const { scrollY } = useScroll();
   
