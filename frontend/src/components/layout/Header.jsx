@@ -182,7 +182,7 @@ export const Header = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await apiService.getMenus(true);
+        const res = await apiService.getMenus({ visible_only: true });
         setMenuItems(res.data);
       } catch (err) {
         console.error('Failed to fetch menu:', err);
