@@ -35,10 +35,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             
             {/* Corporate Routes */}
-            <Route path="/corporate/vision" element={<VisionPage />} />
-            <Route path="/corporate/mission" element={<MissionPage />} />
-            <Route path="/corporate/journey" element={<JourneyPage />} />
-            <Route path="/corporate/about" element={<AboutPage />} />
+            <Route path="/corporate/overview" element={<OverviewPage />} />
+            <Route path="/corporate/philosophy" element={<PhilosophyPage />} />
+            <Route path="/corporate/history" element={<HistoryPage />} />
             
             {/* Compliance Routes */}
             <Route path="/compliance/sop" element={<SOPPage />} />
