@@ -701,6 +701,7 @@ class HeroSettingsUpdate(BaseModel):
     show_particles: Optional[bool] = None
     show_gradient_overlay: Optional[bool] = None
     show_floating_cards: Optional[bool] = None
+    show_welcome_badge: Optional[bool] = None
 
 class HeroSettingsResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
