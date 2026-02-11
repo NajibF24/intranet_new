@@ -33,19 +33,20 @@ const stats = [
 export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMuted, setIsMuted] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const videoRef = useRef(null);
   const [heroSettings, setHeroSettings] = useState({
-    hero_image_url: 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80',
+    hero_image_url: '',
     hero_video_url: '',
     background_type: 'image',
     video_muted: true,
-    hero_title_line1: "Building Indonesia's",
-    hero_title_line2: 'Steel Future',
-    hero_subtitle: 'PT Garuda Yamato Steel is committed to excellence in steel manufacturing, delivering premium quality products while prioritizing safety and sustainability.',
-    hero_cta1_text: 'Latest News',
-    hero_cta1_link: '#news',
-    hero_cta2_text: 'Employee Directory',
-    hero_cta2_link: '#directory',
+    hero_title_line1: '',
+    hero_title_line2: '',
+    hero_subtitle: '',
+    hero_cta1_text: '',
+    hero_cta1_link: '',
+    hero_cta2_text: '',
+    hero_cta2_link: '',
     show_title: true,
     show_subtitle: true,
     show_cta_buttons: true,
@@ -71,6 +72,8 @@ export const HeroSection = () => {
         setIsMuted(response.data.video_muted !== false);
       } catch (error) {
         // Use defaults
+      } finally {
+        setIsLoaded(true);
       }
     };
     fetchSettings();
