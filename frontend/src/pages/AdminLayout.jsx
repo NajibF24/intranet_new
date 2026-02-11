@@ -15,6 +15,8 @@ import {
   Palette,
   UserCog,
   Radio,
+  FileText,
+  LayoutList,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
