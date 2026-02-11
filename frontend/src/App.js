@@ -24,6 +24,12 @@ import { AdminEmployees } from "./pages/AdminEmployees";
 import { AdminHero } from "./pages/AdminHero";
 import { AdminUsers } from "./pages/AdminUsers";
 import { AdminTicker } from "./pages/AdminTicker";
+import { AdminPages } from "./pages/AdminPages";
+import { AdminPageEditor } from "./pages/AdminPageEditor";
+import { AdminMenus } from "./pages/AdminMenus";
+
+// Dynamic CMS Page
+import { DynamicPage } from "./pages/DynamicPage";
 
 function App() {
   return (
