@@ -116,8 +116,6 @@ export const HeroSection = () => {
       fetchSettings();
     }
   }, []);
-    fetchSettings();
-  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
