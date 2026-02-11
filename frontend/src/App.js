@@ -72,7 +72,13 @@ function App() {
               <Route path="hero" element={<AdminHero />} />
               <Route path="users" element={<AdminUsers />} />
               <Route path="ticker" element={<AdminTicker />} />
+              <Route path="pages" element={<AdminPages />} />
+              <Route path="pages/:pageId/edit" element={<AdminPageEditor />} />
+              <Route path="menus" element={<AdminMenus />} />
             </Route>
+
+            {/* Dynamic CMS Pages */}
+            <Route path="/page/:slug" element={<DynamicPage />} />
           </Routes>
         </BrowserRouter>
         <Toaster 
