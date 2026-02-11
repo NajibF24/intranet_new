@@ -605,7 +605,12 @@ async def delete_employee(employee_id: str, current_user: dict = Depends(get_cur
 # ===================== HERO SETTINGS =====================
 
 class HeroSettingsUpdate(BaseModel):
+    # Background
     hero_image_url: Optional[str] = None
+    hero_video_url: Optional[str] = None
+    background_type: Optional[str] = None  # 'image' or 'video'
+    video_muted: Optional[bool] = None
+    # Text Content
     hero_title_line1: Optional[str] = None
     hero_title_line2: Optional[str] = None
     hero_subtitle: Optional[str] = None
@@ -613,6 +618,10 @@ class HeroSettingsUpdate(BaseModel):
     hero_cta1_link: Optional[str] = None
     hero_cta2_text: Optional[str] = None
     hero_cta2_link: Optional[str] = None
+    # Visibility Toggles
+    show_title: Optional[bool] = None
+    show_subtitle: Optional[bool] = None
+    show_cta_buttons: Optional[bool] = None
     show_particles: Optional[bool] = None
     show_gradient_overlay: Optional[bool] = None
     show_floating_cards: Optional[bool] = None
@@ -620,7 +629,12 @@ class HeroSettingsUpdate(BaseModel):
 class HeroSettingsResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str
+    # Background
     hero_image_url: str
+    hero_video_url: str = ""
+    background_type: str = "image"
+    video_muted: bool = True
+    # Text Content
     hero_title_line1: str
     hero_title_line2: str
     hero_subtitle: str
@@ -628,6 +642,10 @@ class HeroSettingsResponse(BaseModel):
     hero_cta1_link: str
     hero_cta2_text: str
     hero_cta2_link: str
+    # Visibility Toggles
+    show_title: bool = True
+    show_subtitle: bool = True
+    show_cta_buttons: bool = True
     show_particles: bool = True
     show_gradient_overlay: bool = True
     show_floating_cards: bool = True
