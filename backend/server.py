@@ -933,6 +933,18 @@ async def create_menu_item(item: MenuItemCreate, current_user: dict = Depends(ge
     menu_data["children"] = []
     return MenuItemResponse(**menu_data)
 
+class ReorderRequest(BaseModel):
+    items: List[dict]
+
+@api_router.put("/menus/reorder")
+async def reorder_menus(request: ReorderRequest, current_user: dict = Depends(get_current_user)):
+    for item in request.items:
+        await db.menus.update_one(
+            {"id": item["id"]},
+            {"$set": {"order": item["order"], "parent_id": item.get("parent_id")}}
+        )
+    return {"message": "Menu reordered successfully"}
+
 @api_router.put("/menus/{menu_id}", response_model=MenuItemResponse)
 async def update_menu_item(menu_id: str, item: MenuItemUpdate, current_user: dict = Depends(get_current_user)):
     existing = await db.menus.find_one({"id": menu_id})
@@ -953,18 +965,6 @@ async def delete_menu_item(menu_id: str, current_user: dict = Depends(get_curren
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Menu item not found")
     return {"message": "Menu item deleted successfully"}
-
-class ReorderRequest(BaseModel):
-    items: List[dict]
-
-@api_router.put("/menus/reorder")
-async def reorder_menus(request: ReorderRequest, current_user: dict = Depends(get_current_user)):
-    for item in request.items:
-        await db.menus.update_one(
-            {"id": item["id"]},
-            {"$set": {"order": item["order"], "parent_id": item.get("parent_id")}}
-        )
-    return {"message": "Menu reordered successfully"}
 
 # ===================== PAGE TEMPLATES =====================
 
