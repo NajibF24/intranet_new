@@ -271,6 +271,17 @@ export const AdminHero = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
+                  <span className="text-sm font-medium text-slate-700">Show Welcome Badge</span>
+                  <p className="text-xs text-slate-500">"Welcome to GYS Intranet" badge</p>
+                </div>
+                <Switch
+                  checked={settings.show_welcome_badge}
+                  onCheckedChange={(checked) => setSettings({...settings, show_welcome_badge: checked})}
+                  data-testid="hero-welcome-badge-toggle"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
                   <span className="text-sm font-medium text-slate-700">Show Title</span>
                   <p className="text-xs text-slate-500">Main hero title text</p>
                 </div>
