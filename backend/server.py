@@ -726,6 +726,7 @@ class HeroSettingsResponse(BaseModel):
     show_particles: bool = True
     show_gradient_overlay: bool = True
     show_floating_cards: bool = True
+    show_welcome_badge: bool = True
 
 # Ticker Settings Model
 class TickerSettingsUpdate(BaseModel):
