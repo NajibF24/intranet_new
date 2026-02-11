@@ -28,6 +28,8 @@ const sidebarItems = [
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: Image, label: 'Gallery', path: '/admin/gallery' },
   { icon: Users, label: 'Employees', path: '/admin/employees' },
+  { icon: FileText, label: 'Page Management', path: '/admin/pages' },
+  { icon: LayoutList, label: 'Menu Management', path: '/admin/menus' },
   { icon: UserCog, label: 'User Management', path: '/admin/users', adminOnly: true },
 ];
 
