@@ -675,6 +675,9 @@ async def get_hero_settings():
         return HeroSettingsResponse(
             id="hero-settings",
             hero_image_url="https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920&q=80",
+            hero_video_url="",
+            background_type="image",
+            video_muted=True,
             hero_title_line1="Building Indonesia's",
             hero_title_line2="Steel Future",
             hero_subtitle="PT Garuda Yamato Steel is committed to excellence in steel manufacturing, delivering premium quality products while prioritizing safety and sustainability.",
@@ -682,6 +685,9 @@ async def get_hero_settings():
             hero_cta1_link="#news",
             hero_cta2_text="Employee Directory",
             hero_cta2_link="#directory",
+            show_title=True,
+            show_subtitle=True,
+            show_cta_buttons=True,
             show_particles=True,
             show_gradient_overlay=True,
             show_floating_cards=True
