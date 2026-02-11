@@ -912,13 +912,23 @@ async def delete_page(page_id: str, current_user: dict = Depends(get_current_use
 @api_router.get("/menus", response_model=List[MenuItemResponse])
 async def get_menus(visible_only: bool = False):
     query = {"is_visible": True} if visible_only else {}
-    items = await db.menus.find(query, {"_id": 0}).sort("order", 1).to_list(100)
+    items = await db.menus.find(query, {"_id": 0}).sort("order", 1).to_list(200)
     
-    # Build tree structure
-    root_items = [item for item in items if not item.get("parent_id")]
-    for root in root_items:
-        root["children"] = [item for item in items if item.get("parent_id") == root["id"]]
-        root["children"].sort(key=lambda x: x.get("order", 0))
+    # Build 3-level tree: root → children → grandchildren
+    items_map = {item["id"]: {**item, "children": []} for item in items}
+    root_items = []
+    
+    for item in items:
+        pid = item.get("parent_id")
+        if not pid:
+            root_items.append(items_map[item["id"]])
+        elif pid in items_map:
+            items_map[pid]["children"].append(items_map[item["id"]])
+    
+    # Sort children at every level
+    for item_id, item in items_map.items():
+        item["children"].sort(key=lambda x: x.get("order", 0))
+    root_items.sort(key=lambda x: x.get("order", 0))
     
     return [MenuItemResponse(**item) for item in root_items]
 
