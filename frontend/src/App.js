@@ -5,7 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 // Public Pages
 import { HomePage } from "./pages/HomePage";
-import { VisionPage, MissionPage, JourneyPage, AboutPage } from "./pages/CorporatePages";
+import { OverviewPage, PhilosophyPage, HistoryPage } from "./pages/CorporatePages";
 import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
 import { ITServicesPage, HRServicesPage, FAServicesPage } from "./pages/ServicePages";
 import { NewsPage } from "./pages/NewsPage";
