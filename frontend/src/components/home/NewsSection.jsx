@@ -28,13 +28,11 @@ export const NewsSection = () => {
 
   if (loading) {
     return (
-      <section style={{ backgroundColor: '#6E6F72' }} id="news">
-        <div className="animate-pulse max-w-7xl mx-auto px-4 py-16">
-          <div className="grid grid-cols-2 gap-0">
-            <div className="h-[400px] bg-white/10" />
-            <div className="h-[400px] bg-white/5" />
-            <div className="h-[350px] bg-white/5" />
-            <div className="h-[350px] bg-white/10" />
+      <section className="bg-[#414141]" id="news">
+        <div className="animate-pulse">
+          <div className="grid grid-cols-5 min-h-[420px]">
+            <div className="col-span-3 bg-white/5" />
+            <div className="col-span-2 bg-white/5" />
           </div>
         </div>
       </section>
@@ -43,51 +41,50 @@ export const NewsSection = () => {
 
   if (news.length === 0) return null;
 
-  // Build the staggered rows: each featured news gets a row
-  // Odd rows: image LEFT, text RIGHT — slide from left
-  // Even rows: text LEFT, image RIGHT — slide from right
   const renderFeaturedRow = (article, index) => {
     const isEven = index % 2 === 1;
-    const slideFrom = isEven ? 80 : -80;
+    const slideDir = isEven ? 1 : -1;
 
-    const imageBlock = (
+    const imageCell = (
       <motion.div
-        initial={{ opacity: 0, x: slideFrom }}
+        initial={{ opacity: 0, x: slideDir * 60 }}
         whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="relative overflow-hidden aspect-video"
-        data-testid={`featured-image-${index}`}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className={isEven ? 'col-span-2' : 'col-span-3'}
       >
-        <img
-          src={article.image_url || 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1200'}
-          alt={article.title}
-          className="w-full h-full object-cover"
-        />
+        <div className="relative w-full h-full min-h-[380px] lg:min-h-[440px]">
+          <img
+            src={article.image_url || 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1200'}
+            alt={article.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
       </motion.div>
     );
 
-    const textBlock = (
+    const textCell = (
       <motion.div
-        initial={{ opacity: 0, x: -slideFrom }}
+        initial={{ opacity: 0, x: -slideDir * 60 }}
         whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="flex flex-col justify-center px-8 lg:px-14 py-10 lg:py-16"
-        data-testid={`featured-text-${index}`}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.9, delay: 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className={`flex flex-col justify-center ${isEven ? 'col-span-3 px-12 lg:px-20 xl:px-24' : 'col-span-2 px-10 lg:px-16 xl:px-20'}`}
       >
-        <span className="text-white/50 text-sm font-medium mb-4">
+        <span className="text-white/40 text-sm tracking-wide mb-5">
           {format(new Date(article.created_at), 'MMMM d, yyyy')}
         </span>
-        <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-5 leading-tight">
+        <h2 className="text-2xl lg:text-3xl xl:text-[2.5rem] font-bold text-white leading-tight mb-5">
           {article.title}
         </h2>
-        <p className="text-white/70 text-base mb-8 line-clamp-3 leading-relaxed">
-          {article.summary}
-        </p>
+        {article.summary && (
+          <p className="text-white/60 text-base leading-relaxed mb-8 line-clamp-3">
+            {article.summary}
+          </p>
+        )}
         <Link
           to={`/news/${article.id}`}
-          className="inline-flex items-center self-start text-white font-semibold border border-white/40 px-6 py-3 rounded-sm hover:bg-white hover:text-slate-900 transition-all duration-300 group"
+          className="inline-flex items-center self-start text-white text-sm font-medium border border-white/30 px-7 py-3 hover:bg-white hover:text-slate-900 transition-all duration-300 group"
           data-testid={`featured-link-${index}`}
         >
           <span>Find out more</span>
@@ -99,18 +96,18 @@ export const NewsSection = () => {
     return (
       <div
         key={article.id}
-        className={`grid md:grid-cols-2 ${index === 0 ? 'min-h-[450px]' : 'min-h-[380px]'}`}
+        className="grid grid-cols-1 md:grid-cols-5"
         data-testid={`featured-row-${index}`}
       >
         {isEven ? (
           <>
-            {textBlock}
-            {imageBlock}
+            {textCell}
+            {imageCell}
           </>
         ) : (
           <>
-            {imageBlock}
-            {textBlock}
+            {imageCell}
+            {textCell}
           </>
         )}
       </div>
@@ -119,12 +116,10 @@ export const NewsSection = () => {
 
   return (
     <section id="news" data-testid="news-section">
-      {/* Featured News — ArcelorMittal staggered layout */}
+      {/* Featured News — ArcelorMittal style */}
       {featuredNews.length > 0 && (
-        <div style={{ backgroundColor: '#6E6F72' }} data-testid="featured-news-section">
-          <div className="max-w-[1400px] mx-auto">
-            {featuredNews.map((article, index) => renderFeaturedRow(article, index))}
-          </div>
+        <div className="bg-[#414141]" data-testid="featured-news-section">
+          {featuredNews.map((article, index) => renderFeaturedRow(article, index))}
         </div>
       )}
 
