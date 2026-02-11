@@ -27,6 +27,7 @@ export const AdminHero = () => {
     show_particles: true,
     show_gradient_overlay: true,
     show_floating_cards: true,
+    show_welcome_badge: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
