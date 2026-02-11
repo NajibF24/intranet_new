@@ -179,12 +179,6 @@ export const Header = () => {
                   ))}
                 </div>
               ))}
-              <Link
-                to="/admin"
-                className="block w-full px-4 py-3 bg-[#0C765B] text-white text-center rounded-lg font-medium mt-4"
-              >
-                Admin Portal
-              </Link>
             </div>
           </motion.div>
         )}
