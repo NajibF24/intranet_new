@@ -8,10 +8,9 @@ const menuItems = [
     label: 'Corporate Identity',
     icon: Building2,
     children: [
-      { label: 'Company Vision', path: '/corporate/vision' },
-      { label: 'Company Mission', path: '/corporate/mission' },
-      { label: 'GYS Journey', path: '/corporate/journey' },
-      { label: 'About GYS', path: '/corporate/about' },
+      { label: 'Corporate Overview', path: '/corporate/overview' },
+      { label: 'Corporate Philosophy', path: '/corporate/philosophy' },
+      { label: 'Corporate History & Group Structure', path: '/corporate/history' },
     ],
   },
   {
@@ -28,7 +27,7 @@ const menuItems = [
     icon: Users,
     children: [
       { label: 'IT Global Services', path: '/services/it' },
-      { label: 'HR Darwinbox', path: '/services/hr' },
+      { label: 'GYS Darwinbox', path: '/services/hr' },
       { label: 'FA E-Asset', path: '/services/fa' },
     ],
   },
