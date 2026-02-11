@@ -2,161 +2,204 @@ import React from 'react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { PageContainer } from '../components/layout/PageContainer';
-import { Target, Eye, Lightbulb, Heart } from 'lucide-react';
+import { Building2, Target, Eye, Heart, Users, Award, Globe, Factory, Shield, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export const VisionPage = () => {
-  const visions = [
-    {
-      icon: Target,
-      title: 'Industry Leadership',
-      description: 'To become the leading steel manufacturer in Southeast Asia, recognized for quality, innovation, and sustainable practices.',
-    },
-    {
-      icon: Eye,
-      title: 'Global Recognition',
-      description: 'To establish PT Garuda Yamato Steel as a globally respected brand synonymous with excellence in steel manufacturing.',
-    },
-    {
-      icon: Lightbulb,
-      title: 'Innovation Pioneer',
-      description: 'To lead the industry in adopting cutting-edge technologies and manufacturing processes that set new standards.',
-    },
-    {
-      icon: Heart,
-      title: 'Community Impact',
-      description: 'To positively impact the communities we serve through sustainable practices and meaningful social contributions.',
-    },
+// Corporate Overview Page
+export const OverviewPage = () => {
+  const highlights = [
+    { icon: Factory, value: '500K+', label: 'Metric Tons', desc: 'Annual Production Capacity' },
+    { icon: Users, value: '2,500+', label: 'Employees', desc: 'Across Indonesia' },
+    { icon: Shield, value: '1000+', label: 'Safety Days', desc: 'Without Incident' },
+    { icon: Globe, value: '30+', label: 'Years', desc: 'Industry Experience' },
   ];
 
   return (
-    <div className="min-h-screen bg-white" data-testid="vision-page">
+    <div className="min-h-screen bg-white" data-testid="overview-page">
       <Header />
       <PageContainer
-        title="Company Vision"
-        subtitle="Our aspirations and long-term goals that guide PT Garuda Yamato Steel towards excellence."
+        title="Corporate Overview"
+        subtitle="PT Garuda Yamato Steel - Leading Indonesia's steel industry with excellence, innovation, and sustainability."
         breadcrumbs={[
-          { label: 'Corporate Identity', path: '/corporate' },
-          { label: 'Vision' },
+          { label: 'Corporate Identity', path: '/' },
+          { label: 'Corporate Overview' },
         ]}
         category="corporate"
       >
-        <div className="prose prose-slate max-w-none">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-[#0C765B]/5 border border-[#0C765B]/10 rounded-2xl p-8 mb-12"
-          >
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Our Vision Statement</h2>
-            <p className="text-xl text-slate-700 leading-relaxed">
-              "To be the premier steel manufacturer in Indonesia and Southeast Asia, driving industrial growth 
-              through innovation, quality excellence, and sustainable practices while creating lasting value 
-              for our stakeholders and contributing to nation-building."
-            </p>
-          </motion.div>
+        {/* Company Introduction */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-[#0C765B]/5 to-[#0C765B]/10 rounded-2xl p-8 mb-12"
+        >
+          <div className="flex items-start gap-6">
+            <div className="w-16 h-16 bg-[#0C765B] rounded-xl flex items-center justify-center flex-shrink-0">
+              <Building2 className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-4">About PT Garuda Yamato Steel</h2>
+              <p className="text-slate-700 leading-relaxed mb-4">
+                Established in 1994 as a strategic joint venture between Indonesian and Japanese investors, 
+                PT Garuda Yamato Steel has evolved into one of Southeast Asia's most trusted steel manufacturers. 
+                Our commitment to quality, innovation, and sustainable practices has positioned us as a leader 
+                in the Indonesian steel industry.
+              </p>
+              <p className="text-slate-700 leading-relaxed">
+                We specialize in producing high-quality steel products for construction, automotive, 
+                infrastructure, and various industrial applications. Our state-of-the-art facilities 
+                combine Japanese precision manufacturing with Indonesian operational excellence.
+              </p>
+            </div>
+          </div>
+        </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {visions.map((vision, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
-              >
-                <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
-                  <vision.icon className="w-6 h-6 text-[#0C765B]" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{vision.title}</h3>
-                <p className="text-slate-600">{vision.description}</p>
-              </motion.div>
+        {/* Key Highlights */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          {highlights.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white border border-slate-200 rounded-xl p-6 text-center hover:shadow-lg transition-shadow"
+            >
+              <div className="w-12 h-12 bg-[#0C765B]/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <item.icon className="w-6 h-6 text-[#0C765B]" />
+              </div>
+              <p className="text-3xl font-bold text-slate-900">{item.value}</p>
+              <p className="text-[#0C765B] font-semibold">{item.label}</p>
+              <p className="text-sm text-slate-500">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Business Segments */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h3 className="text-2xl font-bold text-slate-900 mb-6">Our Business Segments</h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { title: 'Hot Rolled Steel', desc: 'Premium quality hot rolled coils and sheets for construction and manufacturing.' },
+              { title: 'Cold Rolled Steel', desc: 'Precision cold rolled products for automotive and appliance industries.' },
+              { title: 'Specialty Steel', desc: 'Custom steel solutions for specific industrial applications.' },
+            ].map((segment, index) => (
+              <div key={index} className="bg-slate-50 rounded-xl p-6">
+                <h4 className="font-bold text-slate-900 mb-2">{segment.title}</h4>
+                <p className="text-slate-600 text-sm">{segment.desc}</p>
+              </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </PageContainer>
       <Footer />
     </div>
   );
 };
 
-export const MissionPage = () => {
-  const missions = [
+// Corporate Philosophy Page
+export const PhilosophyPage = () => {
+  const values = [
     {
-      number: '01',
-      title: 'Quality Excellence',
-      description: 'Deliver premium quality steel products that meet and exceed international standards, ensuring customer satisfaction and trust.',
+      icon: Target,
+      title: 'Vision',
+      subtitle: 'Where We Are Going',
+      description: 'To be the premier steel manufacturer in Indonesia and Southeast Asia, driving industrial growth through innovation, quality excellence, and sustainable practices.',
     },
     {
-      number: '02',
-      title: 'Innovation & Technology',
-      description: 'Continuously invest in research, development, and state-of-the-art technology to improve our products and processes.',
+      icon: Eye,
+      title: 'Mission',
+      subtitle: 'What We Do',
+      description: 'Delivering premium quality steel products that exceed international standards while maintaining the highest levels of safety, environmental responsibility, and customer satisfaction.',
     },
     {
-      number: '03',
-      title: 'Safety First',
-      description: 'Maintain the highest standards of workplace safety, creating a secure environment for all employees and stakeholders.',
-    },
-    {
-      number: '04',
-      title: 'Environmental Stewardship',
-      description: 'Commit to sustainable manufacturing practices that minimize environmental impact and promote ecological responsibility.',
-    },
-    {
-      number: '05',
-      title: 'Employee Development',
-      description: 'Foster a culture of continuous learning and growth, empowering our workforce to reach their full potential.',
-    },
-    {
-      number: '06',
-      title: 'Community Engagement',
-      description: 'Actively contribute to the development and well-being of the communities where we operate.',
+      icon: Heart,
+      title: 'Core Values',
+      subtitle: 'What We Believe',
+      description: 'Integrity, Excellence, Innovation, Safety, and Sustainability form the foundation of everything we do at GYS.',
     },
   ];
 
+  const principles = [
+    { icon: Award, title: 'Quality First', desc: 'Never compromise on product quality and standards.' },
+    { icon: Shield, title: 'Safety Always', desc: 'Every employee goes home safe, every day.' },
+    { icon: Leaf, title: 'Sustainable Growth', desc: 'Grow responsibly with minimal environmental impact.' },
+    { icon: Users, title: 'People Matter', desc: 'Our employees are our greatest asset.' },
+  ];
+
   return (
-    <div className="min-h-screen bg-white" data-testid="mission-page">
+    <div className="min-h-screen bg-white" data-testid="philosophy-page">
       <Header />
       <PageContainer
-        title="Company Mission"
-        subtitle="Our commitments and guiding principles that drive everything we do at PT Garuda Yamato Steel."
+        title="Corporate Philosophy"
+        subtitle="Our vision, mission, and the core values that guide PT Garuda Yamato Steel."
         breadcrumbs={[
-          { label: 'Corporate Identity', path: '/corporate' },
-          { label: 'Mission' },
+          { label: 'Corporate Identity', path: '/' },
+          { label: 'Corporate Philosophy' },
         ]}
+        category="corporate"
       >
-        <div className="space-y-8">
-          {missions.map((mission, index) => (
+        {/* Vision, Mission, Values */}
+        <div className="space-y-8 mb-12">
+          {values.map((item, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex gap-6 items-start"
+              transition={{ delay: index * 0.15 }}
+              className="bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-lg transition-shadow"
             >
-              <div className="flex-shrink-0 w-16 h-16 bg-[#0C765B] rounded-xl flex items-center justify-center">
-                <span className="text-2xl font-bold text-white">{mission.number}</span>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{mission.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{mission.description}</p>
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 bg-[#0C765B] rounded-xl flex items-center justify-center flex-shrink-0">
+                  <item.icon className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm text-[#0C765B] font-semibold mb-1">{item.subtitle}</p>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">{item.description}</p>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Guiding Principles */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <h3 className="text-2xl font-bold text-slate-900 mb-6">Our Guiding Principles</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {principles.map((principle, index) => (
+              <div key={index} className="flex items-start gap-4 bg-slate-50 rounded-xl p-6">
+                <div className="w-10 h-10 bg-[#0C765B]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <principle.icon className="w-5 h-5 text-[#0C765B]" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-1">{principle.title}</h4>
+                  <p className="text-slate-600 text-sm">{principle.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </PageContainer>
       <Footer />
     </div>
   );
 };
 
-export const JourneyPage = () => {
+// Corporate History & Group Structure Page
+export const HistoryPage = () => {
   const milestones = [
     { year: '1994', title: 'Foundation', description: 'PT Garuda Yamato Steel established as a joint venture between Indonesian and Japanese investors.' },
     { year: '1996', title: 'First Production', description: 'Commenced commercial production with initial capacity of 100,000 metric tons annually.' },
     { year: '2000', title: 'Expansion Phase I', description: 'Doubled production capacity with new hot rolling mill installation.' },
     { year: '2005', title: 'ISO Certification', description: 'Achieved ISO 9001:2000 certification for quality management systems.' },
-    { year: '2010', title: 'Environmental Leadership', description: 'Implemented comprehensive environmental management system and received ISO 14001 certification.' },
+    { year: '2010', title: 'Environmental Leadership', description: 'Implemented comprehensive environmental management system with ISO 14001 certification.' },
     { year: '2015', title: 'Technology Upgrade', description: 'Major modernization program with state-of-the-art Japanese technology integration.' },
     { year: '2020', title: 'Safety Milestone', description: 'Achieved 500 consecutive days without lost-time incidents.' },
     { year: '2024', title: 'Carbon Neutral Initiative', description: 'Launched ambitious sustainability program targeting carbon neutrality by 2030.' },
@@ -164,29 +207,58 @@ export const JourneyPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white" data-testid="journey-page">
+    <div className="min-h-screen bg-white" data-testid="history-page">
       <Header />
       <PageContainer
-        title="GYS Journey"
-        subtitle="Three decades of excellence in steel manufacturing - our story of growth, innovation, and commitment."
+        title="Corporate History & Group Structure"
+        subtitle="Three decades of excellence - our journey of growth, innovation, and commitment to the steel industry."
         breadcrumbs={[
-          { label: 'Corporate Identity', path: '/corporate' },
-          { label: 'GYS Journey' },
+          { label: 'Corporate Identity', path: '/' },
+          { label: 'History & Group Structure' },
         ]}
         category="corporate"
       >
+        {/* Group Structure */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 mb-12"
+        >
+          <h3 className="text-2xl font-bold text-slate-900 mb-6">Group Structure</h3>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-slate-200 w-full md:w-64">
+              <p className="text-sm text-slate-500 mb-1">Parent Company</p>
+              <p className="font-bold text-slate-900">Yamato Steel Corporation</p>
+              <p className="text-sm text-slate-500">Japan</p>
+            </div>
+            <div className="text-[#0C765B] font-bold text-2xl hidden md:block">+</div>
+            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-slate-200 w-full md:w-64">
+              <p className="text-sm text-slate-500 mb-1">Local Partner</p>
+              <p className="font-bold text-slate-900">Garuda Industrial Group</p>
+              <p className="text-sm text-slate-500">Indonesia</p>
+            </div>
+            <div className="text-[#0C765B] font-bold text-2xl hidden md:block">=</div>
+            <div className="bg-[#0C765B] rounded-xl p-6 text-center w-full md:w-64">
+              <p className="text-sm text-white/70 mb-1">Joint Venture</p>
+              <p className="font-bold text-white">PT Garuda Yamato Steel</p>
+              <p className="text-sm text-white/70">Est. 1994</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Timeline */}
+        <h3 className="text-2xl font-bold text-slate-900 mb-6">Our Journey</h3>
         <div className="relative">
           {/* Timeline Line */}
           <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[#0C765B]/20 hidden md:block" />
           
-          {/* Milestones */}
-          <div className="space-y-12">
+          <div className="space-y-8">
             {milestones.map((milestone, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
                 className="relative flex gap-8"
               >
                 {/* Year Dot */}
@@ -201,65 +273,12 @@ export const JourneyPage = () => {
                   <span className="md:hidden inline-block px-3 py-1 bg-[#0C765B] text-white text-sm font-bold rounded mb-3">
                     {milestone.year}
                   </span>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{milestone.title}</h3>
+                  <h4 className="text-xl font-bold text-slate-900 mb-2">{milestone.title}</h4>
                   <p className="text-slate-600">{milestone.description}</p>
                 </div>
               </motion.div>
             ))}
           </div>
-        </div>
-      </PageContainer>
-      <Footer />
-    </div>
-  );
-};
-
-export const AboutPage = () => {
-  return (
-    <div className="min-h-screen bg-white" data-testid="about-page">
-      <Header />
-      <PageContainer
-        title="About GYS"
-        subtitle="Learn about our history, values, and commitment to excellence in steel manufacturing."
-        breadcrumbs={[
-          { label: 'Corporate Identity', path: '/corporate' },
-          { label: 'About GYS' },
-        ]}
-      >
-        <div className="prose prose-slate max-w-none">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Our Story</h2>
-            <p className="text-slate-600 leading-relaxed mb-8">
-              PT Garuda Yamato Steel was established in 1994 as a joint venture between Indonesian and Japanese 
-              investors, combining local expertise with world-class Japanese manufacturing technology. Over the 
-              past three decades, we have grown to become one of Indonesia&apos;s leading steel manufacturers, 
-              serving diverse industries including construction, automotive, and infrastructure development.
-            </p>
-
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Our Values</h2>
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {['Integrity', 'Excellence', 'Innovation', 'Safety'].map((value, index) => (
-                <div key={index} className="bg-slate-50 rounded-xl p-6">
-                  <h3 className="font-bold text-[#0C765B] mb-2">{value}</h3>
-                  <p className="text-slate-600 text-sm">
-                    We uphold {value.toLowerCase()} as a core principle in everything we do.
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Our Facilities</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Our state-of-the-art manufacturing facilities span over 50 hectares in Cikarang Industrial Estate, 
-              equipped with advanced hot rolling mills, cold rolling lines, and quality control laboratories. 
-              We maintain ISO 9001:2015 certification and continuously invest in upgrading our technology 
-              to meet evolving market demands.
-            </p>
-          </motion.div>
         </div>
       </PageContainer>
       <Footer />
