@@ -844,6 +844,178 @@ async def update_ticker_settings(settings: TickerSettingsUpdate, current_user: d
     updated = await db.settings.find_one({"type": "ticker"}, {"_id": 0})
     return TickerSettingsResponse(**updated)
 
+# ===================== PAGE MANAGEMENT =====================
+
+@api_router.get("/pages", response_model=List[PageResponse])
+async def get_pages(published_only: bool = False):
+    query = {"is_published": True} if published_only else {}
+    pages = await db.pages.find(query, {"_id": 0}).sort("title", 1).to_list(100)
+    return [PageResponse(**page) for page in pages]
+
+@api_router.get("/pages/{page_id}", response_model=PageResponse)
+async def get_page(page_id: str):
+    page = await db.pages.find_one({"id": page_id}, {"_id": 0})
+    if not page:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return PageResponse(**page)
+
+@api_router.get("/pages/slug/{slug}", response_model=PageResponse)
+async def get_page_by_slug(slug: str):
+    page = await db.pages.find_one({"slug": slug, "is_published": True}, {"_id": 0})
+    if not page:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return PageResponse(**page)
+
+@api_router.post("/pages", response_model=PageResponse)
+async def create_page(page: PageCreate, current_user: dict = Depends(get_current_user)):
+    # Check slug uniqueness
+    existing = await db.pages.find_one({"slug": page.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="Page with this slug already exists")
+    
+    now = datetime.now(timezone.utc)
+    page_data = {
+        "id": str(uuid.uuid4()),
+        **page.model_dump(),
+        "created_at": now,
+        "updated_at": now
+    }
+    await db.pages.insert_one(page_data)
+    return PageResponse(**page_data)
+
+@api_router.put("/pages/{page_id}", response_model=PageResponse)
+async def update_page(page_id: str, page: PageUpdate, current_user: dict = Depends(get_current_user)):
+    existing = await db.pages.find_one({"id": page_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Page not found")
+    
+    update_data = {k: v for k, v in page.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
+    
+    await db.pages.update_one({"id": page_id}, {"$set": update_data})
+    updated = await db.pages.find_one({"id": page_id}, {"_id": 0})
+    return PageResponse(**updated)
+
+@api_router.delete("/pages/{page_id}")
+async def delete_page(page_id: str, current_user: dict = Depends(get_current_user)):
+    result = await db.pages.delete_one({"id": page_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return {"message": "Page deleted successfully"}
+
+# ===================== MENU MANAGEMENT =====================
+
+@api_router.get("/menus", response_model=List[MenuItemResponse])
+async def get_menus(visible_only: bool = False):
+    query = {"is_visible": True} if visible_only else {}
+    items = await db.menus.find(query, {"_id": 0}).sort("order", 1).to_list(100)
+    
+    # Build tree structure
+    root_items = [item for item in items if not item.get("parent_id")]
+    for root in root_items:
+        root["children"] = [item for item in items if item.get("parent_id") == root["id"]]
+        root["children"].sort(key=lambda x: x.get("order", 0))
+    
+    return [MenuItemResponse(**item) for item in root_items]
+
+@api_router.get("/menus/flat", response_model=List[MenuItemResponse])
+async def get_menus_flat():
+    items = await db.menus.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    return [MenuItemResponse(**item) for item in items]
+
+@api_router.post("/menus", response_model=MenuItemResponse)
+async def create_menu_item(item: MenuItemCreate, current_user: dict = Depends(get_current_user)):
+    menu_data = {
+        "id": str(uuid.uuid4()),
+        **item.model_dump()
+    }
+    await db.menus.insert_one(menu_data)
+    menu_data["children"] = []
+    return MenuItemResponse(**menu_data)
+
+@api_router.put("/menus/{menu_id}", response_model=MenuItemResponse)
+async def update_menu_item(menu_id: str, item: MenuItemUpdate, current_user: dict = Depends(get_current_user)):
+    existing = await db.menus.find_one({"id": menu_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Menu item not found")
+    
+    update_data = {k: v for k, v in item.model_dump().items() if v is not None}
+    await db.menus.update_one({"id": menu_id}, {"$set": update_data})
+    updated = await db.menus.find_one({"id": menu_id}, {"_id": 0})
+    updated["children"] = []
+    return MenuItemResponse(**updated)
+
+@api_router.delete("/menus/{menu_id}")
+async def delete_menu_item(menu_id: str, current_user: dict = Depends(get_current_user)):
+    # Delete children first
+    await db.menus.delete_many({"parent_id": menu_id})
+    result = await db.menus.delete_one({"id": menu_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Menu item not found")
+    return {"message": "Menu item deleted successfully"}
+
+@api_router.put("/menus/reorder")
+async def reorder_menus(items: List[dict], current_user: dict = Depends(get_current_user)):
+    for item in items:
+        await db.menus.update_one(
+            {"id": item["id"]},
+            {"$set": {"order": item["order"], "parent_id": item.get("parent_id")}}
+        )
+    return {"message": "Menu reordered successfully"}
+
+# ===================== PAGE TEMPLATES =====================
+
+@api_router.get("/templates")
+async def get_templates():
+    """Return available page templates"""
+    return [
+        {
+            "id": "blank",
+            "name": "Blank Page",
+            "description": "Start with an empty page",
+            "blocks": []
+        },
+        {
+            "id": "content",
+            "name": "Content Page",
+            "description": "Standard content page with header and text sections",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "Page Title", "subtitle": "Page description goes here"}, "order": 0},
+                {"type": "text", "content": {"heading": "Section Heading", "body": "Add your content here..."}, "order": 1}
+            ]
+        },
+        {
+            "id": "landing",
+            "name": "Landing Page",
+            "description": "Marketing-style page with hero, features, and CTA",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "Welcome", "subtitle": "Your landing page subtitle"}, "order": 0},
+                {"type": "features", "content": {"title": "Features", "items": []}, "order": 1},
+                {"type": "cta", "content": {"title": "Get Started", "button_text": "Contact Us", "button_link": "#"}, "order": 2}
+            ]
+        },
+        {
+            "id": "about",
+            "name": "About Page",
+            "description": "Company/team information page",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "About Us", "subtitle": "Learn more about our company"}, "order": 0},
+                {"type": "text", "content": {"heading": "Our Story", "body": "Tell your story here..."}, "order": 1},
+                {"type": "cards", "content": {"title": "Our Values", "items": []}, "order": 2}
+            ]
+        },
+        {
+            "id": "service",
+            "name": "Service Page",
+            "description": "Service or product description page",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "Our Services", "subtitle": "What we offer"}, "order": 0},
+                {"type": "two_column", "content": {"left": {"type": "text", "content": {}}, "right": {"type": "image", "content": {}}}, "order": 1},
+                {"type": "features", "content": {"title": "Benefits", "items": []}, "order": 2}
+            ]
+        }
+    ]
+
 # ===================== SEED DATA =====================
 
 @api_router.post("/seed")
