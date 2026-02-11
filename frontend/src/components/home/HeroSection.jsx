@@ -100,17 +100,6 @@ export const HeroSection = () => {
 
   const isVideo = heroSettings.background_type === 'video' && heroSettings.hero_video_url;
 
-  // Don't render until settings are loaded to prevent flash of default content
-  if (!isLoaded) {
-    return (
-      <section className="relative h-screen bg-slate-900" data-testid="hero-loading">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="relative h-screen min-h-[700px] overflow-hidden" data-testid="hero-section">
       {/* Background Media with Parallax */}
