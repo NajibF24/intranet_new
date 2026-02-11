@@ -102,12 +102,24 @@ A professional intranet website for PT Garuda Yamato Steel (GYS) with content ma
   - Manual Mode (custom text input)
   - Badge text customization
   - Icon selection (7 options)
-- **Added** Service Hub iframe embedding:
-  - IT Global Services → https://globalservices.gyssteel.com (fallback if blocked)
-  - GYS Darwinbox → https://gys.darwinbox.com
-  - FA E-Asset → https://garudayamatosteel.outsystemsenterprise.com/eAsset_Web/ (working!)
-  - Features: Refresh, Fullscreen, Open in New Tab buttons
-  - Graceful fallback if iframe blocked by security headers
+- **Added** Service Hub iframe embedding for IT, HR, E-Asset
+- **Phase 1-3 CMS Improvements:**
+  - Removed Admin Portal button from public header (admin-only via /admin URL)
+  - Updated Corporate Identity menu with new submenus:
+    - Corporate Overview
+    - Corporate Philosophy
+    - Corporate History & Group Structure
+  - **Hero CMS** now has:
+    - Show/Hide toggles for Title, Subtitle, CTA Buttons
+    - Show/Hide toggles for Particles, Gradient, Stats Cards
+    - Image/Video background tabs with file upload only (no URL)
+    - Video mute/unmute control
+  - **Employee CMS** has file upload for avatar (no URL), "Other" department option
+  - **News CMS** has file upload only for images (no URL)
+  - **ArcelorMittal-style News Section:**
+    - Main featured article with large image left, dark content right
+    - Secondary featured cards with fluid animations
+    - "More News" grid below
 
 ## Future Enhancements (Backlog)
 - P2: Additional user permissions granularity
