@@ -1340,34 +1340,6 @@ async def seed_data():
     ]
     await db.employees.insert_many(employees)
 
-    # Seed Menu Items (matching existing hardcoded navigation)
-    existing_menus = await db.menus.count_documents({})
-    if existing_menus == 0:
-        corporate_id = str(uuid.uuid4())
-        operational_id = str(uuid.uuid4())
-        employee_id = str(uuid.uuid4())
-        comms_id = str(uuid.uuid4())
-
-        menu_items = [
-            {"id": corporate_id, "label": "Corporate Identity", "path": "", "icon": "building", "parent_id": None, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "Corporate Overview", "path": "/corporate/overview", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "Corporate Philosophy", "path": "/corporate/philosophy", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
-            {"id": str(uuid.uuid4()), "label": "Corporate History & Group Structure", "path": "/corporate/history", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 2},
-            {"id": operational_id, "label": "Operational/Compliance", "path": "", "icon": "file-text", "parent_id": None, "is_visible": True, "open_in_new_tab": False, "order": 1},
-            {"id": str(uuid.uuid4()), "label": "Standard Operating Procedures", "path": "/compliance/sop", "icon": "", "parent_id": operational_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "Company Policies", "path": "/compliance/policies", "icon": "", "parent_id": operational_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
-            {"id": str(uuid.uuid4()), "label": "Safety Guidelines", "path": "/compliance/safety", "icon": "", "parent_id": operational_id, "is_visible": True, "open_in_new_tab": False, "order": 2},
-            {"id": employee_id, "label": "Employee Services", "path": "", "icon": "users", "parent_id": None, "is_visible": True, "open_in_new_tab": False, "order": 2},
-            {"id": str(uuid.uuid4()), "label": "IT Global Services", "path": "/services/it", "icon": "", "parent_id": employee_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "GYS Darwinbox", "path": "/services/hr", "icon": "", "parent_id": employee_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
-            {"id": str(uuid.uuid4()), "label": "FA E-Asset", "path": "/services/fa", "icon": "", "parent_id": employee_id, "is_visible": True, "open_in_new_tab": False, "order": 2},
-            {"id": comms_id, "label": "Communication", "path": "", "icon": "message-square", "parent_id": None, "is_visible": True, "open_in_new_tab": False, "order": 3},
-            {"id": str(uuid.uuid4()), "label": "News & Announcements", "path": "/news", "icon": "", "parent_id": comms_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "Events Calendar", "path": "/events", "icon": "", "parent_id": comms_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
-            {"id": str(uuid.uuid4()), "label": "Photo Gallery", "path": "/gallery", "icon": "", "parent_id": comms_id, "is_visible": True, "open_in_new_tab": False, "order": 2},
-        ]
-        await db.menus.insert_many(menu_items)
-
     return {"message": "Data seeded successfully"}
 
 # Root endpoint
