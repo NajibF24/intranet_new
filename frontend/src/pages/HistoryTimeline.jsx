@@ -10,11 +10,43 @@ const milestones = [
   { year: 'Today', position: 'top', isToday: true, content: 'GYS stands as one of the largest private steel companies in Indonesia.' },
 ];
 
+const YAMATO_LOGO = 'https://customer-assets.emergentagent.com/job_39fb6c95-d97a-4bed-8a0a-484ac8ea1dc9/artifacts/kvhd76cb_yamato_logo.png';
+const SYS_LOGO = 'https://customer-assets.emergentagent.com/job_39fb6c95-d97a-4bed-8a0a-484ac8ea1dc9/artifacts/sasah9ha_syssteel-logo.png';
+const HANWA_LOGO = 'https://customer-assets.emergentagent.com/job_39fb6c95-d97a-4bed-8a0a-484ac8ea1dc9/artifacts/5m4u3l0k_hanwa-logo.png';
+
 const LogoBadges = () => (
-  <div className="flex items-center gap-3 mt-3 pt-3 border-t border-slate-100">
-    <span className="text-xs font-bold text-[#0C765B] italic">Yamato</span>
-    <span className="text-xs font-bold text-[#2563EB]">SYS</span>
-    <span className="text-xs font-bold text-[#0C765B]">HANWA</span>
+  <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
+    <img src={YAMATO_LOGO} alt="Yamato" className="h-4 object-contain" />
+    <img src={SYS_LOGO} alt="SYS" className="h-4 object-contain" />
+    <img src={HANWA_LOGO} alt="Hanwa" className="h-4 object-contain" />
+  </div>
+);
+
+const TopCard = ({ m }) => (
+  <div className="px-3 pb-8">
+    <p className="text-3xl font-black text-[#0C765B] mb-3">{m.year}</p>
+    <div className="bg-white rounded-xl p-4 shadow-md border border-slate-200 text-sm text-slate-600 leading-relaxed">
+      {m.content}
+    </div>
+  </div>
+);
+
+const TodayCard = ({ m }) => (
+  <div className="px-3 pb-8">
+    <div className="bg-[#0C765B] rounded-2xl p-5 shadow-lg text-white">
+      <p className="text-2xl font-black mb-2">Today</p>
+      <p className="text-white/90 text-sm leading-relaxed">{m.content}</p>
+    </div>
+  </div>
+);
+
+const BottomCard = ({ m }) => (
+  <div className="px-3 pt-8">
+    <p className="text-3xl font-black text-[#0C765B] mb-3">{m.year}</p>
+    <div className="bg-white rounded-xl p-4 shadow-md border border-slate-200 text-sm text-slate-600 leading-relaxed">
+      {m.content}
+      {m.logos && <LogoBadges />}
+    </div>
   </div>
 );
 
@@ -26,56 +58,78 @@ export const JourneyTimeline = () => (
         <p className="text-slate-500 max-w-xl mx-auto">From humble beginnings to becoming one of Indonesia's largest private steel companies.</p>
       </motion.div>
 
-      {/* Desktop Timeline */}
-      <div className="hidden lg:block relative">
-        <div className="relative mx-8">
-          <div className="absolute top-[50%] left-0 right-0 h-3 bg-gradient-to-r from-[#0C765B] via-[#0fa07a] to-[#0C765B] rounded-full transform -translate-y-1/2 shadow-md" />
-          <div className="relative grid grid-cols-5 gap-0">
-            {milestones.map(function(m, i) {
-              const pinClass = m.isToday ? 'bg-[#0C765B]' : 'bg-white border-[3px] border-[#0C765B]';
-              const iconClass = m.isToday ? 'text-white' : 'text-[#0C765B]';
-              const linePos = (m.position === 'top' || m.isToday) ? 'bottom-full h-6' : 'top-full h-6';
+      {/* Desktop Horizontal Timeline */}
+      <div className="hidden lg:block">
+        <div className="relative">
+          {/* Top row: cards for top-positioned milestones */}
+          <div className="grid grid-cols-5 gap-0 mb-0">
+            {milestones.map(function(m) {
+              if (m.isToday) return <div key={m.year} className="flex flex-col justify-end"><TodayCard m={m} /></div>;
+              if (m.position === 'top') return <div key={m.year} className="flex flex-col justify-end"><TopCard m={m} /></div>;
+              return <div key={m.year} className="min-h-[200px]" />;
+            })}
+          </div>
+
+          {/* Connector lines from top cards */}
+          <div className="grid grid-cols-5 gap-0">
+            {milestones.map(function(m) {
+              const showLine = m.position === 'top' || m.isToday;
               return (
-                <motion.div key={m.year} initial={{ opacity: 0, y: m.position === 'top' ? -30 : 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.12 }} className="relative flex flex-col items-center" data-testid={'milestone-' + m.year.toLowerCase()}>
-                  {m.position === 'top' && !m.isToday && (
-                    <div className="mb-6 px-2">
-                      <p className="text-3xl font-black text-[#0C765B] mb-3">{m.year}</p>
-                      <div className="bg-white rounded-xl p-4 shadow-md border border-slate-200 text-sm text-slate-600 leading-relaxed max-w-[220px]">{m.content}</div>
-                    </div>
-                  )}
-                  {m.isToday && (
-                    <div className="mb-6 px-2">
-                      <div className="bg-[#0C765B] rounded-2xl p-5 shadow-lg text-white max-w-[220px]">
-                        <p className="text-2xl font-black mb-2">Today</p>
-                        <p className="text-white/90 text-sm leading-relaxed">{m.content}</p>
-                      </div>
-                    </div>
-                  )}
-                  {m.position === 'bottom' && <div className="mb-6 h-[180px]" />}
-                  <div className="relative z-10 flex-shrink-0">
-                    <div className={'w-10 h-10 rounded-full flex items-center justify-center shadow-lg ' + pinClass}>
-                      <MapPin className={'w-4 h-4 ' + iconClass} />
-                    </div>
-                    <div className={'absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-[#0C765B]/40 ' + linePos} />
-                  </div>
-                  {m.position === 'bottom' && (
-                    <div className="mt-6 px-2">
-                      <p className="text-3xl font-black text-[#0C765B] mb-3">{m.year}</p>
-                      <div className="bg-white rounded-xl p-4 shadow-md border border-slate-200 text-sm text-slate-600 leading-relaxed max-w-[220px]">
-                        {m.content}
-                        {m.logos && <LogoBadges />}
-                      </div>
-                    </div>
-                  )}
-                  {(m.position === 'top' || m.isToday) && <div className="mt-6 h-[180px]" />}
-                </motion.div>
+                <div key={m.year} className="flex justify-center">
+                  <div className={'w-0.5 h-6 ' + (showLine ? 'bg-[#0C765B]/50' : 'bg-transparent')} />
+                </div>
               );
+            })}
+          </div>
+
+          {/* Green timeline bar with pins */}
+          <div className="relative mx-4">
+            <div className="absolute top-1/2 left-0 right-0 h-3 bg-gradient-to-r from-[#0C765B] via-[#0fa07a] to-[#0C765B] rounded-full transform -translate-y-1/2 shadow-md" />
+            <div className="relative grid grid-cols-5 gap-0">
+              {milestones.map(function(m, i) {
+                const isFilled = m.isToday;
+                return (
+                  <motion.div
+                    key={m.year}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="flex justify-center"
+                    data-testid={'milestone-' + m.year.toLowerCase()}
+                  >
+                    <div className={'w-10 h-10 rounded-full flex items-center justify-center shadow-lg z-10 ' + (isFilled ? 'bg-[#0C765B]' : 'bg-white border-[3px] border-[#0C765B]')}>
+                      <MapPin className={'w-4 h-4 ' + (isFilled ? 'text-white' : 'text-[#0C765B]')} />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Connector lines to bottom cards */}
+          <div className="grid grid-cols-5 gap-0">
+            {milestones.map(function(m) {
+              const showLine = m.position === 'bottom';
+              return (
+                <div key={m.year} className="flex justify-center">
+                  <div className={'w-0.5 h-6 ' + (showLine ? 'bg-[#0C765B]/50' : 'bg-transparent')} />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bottom row: cards for bottom-positioned milestones */}
+          <div className="grid grid-cols-5 gap-0 mt-0">
+            {milestones.map(function(m) {
+              if (m.position === 'bottom') return <div key={m.year}><BottomCard m={m} /></div>;
+              return <div key={m.year} className="min-h-[200px]" />;
             })}
           </div>
         </div>
       </div>
 
-      {/* Mobile Timeline */}
+      {/* Mobile Vertical Timeline */}
       <div className="lg:hidden relative">
         <div className="absolute left-6 top-0 bottom-0 w-1 bg-[#0C765B]/20 rounded-full" />
         <div className="space-y-8">
