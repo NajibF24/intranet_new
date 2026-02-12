@@ -186,18 +186,164 @@ const AccordionBlock = ({ content }) => {
   );
 };
 
+// Hero Banner (with image background)
+const HeroBannerBlock = ({ content }) => (
+  <div className="relative min-h-[60vh] flex items-center" data-testid="block-hero-banner">
+    <div className="absolute inset-0">
+      {content.image_url && <img src={content.image_url} alt="" className="w-full h-full object-cover" />}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-900/60 to-transparent" />
+    </div>
+    <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-8 py-20">
+      {content.title && <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{content.title}</h1>}
+      {content.subtitle && <p className="text-lg text-white/70 mb-8 max-w-xl">{content.subtitle}</p>}
+      {content.button_text && <Link to={content.button_link || '#'} className="inline-flex items-center px-7 py-3 bg-[#0C765B] text-white rounded-sm font-medium hover:bg-[#095E49] transition-colors">{content.button_text}</Link>}
+    </div>
+  </div>
+);
+
+// Stats Block
+const StatsBlock = ({ content }) => {
+  const items = content.items || [];
+  return (
+    <div className="bg-[#0C765B] py-10" data-testid="block-stats">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-8">
+        {items.map((item, i) => (
+          <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: 'spring' }} className="text-center">
+            <p className="text-4xl lg:text-5xl font-black text-white mb-1">{item.value}</p>
+            <p className="text-white/70 text-sm font-medium">{item.label}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Quote Block
+const QuoteBlock = ({ content }) => (
+  <div className="max-w-3xl mx-auto px-4 py-12" data-testid="block-quote">
+    <blockquote className="border-l-4 border-[#0C765B] pl-6 py-2">
+      <p className="text-xl text-slate-700 italic leading-relaxed">{content.text}</p>
+      {content.author && <footer className="mt-4 text-sm font-semibold text-slate-500">&mdash; {content.author}</footer>}
+    </blockquote>
+  </div>
+);
+
+// Testimonial Block
+const TestimonialBlock = ({ content }) => (
+  <div className="bg-slate-50 py-12" data-testid="block-testimonial">
+    <div className="max-w-3xl mx-auto px-4 text-center">
+      <div className="text-4xl text-[#0C765B] mb-4">&ldquo;</div>
+      <p className="text-xl text-slate-700 italic leading-relaxed mb-6">{content.quote}</p>
+      <p className="font-bold text-slate-900">{content.author}</p>
+      {content.role && <p className="text-sm text-slate-500">{content.role}</p>}
+    </div>
+  </div>
+);
+
+// Team Grid Block
+const TeamGridBlock = ({ content }) => {
+  const items = content.items || [];
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-12" data-testid="block-team">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {items.map((item, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
+            <div className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden bg-slate-200">
+              {item.image_url ? <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-slate-400 text-3xl font-bold">{(item.name || '?')[0]}</div>}
+            </div>
+            <h4 className="font-bold text-slate-900">{item.name}</h4>
+            <p className="text-[#0C765B] text-sm font-medium">{item.role}</p>
+            {item.bio && <p className="text-slate-500 text-sm mt-2">{item.bio}</p>}
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Image Gallery Block
+const ImageGalleryBlock = ({ content }) => {
+  const items = content.items || [];
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-12" data-testid="block-gallery">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        {items.map((item, i) => (
+          <div key={i} className="group relative aspect-[4/3] rounded-xl overflow-hidden">
+            {item.url && <img src={item.url} alt={item.caption || ''} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
+            {item.caption && <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4"><p className="text-white text-sm">{item.caption}</p></div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Video Block
+const VideoBlock = ({ content }) => {
+  var url = content.url || '';
+  var youtubeId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8" data-testid="block-video">
+      {youtubeId ? (
+        <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
+          <iframe src={'https://youtube.com/embed/' + youtubeId[1]} title="Video" className="absolute inset-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" allowFullScreen />
+        </div>
+      ) : url ? (
+        <video src={url} controls className="w-full rounded-xl shadow-lg" />
+      ) : null}
+      {content.caption && <p className="text-center text-sm text-slate-500 mt-3">{content.caption}</p>}
+    </div>
+  );
+};
+
+// Timeline Block
+const TimelineBlock = ({ content }) => {
+  const items = content.items || [];
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12" data-testid="block-timeline">
+      {content.title && <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-10 text-center">{content.title}</h2>}
+      <div className="relative border-l-2 border-[#0C765B]/30 ml-4 pl-8 space-y-10">
+        {items.map((item, i) => (
+          <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+            <div className="absolute -left-[9px] w-4 h-4 bg-[#0C765B] rounded-full border-2 border-white" style={{ marginTop: i * 0 }} />
+            <span className="text-sm font-bold text-[#0C765B]">{item.year}</span>
+            <h4 className="font-bold text-slate-900 mt-1">{item.title}</h4>
+            <p className="text-slate-600 text-sm mt-1">{item.description}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Divider Block
+const DividerBlock = () => (
+  <div className="max-w-4xl mx-auto px-4 py-6" data-testid="block-divider">
+    <hr className="border-slate-200" />
+  </div>
+);
+
 // Block renderer mapper
 const renderBlock = (block, index) => {
   const key = block.id || index;
   switch (block.type) {
     case 'hero_simple': return <HeroSimpleBlock key={key} content={block.content} />;
+    case 'hero_banner': return <HeroBannerBlock key={key} content={block.content} />;
     case 'text': return <TextBlock key={key} content={block.content} />;
     case 'image': return <ImageBlock key={key} content={block.content} />;
+    case 'image_gallery': return <ImageGalleryBlock key={key} content={block.content} />;
+    case 'video': return <VideoBlock key={key} content={block.content} />;
     case 'two_column': return <TwoColumnBlock key={key} content={block.content} />;
     case 'cards': return <CardsBlock key={key} content={block.content} />;
     case 'features': return <FeaturesBlock key={key} content={block.content} />;
+    case 'stats': return <StatsBlock key={key} content={block.content} />;
+    case 'team_grid': return <TeamGridBlock key={key} content={block.content} />;
+    case 'quote': return <QuoteBlock key={key} content={block.content} />;
+    case 'testimonial': return <TestimonialBlock key={key} content={block.content} />;
+    case 'timeline': return <TimelineBlock key={key} content={block.content} />;
     case 'cta': return <CTABlock key={key} content={block.content} />;
     case 'accordion': return <AccordionBlock key={key} content={block.content} />;
+    case 'divider': return <DividerBlock key={key} />;
     default: return null;
   }
 };
