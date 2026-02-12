@@ -243,25 +243,21 @@ export function AdminPages() {
         </div>
       )}
 
-      {/* Create Page Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-md">
+      {/* Create Page Dialog — 2 modes: Template or Block-by-Block */}
+      <Dialog open={isCreateDialogOpen} onOpenChange={function(open) { setIsCreateDialogOpen(open); if (!open) setNewPage({ title: '', slug: '', template: 'blank' }); }}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New Page</DialogTitle>
-            <DialogDescription>Choose a template and enter page details</DialogDescription>
+            <DialogDescription>Choose how you want to build your page</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+
+          {/* Step 1: Page info */}
+          <div className="grid grid-cols-2 gap-4 pb-4 border-b border-slate-100">
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Page Title *</label>
               <Input
                 value={newPage.title}
-                onChange={(e) => {
-                  setNewPage({ 
-                    ...newPage, 
-                    title: e.target.value,
-                    slug: generateSlug(e.target.value)
-                  });
-                }}
+                onChange={function(e) { setNewPage({ ...newPage, title: e.target.value, slug: generateSlug(e.target.value) }); }}
                 placeholder="My New Page"
                 data-testid="page-title-input"
               />
@@ -272,43 +268,69 @@ export function AdminPages() {
                 <span className="text-slate-400 text-sm mr-1">/page/</span>
                 <Input
                   value={newPage.slug}
-                  onChange={(e) => setNewPage({ ...newPage, slug: generateSlug(e.target.value) })}
+                  onChange={function(e) { setNewPage({ ...newPage, slug: generateSlug(e.target.value) }); }}
                   placeholder="my-new-page"
                   data-testid="page-slug-input"
                 />
               </div>
             </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Template</label>
-              <div className="grid grid-cols-2 gap-3">
-                {templates.map((template) => (
-                  <div
-                    key={template.id}
-                    onClick={() => setNewPage({ ...newPage, template: template.id })}
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                      newPage.template === template.id
-                        ? 'border-[#0C765B] bg-[#0C765B]/5'
-                        : 'border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    <h4 className="font-medium text-slate-900 text-sm">{template.name}</h4>
-                    <p className="text-xs text-slate-500 mt-1">{template.description}</p>
-                  </div>
-                ))}
+          </div>
+
+          {/* Step 2: Choose creation mode */}
+          <div className="py-2">
+            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Choose a Starting Point</p>
+
+            {/* Option A: Blank (block-by-block) */}
+            <div
+              onClick={function() { setNewPage({ ...newPage, template: 'blank' }); }}
+              className={'p-4 border-2 rounded-xl cursor-pointer transition-all mb-4 ' + (newPage.template === 'blank' ? 'border-[#0C765B] bg-[#0C765B]/5' : 'border-slate-200 hover:border-slate-300')}
+              data-testid="option-blank"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center"><Blocks className="w-5 h-5 text-slate-600" /></div>
+                <div>
+                  <h4 className="font-semibold text-slate-900">Start Blank (Block by Block)</h4>
+                  <p className="text-xs text-slate-500">Add blocks manually — full control over every section</p>
+                </div>
               </div>
             </div>
+
+            {/* Option B: Templates */}
+            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Or Pick a Template</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {templates.filter(function(t) { return t.id !== 'blank'; }).map(function(template) {
+                var icons = { corporate: Building2, landing: Megaphone, service: Briefcase, team: Users, news_article: Newspaper, gallery_page: ImageIcon, contact: Phone };
+                var TemplateIcon = icons[template.id] || FileText;
+                var colors = { corporate: 'bg-blue-50 text-blue-600', landing: 'bg-orange-50 text-orange-600', service: 'bg-purple-50 text-purple-600', team: 'bg-teal-50 text-teal-600', news_article: 'bg-pink-50 text-pink-600', gallery_page: 'bg-amber-50 text-amber-600', contact: 'bg-green-50 text-green-600' };
+                var colorCls = colors[template.id] || 'bg-slate-50 text-slate-600';
+                return (
+                  <div
+                    key={template.id}
+                    onClick={function() { setNewPage({ ...newPage, template: template.id }); }}
+                    className={'p-4 border-2 rounded-xl cursor-pointer transition-all ' + (newPage.template === template.id ? 'border-[#0C765B] bg-[#0C765B]/5' : 'border-slate-200 hover:border-slate-300')}
+                    data-testid={'template-' + template.id}
+                  >
+                    <div className={'w-9 h-9 rounded-lg flex items-center justify-center mb-3 ' + colorCls}>
+                      <TemplateIcon className="w-5 h-5" />
+                    </div>
+                    <h4 className="font-semibold text-slate-900 text-sm leading-tight">{template.name}</h4>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">{template.description}</p>
+                    <p className="text-[10px] text-slate-400 mt-2">{(template.blocks || []).length} blocks</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
+
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-              Cancel
-            </Button>
+            <Button variant="outline" onClick={function() { setIsCreateDialogOpen(false); }}>Cancel</Button>
             <Button
               onClick={handleCreatePage}
-              disabled={saving}
+              disabled={saving || !newPage.title}
               className="bg-[#0C765B] hover:bg-[#095E49]"
               data-testid="create-page-submit"
             >
-              {saving ? 'Creating...' : 'Create Page'}
+              {saving ? 'Creating...' : 'Create & Open Editor'}
             </Button>
           </DialogFooter>
         </DialogContent>
