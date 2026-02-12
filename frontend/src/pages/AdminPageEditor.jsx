@@ -3,7 +3,8 @@ import { motion, Reorder } from 'framer-motion';
 import { 
   Save, Eye, ArrowLeft, Plus, Trash2, GripVertical, 
   Type, Image, Columns, LayoutGrid, List, MessageSquare,
-  ChevronDown, ChevronUp, Settings, Upload
+  ChevronDown, ChevronUp, Settings, Upload, Quote, BarChart3,
+  Users, ImagePlus, Minus, PlayCircle, Clock
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -12,16 +13,25 @@ import { apiService } from '../lib/api';
 import { toast } from 'sonner';
 import { useParams, useNavigate } from 'react-router-dom';
 
-// Block type definitions
+// Block type definitions — expanded set
 const BLOCK_TYPES = [
-  { id: 'hero_simple', name: 'Hero Section', icon: Type, description: 'Page header with title and subtitle' },
-  { id: 'text', name: 'Text Block', icon: Type, description: 'Heading and paragraph text' },
-  { id: 'image', name: 'Image', icon: Image, description: 'Single image with caption' },
-  { id: 'two_column', name: 'Two Columns', icon: Columns, description: 'Side by side content' },
-  { id: 'cards', name: 'Card Grid', icon: LayoutGrid, description: 'Grid of info cards' },
-  { id: 'features', name: 'Features List', icon: List, description: 'Feature items with icons' },
-  { id: 'cta', name: 'Call to Action', icon: MessageSquare, description: 'CTA section with button' },
-  { id: 'accordion', name: 'Accordion/FAQ', icon: ChevronDown, description: 'Expandable sections' },
+  { id: 'hero_simple', name: 'Hero (Simple)', icon: Type, description: 'Title and subtitle header', category: 'Header' },
+  { id: 'hero_banner', name: 'Hero (Image)', icon: Image, description: 'Full-width image hero with overlay text', category: 'Header' },
+  { id: 'text', name: 'Text Block', icon: Type, description: 'Heading and paragraph', category: 'Content' },
+  { id: 'image', name: 'Image', icon: Image, description: 'Single image with caption', category: 'Media' },
+  { id: 'image_gallery', name: 'Image Gallery', icon: ImagePlus, description: 'Grid of multiple images', category: 'Media' },
+  { id: 'video', name: 'Video Embed', icon: PlayCircle, description: 'YouTube or video URL', category: 'Media' },
+  { id: 'two_column', name: 'Two Columns', icon: Columns, description: 'Side by side text content', category: 'Layout' },
+  { id: 'cards', name: 'Card Grid', icon: LayoutGrid, description: 'Grid of info cards', category: 'Content' },
+  { id: 'features', name: 'Features List', icon: List, description: 'Feature items with descriptions', category: 'Content' },
+  { id: 'stats', name: 'Stats / Counters', icon: BarChart3, description: 'Animated number counters', category: 'Content' },
+  { id: 'team_grid', name: 'Team Grid', icon: Users, description: 'Team members with photos', category: 'People' },
+  { id: 'quote', name: 'Quote / Blockquote', icon: Quote, description: 'Highlighted quote with author', category: 'Content' },
+  { id: 'testimonial', name: 'Testimonial', icon: MessageSquare, description: 'Customer testimonial', category: 'Content' },
+  { id: 'timeline', name: 'Timeline', icon: Clock, description: 'Chronological events', category: 'Content' },
+  { id: 'cta', name: 'Call to Action', icon: MessageSquare, description: 'CTA with button', category: 'Action' },
+  { id: 'accordion', name: 'Accordion / FAQ', icon: ChevronDown, description: 'Expandable Q&A sections', category: 'Content' },
+  { id: 'divider', name: 'Divider / Spacer', icon: Minus, description: 'Visual separator', category: 'Layout' },
 ];
 
 // Block Editor Components
