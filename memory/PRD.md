@@ -20,7 +20,7 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 ### Phase 2 - Corporate Pages (Completed)
 - **Corporate Overview** (`/corporate/overview`): Hero, stats bar, about section, vision/mission, global network
 - **Corporate Philosophy** (`/corporate/philosophy`): Redesigned with full content - hero, "Strength in Excellence" tagline, intro, 3 core values (Quality, Innovation, Sustainability) with key highlights
-- **Corporate History & Group Structure** (`/corporate/history`): Redesigned with horizontal green timeline (1970, 1989, 1991, 2024, Today milestones) and shareholder structure diagram (Yamato 45%, SYS 35%, Hanwa 15%, GRP 5%) with detail cards
+- **Corporate History & Group Structure** (`/corporate/history`): Redesigned with horizontal green timeline (1970, 1989, 1991, 2024, Today milestones) and unified shareholder section with real company logos (Yamato 45%, SYS 35%, Hanwa 15%, GRP 5%) and detail cards. Logos stored as customer assets.
 
 ### Phase 3 - CMS Page Management (In Progress)
 - Page templates (7 templates) created on backend
