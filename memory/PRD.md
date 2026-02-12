@@ -29,6 +29,21 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 - **Pending:** Seed existing nav menu pages into CMS page list
 
 ## File Architecture
+
+### Backend (refactored from 1,418-line monolith)
+```
+/app/backend/
+  server.py              # Slim entry: app setup + router includes (~55 lines)
+  database.py            # MongoDB connection (db, client)
+  auth.py                # JWT helpers, password hashing, get_current_user
+  models/                # Pydantic models
+    user.py, news.py, event.py, album.py, employee.py, page.py, menu.py, settings.py
+  routes/                # API route handlers
+    auth.py, users.py, news.py, events.py, albums.py, photos.py,
+    employees.py, settings.py, pages.py, menus.py, seed.py
+```
+
+### Frontend
 ```
 /app/frontend/src/pages/
   CorporatePages.jsx          # Re-exports from split files
