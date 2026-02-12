@@ -366,16 +366,190 @@ const TwoColumnEditor = ({ content, onChange }) => (
 );
 
 // Block Editor Component Mapping
+// Hero Banner Editor (with image)
+const HeroBannerEditor = ({ content, onChange }) => (
+  <div className="space-y-4">
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Title</label>
+      <Input value={content.title || ''} onChange={(e) => onChange({ ...content, title: e.target.value })} placeholder="Hero Title" />
+    </div>
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Subtitle</label>
+      <textarea value={content.subtitle || ''} onChange={(e) => onChange({ ...content, subtitle: e.target.value })} placeholder="Subtitle text..." className="w-full h-20 px-3 py-2 border border-slate-200 rounded-md text-sm" />
+    </div>
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Background Image URL</label>
+      <Input value={content.image_url || ''} onChange={(e) => onChange({ ...content, image_url: e.target.value })} placeholder="https://..." />
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="text-sm font-medium text-slate-700 mb-1 block">Button Text</label>
+        <Input value={content.button_text || ''} onChange={(e) => onChange({ ...content, button_text: e.target.value })} placeholder="Get Started" />
+      </div>
+      <div>
+        <label className="text-sm font-medium text-slate-700 mb-1 block">Button Link</label>
+        <Input value={content.button_link || ''} onChange={(e) => onChange({ ...content, button_link: e.target.value })} placeholder="/contact" />
+      </div>
+    </div>
+  </div>
+);
+
+// Stats Editor
+const StatsEditor = ({ content, onChange }) => {
+  const items = content.items || [];
+  const addItem = () => onChange({ ...content, items: [...items, { value: '0', label: 'Label' }] });
+  const removeItem = (i) => onChange({ ...content, items: items.filter((_, idx) => idx !== i) });
+  const updateItem = (i, field, val) => { const updated = [...items]; updated[i] = { ...updated[i], [field]: val }; onChange({ ...content, items: updated }); };
+  return (
+    <div className="space-y-3">
+      {items.map((item, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <Input value={item.value} onChange={(e) => updateItem(i, 'value', e.target.value)} placeholder="50+" className="w-24" />
+          <Input value={item.label} onChange={(e) => updateItem(i, 'label', e.target.value)} placeholder="Label" className="flex-1" />
+          <Button variant="ghost" size="sm" onClick={() => removeItem(i)}><Trash2 className="w-4 h-4 text-red-500" /></Button>
+        </div>
+      ))}
+      <Button variant="outline" size="sm" onClick={addItem}><Plus className="w-4 h-4 mr-1" /> Add Stat</Button>
+    </div>
+  );
+};
+
+// Quote Editor
+const QuoteEditor = ({ content, onChange }) => (
+  <div className="space-y-4">
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Quote Text</label>
+      <textarea value={content.text || ''} onChange={(e) => onChange({ ...content, text: e.target.value })} placeholder="The quote text..." className="w-full h-24 px-3 py-2 border border-slate-200 rounded-md text-sm" />
+    </div>
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Author</label>
+      <Input value={content.author || ''} onChange={(e) => onChange({ ...content, author: e.target.value })} placeholder="Author name" />
+    </div>
+  </div>
+);
+
+// Testimonial Editor
+const TestimonialEditor = ({ content, onChange }) => (
+  <div className="space-y-4">
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Quote</label>
+      <textarea value={content.quote || ''} onChange={(e) => onChange({ ...content, quote: e.target.value })} placeholder="Customer quote..." className="w-full h-20 px-3 py-2 border border-slate-200 rounded-md text-sm" />
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="text-sm font-medium text-slate-700 mb-1 block">Author</label>
+        <Input value={content.author || ''} onChange={(e) => onChange({ ...content, author: e.target.value })} placeholder="John Doe" />
+      </div>
+      <div>
+        <label className="text-sm font-medium text-slate-700 mb-1 block">Role</label>
+        <Input value={content.role || ''} onChange={(e) => onChange({ ...content, role: e.target.value })} placeholder="CEO, Company" />
+      </div>
+    </div>
+  </div>
+);
+
+// Team Grid Editor
+const TeamGridEditor = ({ content, onChange }) => {
+  const items = content.items || [];
+  const addItem = () => onChange({ ...content, items: [...items, { name: '', role: '', image_url: '', bio: '' }] });
+  const removeItem = (i) => onChange({ ...content, items: items.filter((_, idx) => idx !== i) });
+  const updateItem = (i, field, val) => { const updated = [...items]; updated[i] = { ...updated[i], [field]: val }; onChange({ ...content, items: updated }); };
+  return (
+    <div className="space-y-4">
+      {items.map((item, i) => (
+        <div key={i} className="p-3 bg-slate-50 rounded-lg space-y-2">
+          <div className="flex justify-between items-center"><span className="text-xs font-medium text-slate-500">Member {i + 1}</span><Button variant="ghost" size="sm" onClick={() => removeItem(i)}><Trash2 className="w-3 h-3 text-red-500" /></Button></div>
+          <div className="grid grid-cols-2 gap-2">
+            <Input value={item.name} onChange={(e) => updateItem(i, 'name', e.target.value)} placeholder="Name" />
+            <Input value={item.role} onChange={(e) => updateItem(i, 'role', e.target.value)} placeholder="Role" />
+          </div>
+          <Input value={item.image_url} onChange={(e) => updateItem(i, 'image_url', e.target.value)} placeholder="Photo URL" />
+          <Input value={item.bio} onChange={(e) => updateItem(i, 'bio', e.target.value)} placeholder="Short bio..." />
+        </div>
+      ))}
+      <Button variant="outline" size="sm" onClick={addItem}><Plus className="w-4 h-4 mr-1" /> Add Member</Button>
+    </div>
+  );
+};
+
+// Image Gallery Editor
+const ImageGalleryEditor = ({ content, onChange }) => {
+  const items = content.items || [];
+  const addItem = () => onChange({ ...content, items: [...items, { url: '', caption: '' }] });
+  const removeItem = (i) => onChange({ ...content, items: items.filter((_, idx) => idx !== i) });
+  const updateItem = (i, field, val) => { const updated = [...items]; updated[i] = { ...updated[i], [field]: val }; onChange({ ...content, items: updated }); };
+  return (
+    <div className="space-y-3">
+      {items.map((item, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <Input value={item.url} onChange={(e) => updateItem(i, 'url', e.target.value)} placeholder="Image URL" className="flex-1" />
+          <Input value={item.caption} onChange={(e) => updateItem(i, 'caption', e.target.value)} placeholder="Caption" className="w-40" />
+          <Button variant="ghost" size="sm" onClick={() => removeItem(i)}><Trash2 className="w-4 h-4 text-red-500" /></Button>
+        </div>
+      ))}
+      <Button variant="outline" size="sm" onClick={addItem}><Plus className="w-4 h-4 mr-1" /> Add Image</Button>
+    </div>
+  );
+};
+
+// Video Editor
+const VideoEditor = ({ content, onChange }) => (
+  <div className="space-y-4">
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Video URL (YouTube or direct)</label>
+      <Input value={content.url || ''} onChange={(e) => onChange({ ...content, url: e.target.value })} placeholder="https://youtube.com/watch?v=..." />
+    </div>
+    <div>
+      <label className="text-sm font-medium text-slate-700 mb-1 block">Caption</label>
+      <Input value={content.caption || ''} onChange={(e) => onChange({ ...content, caption: e.target.value })} placeholder="Video caption" />
+    </div>
+  </div>
+);
+
+// Timeline Editor
+const TimelineEditor = ({ content, onChange }) => {
+  const items = content.items || [];
+  const addItem = () => onChange({ ...content, items: [...items, { year: '', title: '', description: '' }] });
+  const removeItem = (i) => onChange({ ...content, items: items.filter((_, idx) => idx !== i) });
+  const updateItem = (i, field, val) => { const updated = [...items]; updated[i] = { ...updated[i], [field]: val }; onChange({ ...content, items: updated }); };
+  return (
+    <div className="space-y-3">
+      <div><label className="text-sm font-medium text-slate-700 mb-1 block">Section Title</label><Input value={content.title || ''} onChange={(e) => onChange({ ...content, title: e.target.value })} placeholder="Our History" /></div>
+      {items.map((item, i) => (
+        <div key={i} className="flex gap-2 items-start p-2 bg-slate-50 rounded">
+          <Input value={item.year} onChange={(e) => updateItem(i, 'year', e.target.value)} placeholder="2024" className="w-20" />
+          <Input value={item.title} onChange={(e) => updateItem(i, 'title', e.target.value)} placeholder="Event title" className="w-40" />
+          <Input value={item.description} onChange={(e) => updateItem(i, 'description', e.target.value)} placeholder="Description" className="flex-1" />
+          <Button variant="ghost" size="sm" onClick={() => removeItem(i)}><Trash2 className="w-3 h-3 text-red-500" /></Button>
+        </div>
+      ))}
+      <Button variant="outline" size="sm" onClick={addItem}><Plus className="w-4 h-4 mr-1" /> Add Event</Button>
+    </div>
+  );
+};
+
+// Divider Editor (no content needed)
+const DividerEditor = () => <p className="text-sm text-slate-500 italic">This block adds a visual divider/spacer. No configuration needed.</p>;
+
 const getBlockEditor = (type) => {
   switch (type) {
     case 'hero_simple': return HeroSimpleEditor;
+    case 'hero_banner': return HeroBannerEditor;
     case 'text': return TextEditor;
     case 'image': return ImageEditor;
+    case 'image_gallery': return ImageGalleryEditor;
+    case 'video': return VideoEditor;
     case 'cards': return CardsEditor;
     case 'features': return FeaturesEditor;
+    case 'stats': return StatsEditor;
+    case 'team_grid': return TeamGridEditor;
+    case 'quote': return QuoteEditor;
+    case 'testimonial': return TestimonialEditor;
+    case 'timeline': return TimelineEditor;
     case 'cta': return CTAEditor;
     case 'accordion': return AccordionEditor;
     case 'two_column': return TwoColumnEditor;
+    case 'divider': return DividerEditor;
     default: return TextEditor;
   }
 };
