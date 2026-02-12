@@ -984,51 +984,105 @@ async def delete_menu_item(menu_id: str, current_user: dict = Depends(get_curren
 
 @api_router.get("/templates")
 async def get_templates():
-    """Return available page templates"""
+    """Return 7 available page templates + blank option"""
     return [
         {
             "id": "blank",
             "name": "Blank Page",
-            "description": "Start with an empty page",
+            "description": "Start from scratch, add blocks manually",
+            "category": "basic",
+            "thumbnail": "blank",
             "blocks": []
         },
         {
-            "id": "content",
-            "name": "Content Page",
-            "description": "Standard content page with header and text sections",
+            "id": "corporate",
+            "name": "Corporate Page",
+            "description": "Professional company page with hero, about section, and values",
+            "category": "business",
+            "thumbnail": "corporate",
             "blocks": [
-                {"type": "hero_simple", "content": {"title": "Page Title", "subtitle": "Page description goes here"}, "order": 0},
-                {"type": "text", "content": {"heading": "Section Heading", "body": "Add your content here..."}, "order": 1}
+                {"type": "hero_banner", "content": {"title": "Company Name", "subtitle": "Your tagline here", "image_url": "https://images.unsplash.com/photo-1624027492684-327af1fb7559?w=1920&q=80", "overlay": True}, "order": 0},
+                {"type": "text", "content": {"heading": "About Us", "body": "Tell your company story here. Describe your mission, vision, and what makes you unique..."}, "order": 1},
+                {"type": "stats", "content": {"items": [{"value": "50+", "label": "Years Experience"}, {"value": "1K+", "label": "Projects"}, {"value": "500+", "label": "Employees"}, {"value": "100+", "label": "Awards"}]}, "order": 2},
+                {"type": "cards", "content": {"title": "Our Values", "items": [{"title": "Quality", "description": "We never compromise on quality"}, {"title": "Innovation", "description": "Continuously pushing boundaries"}, {"title": "Integrity", "description": "Trust and transparency"}]}, "order": 3}
             ]
         },
         {
             "id": "landing",
             "name": "Landing Page",
-            "description": "Marketing-style page with hero, features, and CTA",
+            "description": "Marketing page with hero, features, testimonials and CTA",
+            "category": "marketing",
+            "thumbnail": "landing",
             "blocks": [
-                {"type": "hero_simple", "content": {"title": "Welcome", "subtitle": "Your landing page subtitle"}, "order": 0},
-                {"type": "features", "content": {"title": "Features", "items": []}, "order": 1},
-                {"type": "cta", "content": {"title": "Get Started", "button_text": "Contact Us", "button_link": "#"}, "order": 2}
-            ]
-        },
-        {
-            "id": "about",
-            "name": "About Page",
-            "description": "Company/team information page",
-            "blocks": [
-                {"type": "hero_simple", "content": {"title": "About Us", "subtitle": "Learn more about our company"}, "order": 0},
-                {"type": "text", "content": {"heading": "Our Story", "body": "Tell your story here..."}, "order": 1},
-                {"type": "cards", "content": {"title": "Our Values", "items": []}, "order": 2}
+                {"type": "hero_banner", "content": {"title": "Powerful Headline Here", "subtitle": "Compelling description that makes visitors want to learn more", "image_url": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80", "button_text": "Get Started", "button_link": "#contact", "overlay": True}, "order": 0},
+                {"type": "features", "content": {"title": "Why Choose Us", "items": [{"title": "Feature One", "description": "Description of your first feature"}, {"title": "Feature Two", "description": "Description of your second feature"}, {"title": "Feature Three", "description": "Description of your third feature"}, {"title": "Feature Four", "description": "Description of your fourth feature"}]}, "order": 1},
+                {"type": "testimonial", "content": {"quote": "This product changed how we do business. Highly recommended!", "author": "John Doe", "role": "CEO, Company Name"}, "order": 2},
+                {"type": "cta", "content": {"title": "Ready to Get Started?", "description": "Join thousands of satisfied customers today.", "button_text": "Contact Us", "button_link": "/contact"}, "order": 3}
             ]
         },
         {
             "id": "service",
             "name": "Service Page",
-            "description": "Service or product description page",
+            "description": "Showcase your services with descriptions and pricing",
+            "category": "business",
+            "thumbnail": "service",
             "blocks": [
-                {"type": "hero_simple", "content": {"title": "Our Services", "subtitle": "What we offer"}, "order": 0},
-                {"type": "two_column", "content": {"left": {"type": "text", "content": {}}, "right": {"type": "image", "content": {}}}, "order": 1},
-                {"type": "features", "content": {"title": "Benefits", "items": []}, "order": 2}
+                {"type": "hero_simple", "content": {"title": "Our Services", "subtitle": "Professional solutions tailored to your needs"}, "order": 0},
+                {"type": "text", "content": {"heading": "What We Offer", "body": "A comprehensive overview of the services we provide to our clients..."}, "order": 1},
+                {"type": "cards", "content": {"title": "Services", "items": [{"title": "Service One", "description": "Detailed description of this service"}, {"title": "Service Two", "description": "Detailed description of this service"}, {"title": "Service Three", "description": "Detailed description of this service"}]}, "order": 2},
+                {"type": "accordion", "content": {"title": "Frequently Asked Questions", "items": [{"title": "What is included?", "body": "Answer to this question..."}, {"title": "How long does it take?", "body": "Answer to this question..."}, {"title": "What are the costs?", "body": "Answer to this question..."}]}, "order": 3}
+            ]
+        },
+        {
+            "id": "team",
+            "name": "Team Page",
+            "description": "Introduce your team members with photos and bios",
+            "category": "people",
+            "thumbnail": "team",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "Meet Our Team", "subtitle": "The people behind our success"}, "order": 0},
+                {"type": "text", "content": {"heading": "Our Leadership", "body": "Get to know the talented individuals who drive our company forward."}, "order": 1},
+                {"type": "team_grid", "content": {"items": [{"name": "Jane Smith", "role": "CEO", "image_url": "", "bio": "Short bio..."}, {"name": "Bob Johnson", "role": "CTO", "image_url": "", "bio": "Short bio..."}, {"name": "Alice Brown", "role": "COO", "image_url": "", "bio": "Short bio..."}]}, "order": 2},
+                {"type": "cta", "content": {"title": "Join Our Team", "description": "We are always looking for talented people.", "button_text": "View Openings", "button_link": "/careers"}, "order": 3}
+            ]
+        },
+        {
+            "id": "news_article",
+            "name": "Article / Blog",
+            "description": "Long-form content with images and sections",
+            "category": "content",
+            "thumbnail": "article",
+            "blocks": [
+                {"type": "hero_banner", "content": {"title": "Article Title", "subtitle": "Published on January 1, 2026", "image_url": "https://images.unsplash.com/photo-1504711434969-e33886168d6c?w=1920&q=80", "overlay": True}, "order": 0},
+                {"type": "text", "content": {"heading": "Introduction", "body": "Your article introduction paragraph goes here..."}, "order": 1},
+                {"type": "image", "content": {"url": "", "caption": "Image caption"}, "order": 2},
+                {"type": "text", "content": {"heading": "Main Content", "body": "Continue writing your article here..."}, "order": 3},
+                {"type": "quote", "content": {"text": "An important quote or highlight from the article.", "author": "Source"}, "order": 4}
+            ]
+        },
+        {
+            "id": "gallery_page",
+            "name": "Photo Gallery",
+            "description": "Visual gallery with image grid and captions",
+            "category": "media",
+            "thumbnail": "gallery",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "Photo Gallery", "subtitle": "A visual journey through our work"}, "order": 0},
+                {"type": "text", "content": {"heading": "", "body": "Browse through our collection of photos showcasing our projects, events, and team activities."}, "order": 1},
+                {"type": "image_gallery", "content": {"items": [{"url": "", "caption": "Photo 1"}, {"url": "", "caption": "Photo 2"}, {"url": "", "caption": "Photo 3"}, {"url": "", "caption": "Photo 4"}, {"url": "", "caption": "Photo 5"}, {"url": "", "caption": "Photo 6"}]}, "order": 2}
+            ]
+        },
+        {
+            "id": "contact",
+            "name": "Contact Page",
+            "description": "Contact information with map and form placeholder",
+            "category": "utility",
+            "thumbnail": "contact",
+            "blocks": [
+                {"type": "hero_simple", "content": {"title": "Contact Us", "subtitle": "We would love to hear from you"}, "order": 0},
+                {"type": "two_column", "content": {"left_content": "Address:\n123 Steel Avenue\nCikarang, West Java\nIndonesia\n\nPhone: +62 21 xxx xxxx\nEmail: info@gys.co.id", "right_content": "Business Hours:\nMonday - Friday: 8:00 AM - 5:00 PM\nSaturday: 8:00 AM - 12:00 PM\nSunday: Closed"}, "order": 1},
+                {"type": "divider", "content": {}, "order": 2},
+                {"type": "text", "content": {"heading": "Send Us a Message", "body": "Fill out the form below or email us directly at info@gys.co.id"}, "order": 3}
             ]
         }
     ]
