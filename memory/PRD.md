@@ -1,68 +1,56 @@
-# GYS Corporate Intranet CMS - PRD
+# GYS Intranet Portal - PRD
 
 ## Original Problem Statement
-Build and improve a corporate intranet website for PT Garuda Yamato Steel with a comprehensive Content Management System (CMS).
+Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS). Key requirements include a complete backend CMS for managing Pages, Menus, News, and Hero settings, with a dynamic frontend that renders content from the CMS.
 
-## Architecture
-- **Frontend:** React (CRA), Tailwind CSS, Framer Motion, Shadcn/UI
-- **Backend:** FastAPI (Python), Motor (async MongoDB)
-- **Database:** MongoDB
-- **Auth:** JWT-based admin authentication
+## Tech Stack
+- **Frontend:** React, Vite, TailwindCSS, Framer Motion, lucide-react, Shadcn UI
+- **Backend:** Python, FastAPI, MongoDB
+- **Architecture:** Monorepo with /app/frontend and /app/backend
 
 ## What's Been Implemented
 
-### Phase 1 - Quick Fixes & UI Updates (COMPLETE)
-- Hidden "Admin Portal" from public hero
-- Restructured "Corporate Identity" menu
+### Phase 1 - Core CMS & Homepage (Completed)
+- Admin CMS with Pages, Menus, News, Hero settings management
+- Dynamic homepage with Hero section (image preloader, no flash)
+- Featured News section (ArcelorMittal-style layout)
+- Dynamic 3-level nested navigation bar
+- News ticker management
 
-### Phase 2 - CMS Enhancements (COMPLETE)
-- Hero CMS with video/image backgrounds, visibility toggles, welcome badge toggle
-- Employee CMS with image upload
-- News CMS with file upload only
+### Phase 2 - Corporate Pages (Completed)
+- **Corporate Overview** (`/corporate/overview`): Hero, stats bar, about section, vision/mission, global network
+- **Corporate Philosophy** (`/corporate/philosophy`): Redesigned with full content - hero, "Strength in Excellence" tagline, intro, 3 core values (Quality, Innovation, Sustainability) with key highlights
+- **Corporate History & Group Structure** (`/corporate/history`): Redesigned with horizontal green timeline (1970, 1989, 1991, 2024, Today milestones) and shareholder structure diagram (Yamato 45%, SYS 35%, Hanwa 15%, GRP 5%) with detail cards
 
-### Phase 3 - Homepage Rework (COMPLETE)
-- ArcelorMittal-style featured news section (staggered text-left/image-right rows, #3C3C3C bg, alternating slide animations)
-- Events page with "Add to Outlook" ICS download
-- Ticker banner with manual/default modes
-- Service Hub with iframe embedding and fallback
+### Phase 3 - CMS Page Management (In Progress)
+- Page templates (7 templates) created on backend
+- New "Create Page" dialog with template-based and blank creation flows
+- Enhanced block editor with multiple block types
+- **Pending:** Seed existing nav menu pages into CMS page list
 
-### Phase 4 - Full Page & Menu CMS (COMPLETE - Feb 11, 2026)
-- Page Management, Block-Based Editor (8 block types), Page Templates
-- Menu Management with 3-level hierarchy
-- Dynamic Page Rendering at /page/:slug
-
-### Dynamic CMS Navigation (COMPLETE - Feb 11, 2026)
-- Public navbar now fully driven by CMS menu items (no hardcoded nav)
-- 3-level hierarchy: L1 main nav → L2 dropdown → L3 fly-out
-- Existing pages pre-seeded into CMS menus
-- Visibility toggle: hidden items don't appear in public navbar
-- Admin can add/edit/delete/reorder all menu items
-
-### Hero Loading Fix (COMPLETE - Feb 11, 2026)
-- Fixed glitch where hero showed text/stats before background image loaded
-- Image preloading with `new Image().onload` before showing content
-- localStorage caching for instant load on repeat visits
-
-## Admin Credentials
-- Email: admin@gys.co.id
-- Password: admin123
-
-## Key API Endpoints
-- Menus: GET /api/menus, GET /api/menus?visible_only=true, POST/PUT/DELETE /api/menus/:id, PUT /api/menus/reorder
-- Pages: GET/POST /api/pages, GET/PUT/DELETE /api/pages/:id, GET /api/pages/slug/:slug
-- Templates: GET /api/templates
-- Settings: GET/PUT /api/settings/hero, GET/PUT /api/settings/ticker
-- Content: /api/news, /api/events, /api/photos, /api/albums, /api/employees, /api/users
+## File Architecture
+```
+/app/frontend/src/pages/
+  CorporatePages.jsx          # Re-exports from split files
+  CorporateOverview.jsx        # Overview page
+  CorporatePhilosophy.jsx      # Philosophy page shell
+  PhilosophySections.jsx        # Quality/Innovation/Sustainability sections
+  CorporateHistory.jsx          # History page shell
+  HistoryTimeline.jsx            # Horizontal timeline component
+  HistoryShareholder.jsx         # Shareholder diagram + cards
+```
 
 ## Prioritized Backlog
+### P0
+- Complete CMS Page Management: seed nav menu pages into CMS
 
-### P1 - Improvements
-- Replace static corporate placeholder pages with dynamic CMS-rendered pages
-- Rich text editing (WYSIWYG) for text blocks
+### P1
+- Test page creation flows (template + blank)
+- Ensure CMS-created pages render on frontend
 
-### P2 - Enhancements
-- Page preview/draft mode in editor
-- Page version history
-- Image gallery block type
-- Embed block type
-- SEO metadata preview
+### P2
+- Convert static CorporateOverview to CMS-editable template
+- Additional block types or design refinements
+
+## Credentials
+- Admin: admin@test.com / password
