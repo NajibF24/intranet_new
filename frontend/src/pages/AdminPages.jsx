@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Pencil, Trash2, Search, FileText, Eye, EyeOff, ExternalLink, Copy } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, FileText, Eye, EyeOff, ExternalLink, Copy, LayoutTemplate, Blocks, Building2, Megaphone, Briefcase, Users, Newspaper, ImageIcon, Phone } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Switch } from '../components/ui/switch';
 import { apiService } from '../lib/api';
 import { toast } from 'sonner';
