@@ -765,27 +765,40 @@ export function AdminPageEditor() {
             Add Block
           </Button>
 
-          {/* Block Type Selector */}
+          {/* Block Type Selector — categorized */}
           {showAddBlock && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl border border-slate-200 p-4"
+              className="bg-white rounded-xl border border-slate-200 p-5"
             >
               <h4 className="font-medium text-slate-900 mb-4">Choose Block Type</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {BLOCK_TYPES.map((type) => (
-                  <button
-                    key={type.id}
-                    onClick={() => addBlock(type.id)}
-                    className="flex flex-col items-center p-4 border border-slate-200 rounded-lg hover:border-[#0C765B] hover:bg-[#0C765B]/5 transition-all"
-                  >
-                    <type.icon className="w-6 h-6 text-[#0C765B] mb-2" />
-                    <span className="text-sm font-medium text-slate-900">{type.name}</span>
-                    <span className="text-xs text-slate-500 mt-1 text-center">{type.description}</span>
-                  </button>
-                ))}
-              </div>
+              {['Header', 'Content', 'Media', 'Layout', 'People', 'Action'].map(function(cat) {
+                const catBlocks = BLOCK_TYPES.filter(function(t) { return t.category === cat; });
+                if (catBlocks.length === 0) return null;
+                return (
+                  <div key={cat} className="mb-4">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{cat}</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                      {catBlocks.map(function(type) {
+                        return (
+                          <button
+                            key={type.id}
+                            onClick={function() { addBlock(type.id); }}
+                            className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-[#0C765B] hover:bg-[#0C765B]/5 transition-all text-left"
+                          >
+                            <type.icon className="w-5 h-5 text-[#0C765B] flex-shrink-0" />
+                            <div>
+                              <span className="text-sm font-medium text-slate-900 block leading-tight">{type.name}</span>
+                              <span className="text-xs text-slate-500">{type.description}</span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </motion.div>
           )}
         </div>
