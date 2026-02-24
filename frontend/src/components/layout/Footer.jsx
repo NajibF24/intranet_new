@@ -26,18 +26,26 @@ export const Footer = () => {
               Building Indonesia&apos;s future with premium steel products.
             </p>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-white/80 text-sm">
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Jl.+Perjuangan+No.+8,+Kp.+Tangsi+RT.+004/006+Sukadanau,+Cikarang+Barat,+Bekasi"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 text-white/80 text-sm hover:text-white transition-colors"
+              >
                 <MapPin className="w-4 h-4 text-amber-400" />
-                <span>Jl. Industri Raya No. 123, Cikarang, Bekasi</span>
-              </div>
+                <span>Jl. Perjuangan No. 8, Kp. Tangsi RT. 004/006 Sukadanau, Cikarang Barat, Bekasi</span>
+              </a>
               <div className="flex items-center space-x-3 text-white/80 text-sm">
                 <Phone className="w-4 h-4 text-amber-400" />
-                <span>+62 21 8900 1234</span>
+                <span>+62 21 8900 222</span>
               </div>
-              <div className="flex items-center space-x-3 text-white/80 text-sm">
+              <a 
+                href="mailto:helpdesk@gyssteel.com" 
+                className="flex items-center space-x-3 text-white/80 text-sm hover:text-white transition-colors"
+              >
                 <Mail className="w-4 h-4 text-amber-400" />
-                <span>info@gys.co.id</span>
-              </div>
+                <span>helpdesk@gyssteel.com</span>
+              </a>
             </div>
           </div>
 
@@ -46,18 +54,18 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-6">Corporate Identity</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/corporate/vision" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
-                  Company Vision
+                <Link to="/corporate/overview" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
+                  Corporate Overview
                 </Link>
               </li>
               <li>
-                <Link to="/corporate/mission" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
-                  Company Mission
+                <Link to="/corporate/philosophy" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
+                  Corporate Philosophy
                 </Link>
               </li>
               <li>
-                <Link to="/corporate/about" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
-                  About GYS
+                <Link to="/corporate/history" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
+                  Corporate History & Group Structure
                 </Link>
               </li>
             </ul>

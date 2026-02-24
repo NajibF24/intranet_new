@@ -71,7 +71,7 @@ const apps = [
     url: "https://chat.gyssteel.com/login",
     icon: MessageCircle,
     color: "bg-indigo-500",
-    desc: "Internal Chatbot Apps"
+    desc: "Internal Chatbot AI Apps"
   },
   {
     name: "PowerBI Dashboard",
