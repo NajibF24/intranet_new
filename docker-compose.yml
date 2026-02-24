@@ -11,7 +11,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8001:8000"
     environment:
       - MONGO_URL=mongodb://mongodb:27017
       - DB_NAME=intranet_db
@@ -24,12 +24,12 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       # 1. Nama harus REACT_APP_BACKEND_URL
       # 2. Gunakan IP Server GYS (jangan localhost)
       # 3. JANGAN tambahkan /api di ujungnya
-      - REACT_APP_BACKEND_URL=http://172.16.21.48:8000
+      - REACT_APP_BACKEND_URL=https://mygys.gyssteel.com:8000
     depends_on:
       - backend
     stdin_open: true

@@ -100,15 +100,6 @@ export const AdminLogin = () => {
             </Button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-slate-50 rounded-xl">
-            <p className="text-xs text-slate-500 text-center mb-2">Demo Credentials</p>
-            <p className="text-sm text-slate-700 text-center">
-              <span className="font-medium">Email:</span> admin@gys.co.id<br />
-              <span className="font-medium">Password:</span> admin123
-            </p>
-          </div>
-
           {/* Back to Home */}
           <div className="mt-6 text-center">
             <a href="/" className="text-[#0C765B] text-sm font-medium hover:underline">

@@ -90,18 +90,8 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-6">Employee Services</h3>
             <ul className="space-y-3 mb-8">
               <li>
-                <Link to="/services/it" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
-                  IT Global Services
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/hr" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
-                  HR Darwinbox
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/fa" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
-                  FA E-Asset
+                <Link to="/services/portal" className="text-white/80 hover:text-amber-400 transition-colors text-sm">
+                  GYS Application Portal
                 </Link>
               </li>
             </ul>

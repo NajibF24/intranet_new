@@ -170,3 +170,10 @@ body {
     grid-template-columns: 1fr;
   }
 }
+/* Hilangkan badge Made with Emergent */
+#emergent-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

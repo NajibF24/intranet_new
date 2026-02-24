@@ -7,10 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { HomePage } from "./pages/HomePage";
 import { OverviewPage, PhilosophyPage, HistoryPage } from "./pages/CorporatePages";
 import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
-
-// UPDATE: Import komponen UnifiedPortalPage saja
-import { UnifiedPortalPage } from "./pages/ServicePages";
-
+import { ITServicesPage, HRServicesPage, FAServicesPage } from "./pages/ServicePages";
 import { NewsPage } from "./pages/NewsPage";
 import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { EventsPage } from "./pages/EventsPage";
@@ -53,8 +50,10 @@ function App() {
             <Route path="/compliance/policies" element={<PoliciesPage />} />
             <Route path="/compliance/safety" element={<SafetyPage />} />
             
-            {/* UPDATE: Services Routes (Disatukan) */}
-            <Route path="/services/portal" element={<UnifiedPortalPage />} />
+            {/* Services Routes */}
+            <Route path="/services/it" element={<ITServicesPage />} />
+            <Route path="/services/hr" element={<HRServicesPage />} />
+            <Route path="/services/fa" element={<FAServicesPage />} />
             
             {/* Communication Routes */}
             <Route path="/news" element={<NewsPage />} />

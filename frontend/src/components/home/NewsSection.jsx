@@ -48,11 +48,17 @@ export const NewsSection = () => {
     const slideFrom = index % 2 === 0 ? -60 : 60;
 
     return (
-      <div
-        key={article.id}
-        className="grid grid-cols-1 md:grid-cols-2 border-t border-white/10 first:border-t-0"
-        data-testid={`featured-row-${index}`}
-      >
+//      <div
+  //      key={article.id}
+    //    className="grid grid-cols-1 md:grid-cols-2 border-t border-white/10 first:border-t-0"
+      //  data-testid={`featured-row-${index}`}
+     // >
+        <div
+          key={article.id}
+          // Menambahkan bg-[#A5A7AA] untuk mengganti warna box
+          className="grid grid-cols-1 md:grid-cols-2 border-t border-white/10 first:border-t-0 bg-[#F0F1F1]"
+          data-testid={`featured-row-${index}`}
+        >
         {/* Text side — always LEFT */}
         <motion.div
           initial={{ opacity: 0, x: slideFrom }}
@@ -62,25 +68,25 @@ export const NewsSection = () => {
           className="flex flex-col justify-center px-10 lg:px-16 xl:px-20 py-14 lg:py-20"
           data-testid={`featured-text-${index}`}
         >
-          <h2 className="text-[1.7rem] lg:text-[2.1rem] xl:text-[2.4rem] font-bold text-white leading-[1.2] mb-5 tracking-tight">
+          <h2 className="text-[1.7rem] lg:text-[2.1rem] xl:text-[2.4rem] font-bold text-black leading-[1.2] mb-5 tracking-tight">
             {article.title}
           </h2>
 
           {hasDescription && article.summary && (
-            <p className="text-white/60 text-[0.95rem] leading-relaxed mb-7 line-clamp-3">
+            <p className="text-black/60 text-[0.95rem] leading-relaxed mb-7 line-clamp-3">
               {article.summary}
             </p>
           )}
 
           {!hasDescription && (
-            <p className="text-white/40 text-sm mb-7">
+            <p className="text-black/40 text-sm mb-7">
               {format(new Date(article.created_at), 'MMMM d, yyyy')}
             </p>
           )}
 
           <Link
             to={`/news/${article.id}`}
-            className="inline-flex items-center self-start text-white text-[0.85rem] font-medium border border-white/30 px-6 py-2.5 hover:bg-white hover:text-[#3C3C3C] transition-all duration-300 group"
+            className="inline-flex items-center self-start text-black text-[0.85rem] font-medium border border-black/30 px-6 py-2.5 hover:bg-[#48AE92] hover:text-[#3C3C3C] transition-all duration-300 group"
             data-testid={`featured-link-${index}`}
           >
             <span>Find out more</span>

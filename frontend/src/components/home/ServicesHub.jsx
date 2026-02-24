@@ -1,100 +1,73 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Monitor, Users, BarChart3, ArrowUpRight } from 'lucide-react';
-
-const services = [
-  {
-    icon: Monitor,
-    title: 'IT Global Services',
-    description: 'Access IT support, software requests, and technical assistance through our centralized IT portal.',
-    link: '/services/it',
-    color: 'from-blue-500/20 to-blue-600/20',
-    iconBg: 'bg-blue-100',
-    iconColor: 'text-blue-600',
-  },
-  {
-    icon: Users,
-    title: 'HR Darwinbox',
-    description: 'Manage your HR needs including leave requests, payroll information, and employee benefits.',
-    link: '/services/hr',
-    color: 'from-purple-500/20 to-purple-600/20',
-    iconBg: 'bg-purple-100',
-    iconColor: 'text-purple-600',
-  },
-  {
-    icon: BarChart3,
-    title: 'FA E-Asset',
-    description: 'Track and manage company assets, request equipment, and view asset allocation status.',
-    link: '/services/fa',
-    color: 'from-emerald-500/20 to-emerald-600/20',
-    iconBg: 'bg-emerald-100',
-    iconColor: 'text-emerald-600',
-  },
-];
+import { LayoutGrid, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Pastikan install react-router-dom
 
 export const ServicesHub = () => {
   return (
     <section className="py-24 bg-white" id="services" data-testid="services-section">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <span className="text-[#0C765B] font-semibold text-sm uppercase tracking-wider mb-2 block">
-            Tools Dashboard
+            Centralized Access
           </span>
           <h2 className="text-4xl font-bold text-slate-900 tracking-tight mb-4">
             Employee Services Hub
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto">
-            Quick access to essential employee tools and services. Everything you need to manage your work efficiently.
+            Access all essential tools (IT, HR, Assets) from one single dashboard.
           </p>
         </motion.div>
 
-        {/* Services Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <motion.a
-              key={index}
-              href={service.link}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -8 }}
-              className="group relative"
-              data-testid={`service-card-${index}`}
-            >
-              <div className="glass rounded-2xl p-8 h-full border border-slate-200/50 hover:border-[#0C765B]/30 transition-all duration-300 hover:shadow-xl">
-                {/* Icon */}
-                <div className={`w-14 h-14 ${service.iconBg} rounded-xl flex items-center justify-center mb-6`}>
-                  <service.icon className={`w-7 h-7 ${service.iconColor}`} />
-                </div>
-
-                {/* Content */}
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-[#0C765B] transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-slate-600 leading-relaxed mb-6">
-                  {service.description}
-                </p>
-
-                {/* Link */}
-                <div className="flex items-center text-[#0C765B] font-semibold">
-                  <span>Access Portal</span>
-                  <ArrowUpRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </div>
+        {/* Single Main Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* Link ini mengarah ke route internal yang akan menampilkan ServicePages.jsx */}
+          <Link to="/services/portal" className="group relative block">
+            
+            <div className="glass rounded-3xl p-10 border border-slate-200/50 hover:border-[#0C765B]/30 transition-all duration-300 hover:shadow-2xl flex flex-col md:flex-row items-center gap-8 bg-white">
+              
+              {/* Icon Visual */}
+              <div className="w-24 h-24 bg-gradient-to-br from-[#0C765B] to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 shrink-0">
+                <LayoutGrid className="w-10 h-10 text-white" />
               </div>
 
-              {/* Decorative gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${service.color} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`} />
-            </motion.a>
-          ))}
-        </div>
+              {/* Text Content */}
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-[#0C765B] transition-colors">
+                  Open GYS Portal
+                </h3>
+                <p className="text-slate-600 leading-relaxed">
+                  Click here to access <strong>IT Global Services</strong>, <strong>HR Darwinbox</strong>, and <strong>FA E-Asset</strong> management in one integrated system.
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <div className="shrink-0">
+                <span className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#0C765B]/10 text-[#0C765B] font-semibold group-hover:bg-[#0C765B] group-hover:text-white transition-all duration-300">
+                  Access Portal
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </div>
+
+            {/* Decorative Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl" />
+          </Link>
+        </motion.div>
+
       </div>
     </section>
   );
