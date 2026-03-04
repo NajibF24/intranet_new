@@ -20,7 +20,18 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 ### Phase 2 - Corporate Pages (Completed)
 - **Corporate Overview** (`/corporate/overview`): Hero, stats bar, about section, vision/mission, global network
 - **Corporate Philosophy** (`/corporate/philosophy`): Redesigned with full content - hero, "Strength in Excellence" tagline, intro, 3 core values (Quality, Innovation, Sustainability) with key highlights
-- **Corporate History & Group Structure** (`/corporate/history`): Redesigned with horizontal green timeline (1970, 1989, 1991, 2024, Today milestones) and unified shareholder section with real company logos (Yamato 45%, SYS 35%, Hanwa 15%, GRP 5%) and detail cards. Logos stored as customer assets.
+- **Corporate History & Group Structure** (`/corporate/history`): Redesigned with horizontal green timeline and shareholder diagram with company logos
+
+### Phase 3 - Backend Refactoring (Completed)
+- Refactored monolithic `server.py` into modular structure with routes, models, and database modules
+- Added `python-dotenv` for environment variable management
+
+### Phase 4 - Bug Fixes & Activity Log (Completed - Mar 4, 2026)
+- **Fixed navbar transparency bug** on News Detail page: Header now transparent with white text on page load, transitions to solid white after scrolling
+- **Implemented Admin Activity Log**: Full logging system tracking user logins, content changes (news/pages CRUD), settings updates, and user management actions
+  - Backend: `logs` collection, `GET /api/logs` and `GET /api/logs/count` endpoints (admin-only)
+  - Frontend: Admin "Activity Log" page with search, category filtering, pagination
+  - Sidebar link visible only to admin users
 
 ### Phase 3 - CMS Page Management (In Progress)
 - Page templates (7 templates) created on backend
@@ -30,30 +41,37 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 
 ## File Architecture
 
-### Backend (refactored from 1,418-line monolith)
+### Backend
 ```
 /app/backend/
-  server.py              # Slim entry: app setup + router includes (~55 lines)
+  server.py              # Slim entry: app setup + router includes
   database.py            # MongoDB connection (db, client)
   auth.py                # JWT helpers, password hashing, get_current_user
   models/                # Pydantic models
-    user.py, news.py, event.py, album.py, employee.py, page.py, menu.py, settings.py
+    user.py, news.py, event.py, album.py, employee.py, page.py, menu.py, settings.py, log.py
   routes/                # API route handlers
     auth.py, users.py, news.py, events.py, albums.py, photos.py,
-    employees.py, settings.py, pages.py, menus.py, seed.py
+    employees.py, settings.py, pages.py, menus.py, seed.py, logs.py
+  tests/
+    test_logs_api.py
 ```
 
 ### Frontend
 ```
 /app/frontend/src/pages/
-  CorporatePages.jsx          # Re-exports from split files
-  CorporateOverview.jsx        # Overview page
-  CorporatePhilosophy.jsx      # Philosophy page shell
-  PhilosophySections.jsx        # Quality/Innovation/Sustainability sections
-  CorporateHistory.jsx          # History page shell
-  HistoryTimeline.jsx            # Horizontal timeline component
-  HistoryShareholder.jsx         # Shareholder diagram + cards
+  HomePage.jsx, NewsPage.jsx, NewsDetailPage.jsx, EventsPage.jsx, GalleryPage.jsx
+  CorporatePages.jsx, CorporateOverview.jsx, CorporatePhilosophy.jsx, CorporateHistory.jsx
+  PhilosophySections.jsx, HistoryTimeline.jsx, HistoryShareholder.jsx
+  AdminLayout.jsx, AdminDashboard.jsx, AdminNews.jsx, AdminLogs.jsx, ...
 ```
+
+## Key API Endpoints
+- `POST /api/auth/login` - Login (logs activity)
+- `GET /api/logs` - Get activity logs (admin only)
+- `GET /api/logs/count` - Get log count (admin only)
+- `GET /api/news`, `POST /api/news`, `PUT /api/news/:id`, `DELETE /api/news/:id` (all log activity)
+- `GET /api/pages`, `POST /api/pages`, `PUT /api/pages/:id`, `DELETE /api/pages/:id` (all log activity)
+- `PUT /api/settings/hero`, `PUT /api/settings/ticker` (log activity)
 
 ## Prioritized Backlog
 ### P0
@@ -66,6 +84,7 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 ### P2
 - Convert static CorporateOverview to CMS-editable template
 - Additional block types or design refinements
+- Cleanup potentially redundant CorporateOverview.jsx
 
 ## Credentials
-- Admin: admin@test.com / password
+- Admin: admin@gys.co.id / admin123
