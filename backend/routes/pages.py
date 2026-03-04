@@ -3,6 +3,7 @@ from typing import List
 from models.page import PageCreate, PageUpdate, PageResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 from datetime import datetime, timezone
 
@@ -45,6 +46,7 @@ async def create_page(page: PageCreate, current_user: dict = Depends(get_current
         "updated_at": now
     }
     await db.pages.insert_one(page_data)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_page", "content", f"Created page: {page.title}")
     return PageResponse(**page_data)
 
 
@@ -57,6 +59,7 @@ async def update_page(page_id: str, page: PageUpdate, current_user: dict = Depen
     update_data["updated_at"] = datetime.now(timezone.utc)
     await db.pages.update_one({"id": page_id}, {"$set": update_data})
     updated = await db.pages.find_one({"id": page_id}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_page", "content", f"Updated page: {updated.get('title', page_id)}")
     return PageResponse(**updated)
 
 
@@ -65,4 +68,5 @@ async def delete_page(page_id: str, current_user: dict = Depends(get_current_use
     result = await db.pages.delete_one({"id": page_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Page not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_page", "content", f"Deleted page: {page_id}")
     return {"message": "Page deleted successfully"}

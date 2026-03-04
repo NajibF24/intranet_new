@@ -19,6 +19,7 @@ from routes.settings import router as settings_router
 from routes.pages import router as pages_router
 from routes.menus import router as menus_router
 from routes.seed import router as seed_router
+from routes.logs import router as logs_router
 
 app = FastAPI(title="GYS Intranet API")
 
@@ -42,6 +43,7 @@ api_router.include_router(settings_router)
 api_router.include_router(pages_router)
 api_router.include_router(menus_router)
 api_router.include_router(seed_router)
+api_router.include_router(logs_router)
 
 app.include_router(api_router)
 

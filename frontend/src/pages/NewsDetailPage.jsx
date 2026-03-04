@@ -67,8 +67,8 @@ export const NewsDetailPage = () => {
       <Header />
       
       {/* Hero Image */}
-      <div className="relative pt-20">
-        <div className="h-[50vh] min-h-[400px] relative">
+      <div className="relative">
+        <div className="h-[60vh] min-h-[500px] relative">
           <img
             src={news.image_url || 'https://images.unsplash.com/photo-1721745250213-c3e1a2f4eeeb?w=1920'}
             alt={news.title}

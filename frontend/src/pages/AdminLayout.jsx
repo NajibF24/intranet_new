@@ -17,6 +17,7 @@ import {
   Radio,
   FileText,
   LayoutList,
+  Activity,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -30,6 +31,7 @@ const sidebarItems = [
   { icon: Users, label: 'Employees', path: '/admin/employees' },
   { icon: FileText, label: 'Page Management', path: '/admin/pages' },
   { icon: LayoutList, label: 'Menu Management', path: '/admin/menus' },
+  { icon: Activity, label: 'Activity Log', path: '/admin/logs', adminOnly: true },
   { icon: UserCog, label: 'User Management', path: '/admin/users', adminOnly: true },
 ];
 

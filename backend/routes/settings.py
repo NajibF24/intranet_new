@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from models.settings import HeroSettingsUpdate, HeroSettingsResponse, TickerSettingsUpdate, TickerSettingsResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 
 router = APIRouter(prefix="/settings", tags=["Settings"])
 
@@ -58,6 +59,7 @@ async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict 
         default_settings.update(update_data)
         await db.settings.insert_one(default_settings)
     updated = await db.settings.find_one({"type": "hero"}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_hero", "settings", "Updated hero settings")
     return HeroSettingsResponse(**updated)
 
 
@@ -80,4 +82,5 @@ async def update_ticker_settings(settings: TickerSettingsUpdate, current_user: d
         default_settings.update(update_data)
         await db.settings.insert_one(default_settings)
     updated = await db.settings.find_one({"type": "ticker"}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_ticker", "settings", "Updated ticker settings")
     return TickerSettingsResponse(**updated)

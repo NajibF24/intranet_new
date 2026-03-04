@@ -3,6 +3,7 @@ from typing import List
 from models.user import UserCreate, UserUpdate, UserResponse
 from auth import hash_password, get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 from datetime import datetime, timezone
 
@@ -45,6 +46,7 @@ async def create_user(user: UserCreate, current_user: dict = Depends(get_current
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.users.insert_one(user_doc)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_user", "admin", f"Created user: {user.email}")
     return UserResponse(id=user_id, email=user.email, name=user.name, role=user.role, permissions=user.permissions)
 
 
@@ -59,6 +61,7 @@ async def update_user(user_id: str, user: UserUpdate, current_user: dict = Depen
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
     updated = await db.users.find_one({"id": user_id}, {"_id": 0, "password": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_user", "admin", f"Updated user: {updated.get('email', user_id)}")
     return UserResponse(**updated)
 
 
@@ -69,4 +72,5 @@ async def delete_user(user_id: str, current_user: dict = Depends(get_current_use
     result = await db.users.delete_one({"id": user_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_user", "admin", f"Deleted user: {user_id}")
     return {"message": "User deleted successfully"}

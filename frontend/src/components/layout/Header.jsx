@@ -8,7 +8,7 @@ import { Level2Item, MobileSection } from './NavParts';
 var ICONS = { 'building': Building2, 'file-text': FileText, 'users': Users, 'message-square': MessageSquare };
 
 export function Header() {
-  var [isScrolled, setIsScrolled] = useState(false);
+  var [isScrolled, setIsScrolled] = useState(window.scrollY > 20);
   var [mobileOpen, setMobileOpen] = useState(false);
   var [activeDD, setActiveDD] = useState(null);
   var [items, setItems] = useState([]);
@@ -16,6 +16,7 @@ export function Header() {
 
   useEffect(function() {
     function onScroll() { setIsScrolled(window.scrollY > 20); }
+    onScroll();
     window.addEventListener('scroll', onScroll);
     return function() { window.removeEventListener('scroll', onScroll); };
   }, []);

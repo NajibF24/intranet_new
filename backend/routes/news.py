@@ -3,6 +3,7 @@ from typing import List, Optional
 from models.news import NewsCreate, NewsUpdate, NewsResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 from datetime import datetime, timezone
 
@@ -37,6 +38,7 @@ async def create_news(news: NewsCreate, current_user: dict = Depends(get_current
         "updated_at": now
     }
     await db.news.insert_one(news_doc)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_news", "content", f"Created news: {news.title}")
     return NewsResponse(**news_doc)
 
 
@@ -48,6 +50,7 @@ async def update_news(news_id: str, news: NewsUpdate, current_user: dict = Depen
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="News not found")
     updated = await db.news.find_one({"id": news_id}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_news", "content", f"Updated news: {updated.get('title', news_id)}")
     return NewsResponse(**updated)
 
 
@@ -56,4 +59,5 @@ async def delete_news(news_id: str, current_user: dict = Depends(get_current_use
     result = await db.news.delete_one({"id": news_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="News not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_news", "content", f"Deleted news: {news_id}")
     return {"message": "News deleted successfully"}

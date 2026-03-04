@@ -27,6 +27,7 @@ import { AdminTicker } from "./pages/AdminTicker";
 import { AdminPages } from "./pages/AdminPages";
 import { AdminPageEditor } from "./pages/AdminPageEditor";
 import { AdminMenus } from "./pages/AdminMenus";
+import { AdminLogs } from "./pages/AdminLogs";
 
 // Dynamic CMS Page
 import { DynamicPage } from "./pages/DynamicPage";
@@ -75,6 +76,7 @@ function App() {
               <Route path="pages" element={<AdminPages />} />
               <Route path="pages/:pageId/edit" element={<AdminPageEditor />} />
               <Route path="menus" element={<AdminMenus />} />
+              <Route path="logs" element={<AdminLogs />} />
             </Route>
 
             {/* Dynamic CMS Pages */}

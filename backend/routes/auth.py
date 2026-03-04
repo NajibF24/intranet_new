@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from models.user import UserCreate, UserLogin, UserResponse
 from auth import hash_password, verify_password, create_token, get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 from datetime import datetime, timezone
 
@@ -33,6 +34,7 @@ async def login(credentials: UserLogin):
     if not user or not verify_password(credentials.password, user["password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_token(user["id"], user["email"], user["role"])
+    await create_log(user["email"], user.get("name", ""), "login", "auth", "User logged in")
     return {
         "token": token,
         "user": UserResponse(id=user["id"], email=user["email"], name=user["name"], role=user["role"])

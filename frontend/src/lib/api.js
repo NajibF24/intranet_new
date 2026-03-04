@@ -101,6 +101,10 @@ export const apiService = {
 
   // Seed data
   seedData: () => api.post('/seed'),
+
+  // Activity Logs (admin only)
+  getLogs: (params) => api.get('/logs', { params }),
+  getLogsCount: (params) => api.get('/logs/count', { params }),
 };
 
 export default api;
