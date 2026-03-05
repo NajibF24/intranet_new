@@ -28,11 +28,11 @@ export const NewsSection = () => {
 
   if (loading) {
     return (
-      <section className="bg-[#3C3C3C]" id="news">
+      <section className="bg-[#f7f7f7]" id="news">
         <div className="animate-pulse">
           <div className="grid grid-cols-2 min-h-[450px]">
-            <div className="bg-white/5" />
-            <div className="bg-white/3" />
+            <div className="bg-slate-100" />
+            <div className="bg-slate-200" />
           </div>
         </div>
       </section>
@@ -46,7 +46,7 @@ export const NewsSection = () => {
     return (
       <div
         key={article.id}
-        className="grid grid-cols-1 md:grid-cols-2 border-t border-white/10 first:border-t-0"
+        className="grid grid-cols-1 md:grid-cols-2 border-t border-slate-200 first:border-t-0"
         data-testid={`featured-row-${index}`}
       >
         {/* Text side — always LEFT */}
@@ -58,23 +58,23 @@ export const NewsSection = () => {
           className="flex flex-col justify-center px-10 lg:px-16 xl:px-20 py-14 lg:py-20"
           data-testid={`featured-text-${index}`}
         >
-          <h2 className="text-[1.7rem] lg:text-[2.1rem] xl:text-[2.4rem] font-bold text-white leading-[1.2] mb-4 tracking-tight">
+          <h2 className="text-[1.7rem] lg:text-[2.1rem] xl:text-[2.4rem] font-bold text-slate-900 leading-[1.2] mb-4 tracking-tight">
             {article.title}
           </h2>
 
           {article.summary && (
-            <p className="text-white/60 text-[0.95rem] leading-relaxed mb-4 line-clamp-3">
+            <p className="text-slate-500 text-[0.95rem] leading-relaxed mb-4 line-clamp-3">
               {article.summary}
             </p>
           )}
 
-          <p className="text-white/40 text-sm mb-7">
+          <p className="text-slate-400 text-sm mb-7">
             {format(new Date(article.created_at), 'MMMM d, yyyy')}
           </p>
 
           <Link
             to={`/news/${article.id}`}
-            className="inline-flex items-center self-start text-white text-[0.85rem] font-medium border border-white/30 px-6 py-2.5 hover:bg-white hover:text-[#3C3C3C] transition-all duration-300 group"
+            className="inline-flex items-center self-start text-slate-700 text-[0.85rem] font-medium border border-slate-300 px-6 py-2.5 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300 group"
             data-testid={`featured-link-${index}`}
           >
             <span>Find out more</span>
@@ -105,9 +105,9 @@ export const NewsSection = () => {
 
   return (
     <section id="news" data-testid="news-section">
-      {/* Featured News — ArcelorMittal layout */}
+      {/* Featured News — light background layout */}
       {featuredNews.length > 0 && (
-        <div className="bg-[#3C3C3C]" data-testid="featured-news-section">
+        <div className="bg-[#f7f7f7]" data-testid="featured-news-section">
           {featuredNews.map((article, index) => renderFeaturedRow(article, index))}
         </div>
       )}
