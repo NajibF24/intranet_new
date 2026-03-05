@@ -18,60 +18,34 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 - News ticker management
 
 ### Phase 2 - Corporate Pages (Completed)
-- **Corporate Overview** (`/corporate/overview`): Hero, stats bar, about section, vision/mission, global network
-- **Corporate Philosophy** (`/corporate/philosophy`): Redesigned with full content - hero, "Strength in Excellence" tagline, intro, 3 core values (Quality, Innovation, Sustainability) with key highlights
-- **Corporate History & Group Structure** (`/corporate/history`): Redesigned with horizontal green timeline and shareholder diagram with company logos
+- Corporate Overview, Philosophy, History & Group Structure pages
 
 ### Phase 3 - Backend Refactoring (Completed)
-- Refactored monolithic `server.py` into modular structure with routes, models, and database modules
-- Added `python-dotenv` for environment variable management
+- Refactored monolithic server.py into modular routes, models, database structure
 
 ### Phase 4 - Bug Fixes & Activity Log (Completed - Mar 4, 2026)
-- **Fixed navbar transparency bug** on News Detail page: Header now transparent with white text on page load, transitions to solid white after scrolling
-- **Implemented Admin Activity Log**: Full logging system tracking user logins, content changes (news/pages CRUD), settings updates, and user management actions
-  - Backend: `logs` collection, `GET /api/logs` and `GET /api/logs/count` endpoints (admin-only)
-  - Frontend: Admin "Activity Log" page with search, category filtering, pagination
-  - Sidebar link visible only to admin users
+- Fixed navbar transparency bug on News Detail page
+- Implemented Admin Activity Log tracking all user actions across all CMS sections (news, events, employees, pages, menus, albums, photos, settings)
 
-### Phase 3 - CMS Page Management (In Progress)
-- Page templates (7 templates) created on backend
-- New "Create Page" dialog with template-based and blank creation flows
-- Enhanced block editor with multiple block types
-- **Pending:** Seed existing nav menu pages into CMS page list
-
-## File Architecture
-
-### Backend
-```
-/app/backend/
-  server.py              # Slim entry: app setup + router includes
-  database.py            # MongoDB connection (db, client)
-  auth.py                # JWT helpers, password hashing, get_current_user
-  models/                # Pydantic models
-    user.py, news.py, event.py, album.py, employee.py, page.py, menu.py, settings.py, log.py
-  routes/                # API route handlers
-    auth.py, users.py, news.py, events.py, albums.py, photos.py,
-    employees.py, settings.py, pages.py, menus.py, seed.py, logs.py
-  tests/
-    test_logs_api.py
-```
-
-### Frontend
-```
-/app/frontend/src/pages/
-  HomePage.jsx, NewsPage.jsx, NewsDetailPage.jsx, EventsPage.jsx, GalleryPage.jsx
-  CorporatePages.jsx, CorporateOverview.jsx, CorporatePhilosophy.jsx, CorporateHistory.jsx
-  PhilosophySections.jsx, HistoryTimeline.jsx, HistoryShareholder.jsx
-  AdminLayout.jsx, AdminDashboard.jsx, AdminNews.jsx, AdminLogs.jsx, ...
-```
+### Phase 5 - Granular RBAC (Completed - Mar 5, 2026)
+- **Three roles:** Admin (full access), Editor (view + edit assigned sections), Viewer (read-only on assigned sections)
+- **8 CMS sections:** news, events, gallery, employees, pages, menus, hero, ticker
+- **Backend enforcement:** `require_permission(section)` dependency on all write endpoints; viewers blocked from all writes; editors blocked from unassigned sections
+- **Frontend:** Permissions grid in User Management dialog; sidebar filters based on user permissions; role badges (Admin/Editor/Viewer) with icons
+- **Tested:** 22 backend + 7 frontend tests, 100% pass rate
 
 ## Key API Endpoints
-- `POST /api/auth/login` - Login (logs activity)
-- `GET /api/logs` - Get activity logs (admin only)
-- `GET /api/logs/count` - Get log count (admin only)
-- `GET /api/news`, `POST /api/news`, `PUT /api/news/:id`, `DELETE /api/news/:id` (all log activity)
-- `GET /api/pages`, `POST /api/pages`, `PUT /api/pages/:id`, `DELETE /api/pages/:id` (all log activity)
-- `PUT /api/settings/hero`, `PUT /api/settings/ticker` (log activity)
+- `POST /api/auth/login` - Login (returns permissions in user object)
+- `GET /api/auth/me` - Current user with permissions
+- `GET /api/logs`, `GET /api/logs/count` - Activity logs (admin only)
+- All CRUD endpoints enforce `require_permission(section)` on write operations
+
+## Permissions Model
+```
+Admin:  role="admin"  → full access, permissions field ignored
+Editor: role="editor" → permissions=["news","events",...] → can read + write assigned sections
+Viewer: role="viewer" → permissions=["gallery",...] → can read assigned sections only
+```
 
 ## Prioritized Backlog
 ### P0
@@ -84,7 +58,8 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 ### P2
 - Convert static CorporateOverview to CMS-editable template
 - Additional block types or design refinements
-- Cleanup potentially redundant CorporateOverview.jsx
 
 ## Credentials
 - Admin: admin@gys.co.id / admin123
+- Editor: editor@gys.co.id / editor123 (permissions: news, events)
+- Viewer: viewer@gys.co.id / viewer123 (permissions: gallery)
