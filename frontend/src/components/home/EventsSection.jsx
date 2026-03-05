@@ -233,7 +233,7 @@ export const EventsSection = () => {
                       </div>
                       <div>
                         <p className="font-semibold text-slate-900">{holiday.title}</p>
-                        <p className="text-sm text-slate-500">{holiday.description}</p>
+                        <div className="text-sm text-slate-500 line-clamp-1 [&>p]:m-0" dangerouslySetInnerHTML={{ __html: holiday.description }} />
                       </div>
                     </div>
                   </div>
@@ -268,7 +268,7 @@ export const EventsSection = () => {
                       </div>
                       <div>
                         <p className="font-semibold text-slate-900">{birthday.title}</p>
-                        <p className="text-sm text-slate-500">{birthday.description}</p>
+                        <div className="text-sm text-slate-500 line-clamp-1 [&>p]:m-0" dangerouslySetInnerHTML={{ __html: birthday.description }} />
                       </div>
                     </div>
                   </div>

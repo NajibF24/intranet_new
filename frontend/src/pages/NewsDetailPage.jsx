@@ -128,13 +128,10 @@ export const NewsDetailPage = () => {
           </p>
 
           {/* Main Content */}
-          <div className="prose prose-lg prose-slate max-w-none">
-            {news.content.split('\n').map((paragraph, index) => (
-              <p key={index} className="text-slate-700 leading-relaxed mb-4">
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          <div
+            className="prose prose-lg prose-slate max-w-none"
+            dangerouslySetInnerHTML={{ __html: news.content }}
+          />
 
           {/* Share */}
           <div className="mt-12 pt-8 border-t border-slate-200">

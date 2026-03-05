@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Pencil, Trash2, Search, Calendar, MapPin } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { apiService } from '../lib/api';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
+
+var RichTextEditor = lazy(function() { return import('../components/RichTextEditor'); });
 
 const emptyEvent = {
   title: '',
@@ -207,7 +209,7 @@ export const AdminEvents = () => {
 
       {/* Add/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
             <DialogDescription>Fill in the details for the event.</DialogDescription>
@@ -224,12 +226,14 @@ export const AdminEvents = () => {
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Description *</label>
-              <Input
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Event description"
-                data-testid="event-description-input"
-              />
+              <Suspense fallback={<div className="h-32 bg-slate-100 rounded-lg animate-pulse" />}>
+                <RichTextEditor
+                  value={formData.description}
+                  onChange={(value) => setFormData({ ...formData, description: value })}
+                  placeholder="Event description..."
+                  dataTestId="event-description-input"
+                />
+              </Suspense>
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Date *</label>

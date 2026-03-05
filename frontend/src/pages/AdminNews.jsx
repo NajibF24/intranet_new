@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Pencil, Trash2, Search, Star, X, Upload } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -9,6 +9,8 @@ import { Switch } from '../components/ui/switch';
 import { apiService } from '../lib/api';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+
+var RichTextEditor = lazy(function() { return import('../components/RichTextEditor'); });
 
 const PRESET_CATEGORIES = ['general', 'production', 'safety', 'hr', 'business', 'sustainability'];
 
@@ -266,13 +268,14 @@ export const AdminNews = () => {
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Content *</label>
-              <textarea
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Full article content"
-                className="w-full h-32 px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0C765B]/20 focus:border-[#0C765B]"
-                data-testid="news-content-input"
-              />
+              <Suspense fallback={<div className="h-48 bg-slate-100 rounded-lg animate-pulse" />}>
+                <RichTextEditor
+                  value={formData.content}
+                  onChange={(value) => setFormData({ ...formData, content: value })}
+                  placeholder="Write the full article content..."
+                  dataTestId="news-content-input"
+                />
+              </Suspense>
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1 block">Image</label>

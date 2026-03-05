@@ -206,7 +206,7 @@ export const EventsPage = () => {
                             </span>
                           </div>
                           <h4 className="font-semibold text-slate-900 mb-1">{event.title}</h4>
-                          <p className="text-slate-600 text-sm mb-2">{event.description}</p>
+                          <div className="text-slate-600 text-sm mb-2 line-clamp-2 [&>p]:m-0" dangerouslySetInnerHTML={{ __html: event.description }} />
                           {event.location && (
                             <p className="text-slate-500 text-sm flex items-center mb-3">
                               <MapPin className="w-4 h-4 mr-1" />
