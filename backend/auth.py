@@ -39,3 +39,21 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise HTTPException(status_code=401, detail="Token expired")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+
+def require_permission(section: str):
+    """Dependency factory: checks user has write access to a CMS section.
+    Admin always passes. Viewer always blocked. Editor needs the section in permissions."""
+    async def checker(current_user: dict = Depends(get_current_user)):
+        if current_user.get("role") == "admin":
+            return current_user
+        from database import db
+        user = await db.users.find_one({"id": current_user["user_id"]}, {"_id": 0, "password": 0})
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+        if user.get("role") == "viewer":
+            raise HTTPException(status_code=403, detail="Viewers have read-only access")
+        if section not in user.get("permissions", []):
+            raise HTTPException(status_code=403, detail=f"No permission for {section}")
+        return current_user
+    return checker

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from models.menu import MenuItemCreate, MenuItemUpdate, MenuItemResponse, ReorderRequest
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -40,7 +40,7 @@ async def get_menus_flat():
 
 
 @router.post("", response_model=MenuItemResponse)
-async def create_menu_item(item: MenuItemCreate, current_user: dict = Depends(get_current_user)):
+async def create_menu_item(item: MenuItemCreate, current_user: dict = Depends(require_permission("menus"))):
     menu_data = {
         "id": str(uuid.uuid4()),
         **item.model_dump()
@@ -52,7 +52,7 @@ async def create_menu_item(item: MenuItemCreate, current_user: dict = Depends(ge
 
 
 @router.put("/reorder")
-async def reorder_menus(request: ReorderRequest, current_user: dict = Depends(get_current_user)):
+async def reorder_menus(request: ReorderRequest, current_user: dict = Depends(require_permission("menus"))):
     for item in request.items:
         await db.menus.update_one(
             {"id": item["id"]},
@@ -63,7 +63,7 @@ async def reorder_menus(request: ReorderRequest, current_user: dict = Depends(ge
 
 
 @router.put("/{menu_id}", response_model=MenuItemResponse)
-async def update_menu_item(menu_id: str, item: MenuItemUpdate, current_user: dict = Depends(get_current_user)):
+async def update_menu_item(menu_id: str, item: MenuItemUpdate, current_user: dict = Depends(require_permission("menus"))):
     existing = await db.menus.find_one({"id": menu_id})
     if not existing:
         raise HTTPException(status_code=404, detail="Menu item not found")
@@ -76,7 +76,7 @@ async def update_menu_item(menu_id: str, item: MenuItemUpdate, current_user: dic
 
 
 @router.delete("/{menu_id}")
-async def delete_menu_item(menu_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_menu_item(menu_id: str, current_user: dict = Depends(require_permission("menus"))):
     await db.menus.delete_many({"parent_id": menu_id})
     result = await db.menus.delete_one({"id": menu_id})
     if result.deleted_count == 0:

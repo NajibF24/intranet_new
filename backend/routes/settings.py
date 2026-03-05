@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from models.settings import HeroSettingsUpdate, HeroSettingsResponse, TickerSettingsUpdate, TickerSettingsResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 
@@ -49,7 +49,7 @@ async def get_hero_settings():
 
 
 @router.put("/hero", response_model=HeroSettingsResponse)
-async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict = Depends(get_current_user)):
+async def update_hero_settings(settings: HeroSettingsUpdate, current_user: dict = Depends(require_permission("hero"))):
     update_data = {k: v for k, v in settings.model_dump().items() if v is not None}
     existing = await db.settings.find_one({"type": "hero"})
     if existing:
@@ -72,7 +72,7 @@ async def get_ticker_settings():
 
 
 @router.put("/ticker", response_model=TickerSettingsResponse)
-async def update_ticker_settings(settings: TickerSettingsUpdate, current_user: dict = Depends(get_current_user)):
+async def update_ticker_settings(settings: TickerSettingsUpdate, current_user: dict = Depends(require_permission("ticker"))):
     update_data = {k: v for k, v in settings.model_dump().items() if v is not None}
     existing = await db.settings.find_one({"type": "ticker"})
     if existing:

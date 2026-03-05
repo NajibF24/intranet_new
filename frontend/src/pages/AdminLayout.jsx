@@ -22,17 +22,17 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
-  { icon: Palette, label: 'Hero Settings', path: '/admin/hero' },
-  { icon: Radio, label: 'Ticker Banner', path: '/admin/ticker' },
-  { icon: Newspaper, label: 'News', path: '/admin/news' },
-  { icon: Calendar, label: 'Events', path: '/admin/events' },
-  { icon: Image, label: 'Gallery', path: '/admin/gallery' },
-  { icon: Users, label: 'Employees', path: '/admin/employees' },
-  { icon: FileText, label: 'Page Management', path: '/admin/pages' },
-  { icon: LayoutList, label: 'Menu Management', path: '/admin/menus' },
-  { icon: Activity, label: 'Activity Log', path: '/admin/logs', adminOnly: true },
-  { icon: UserCog, label: 'User Management', path: '/admin/users', adminOnly: true },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard', section: null },
+  { icon: Palette, label: 'Hero Settings', path: '/admin/hero', section: 'hero' },
+  { icon: Radio, label: 'Ticker Banner', path: '/admin/ticker', section: 'ticker' },
+  { icon: Newspaper, label: 'News', path: '/admin/news', section: 'news' },
+  { icon: Calendar, label: 'Events', path: '/admin/events', section: 'events' },
+  { icon: Image, label: 'Gallery', path: '/admin/gallery', section: 'gallery' },
+  { icon: Users, label: 'Employees', path: '/admin/employees', section: 'employees' },
+  { icon: FileText, label: 'Page Management', path: '/admin/pages', section: 'pages' },
+  { icon: LayoutList, label: 'Menu Management', path: '/admin/menus', section: 'menus' },
+  { icon: Activity, label: 'Activity Log', path: '/admin/logs', adminOnly: true, section: null },
+  { icon: UserCog, label: 'User Management', path: '/admin/users', adminOnly: true, section: null },
 ];
 
 export const AdminLayout = () => {
@@ -121,7 +121,12 @@ export const AdminLayout = () => {
         {/* Navigation */}
         <nav className="p-4 space-y-2">
           {sidebarItems
-            .filter((item) => !item.adminOnly || user.role === 'admin')
+            .filter((item) => {
+              if (item.adminOnly) return user.role === 'admin';
+              if (item.section === null) return true;
+              if (user.role === 'admin') return true;
+              return (user.permissions || []).includes(item.section);
+            })
             .map((item, index) => {
             const isActive = location.pathname === item.path;
             return (

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
 from models.employee import EmployeeCreate, EmployeeUpdate, EmployeeResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -34,7 +34,7 @@ async def get_employee_by_id(employee_id: str):
 
 
 @router.post("", response_model=EmployeeResponse)
-async def create_employee(employee: EmployeeCreate, current_user: dict = Depends(get_current_user)):
+async def create_employee(employee: EmployeeCreate, current_user: dict = Depends(require_permission("employees"))):
     employee_id = str(uuid.uuid4())
     employee_doc = {"id": employee_id, **employee.model_dump()}
     await db.employees.insert_one(employee_doc)
@@ -43,7 +43,7 @@ async def create_employee(employee: EmployeeCreate, current_user: dict = Depends
 
 
 @router.put("/{employee_id}", response_model=EmployeeResponse)
-async def update_employee(employee_id: str, employee: EmployeeUpdate, current_user: dict = Depends(get_current_user)):
+async def update_employee(employee_id: str, employee: EmployeeUpdate, current_user: dict = Depends(require_permission("employees"))):
     update_data = {k: v for k, v in employee.model_dump().items() if v is not None}
     result = await db.employees.update_one({"id": employee_id}, {"$set": update_data})
     if result.matched_count == 0:
@@ -54,7 +54,7 @@ async def update_employee(employee_id: str, employee: EmployeeUpdate, current_us
 
 
 @router.delete("/{employee_id}")
-async def delete_employee(employee_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_employee(employee_id: str, current_user: dict = Depends(require_permission("employees"))):
     result = await db.employees.delete_one({"id": employee_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Employee not found")

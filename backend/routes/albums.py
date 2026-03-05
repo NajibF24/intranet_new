@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from models.album import AlbumCreate, AlbumUpdate, AlbumResponse, PhotoResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -38,7 +38,7 @@ async def get_album_photos(album_id: str):
 
 
 @router.post("", response_model=AlbumResponse)
-async def create_album(album: AlbumCreate, current_user: dict = Depends(get_current_user)):
+async def create_album(album: AlbumCreate, current_user: dict = Depends(require_permission("gallery"))):
     album_id = str(uuid.uuid4())
     album_doc = {
         "id": album_id,
@@ -51,7 +51,7 @@ async def create_album(album: AlbumCreate, current_user: dict = Depends(get_curr
 
 
 @router.put("/{album_id}", response_model=AlbumResponse)
-async def update_album(album_id: str, album: AlbumUpdate, current_user: dict = Depends(get_current_user)):
+async def update_album(album_id: str, album: AlbumUpdate, current_user: dict = Depends(require_permission("gallery"))):
     update_data = {k: v for k, v in album.model_dump().items() if v is not None}
     result = await db.albums.update_one({"id": album_id}, {"$set": update_data})
     if result.matched_count == 0:
@@ -64,7 +64,7 @@ async def update_album(album_id: str, album: AlbumUpdate, current_user: dict = D
 
 
 @router.delete("/{album_id}")
-async def delete_album(album_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_album(album_id: str, current_user: dict = Depends(require_permission("gallery"))):
     result = await db.albums.delete_one({"id": album_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Album not found")

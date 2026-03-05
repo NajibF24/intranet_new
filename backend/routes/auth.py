@@ -37,7 +37,7 @@ async def login(credentials: UserLogin):
     await create_log(user["email"], user.get("name", ""), "login", "auth", "User logged in")
     return {
         "token": token,
-        "user": UserResponse(id=user["id"], email=user["email"], name=user["name"], role=user["role"])
+        "user": UserResponse(id=user["id"], email=user["email"], name=user["name"], role=user["role"], permissions=user.get("permissions", []))
     }
 
 

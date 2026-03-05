@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
 from models.news import NewsCreate, NewsUpdate, NewsResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -28,7 +28,7 @@ async def get_news_by_id(news_id: str):
 
 
 @router.post("", response_model=NewsResponse)
-async def create_news(news: NewsCreate, current_user: dict = Depends(get_current_user)):
+async def create_news(news: NewsCreate, current_user: dict = Depends(require_permission("news"))):
     news_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc).isoformat()
     news_doc = {
@@ -43,7 +43,7 @@ async def create_news(news: NewsCreate, current_user: dict = Depends(get_current
 
 
 @router.put("/{news_id}", response_model=NewsResponse)
-async def update_news(news_id: str, news: NewsUpdate, current_user: dict = Depends(get_current_user)):
+async def update_news(news_id: str, news: NewsUpdate, current_user: dict = Depends(require_permission("news"))):
     update_data = {k: v for k, v in news.model_dump().items() if v is not None}
     update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
     result = await db.news.update_one({"id": news_id}, {"$set": update_data})
@@ -55,7 +55,7 @@ async def update_news(news_id: str, news: NewsUpdate, current_user: dict = Depen
 
 
 @router.delete("/{news_id}")
-async def delete_news(news_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_news(news_id: str, current_user: dict = Depends(require_permission("news"))):
     result = await db.news.delete_one({"id": news_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="News not found")

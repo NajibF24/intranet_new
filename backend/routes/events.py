@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
 from models.event import EventCreate, EventUpdate, EventResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -28,7 +28,7 @@ async def get_event_by_id(event_id: str):
 
 
 @router.post("", response_model=EventResponse)
-async def create_event(event: EventCreate, current_user: dict = Depends(get_current_user)):
+async def create_event(event: EventCreate, current_user: dict = Depends(require_permission("events"))):
     event_id = str(uuid.uuid4())
     event_doc = {
         "id": event_id,
@@ -41,7 +41,7 @@ async def create_event(event: EventCreate, current_user: dict = Depends(get_curr
 
 
 @router.put("/{event_id}", response_model=EventResponse)
-async def update_event(event_id: str, event: EventUpdate, current_user: dict = Depends(get_current_user)):
+async def update_event(event_id: str, event: EventUpdate, current_user: dict = Depends(require_permission("events"))):
     update_data = {k: v for k, v in event.model_dump().items() if v is not None}
     result = await db.events.update_one({"id": event_id}, {"$set": update_data})
     if result.matched_count == 0:
@@ -52,7 +52,7 @@ async def update_event(event_id: str, event: EventUpdate, current_user: dict = D
 
 
 @router.delete("/{event_id}")
-async def delete_event(event_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_event(event_id: str, current_user: dict = Depends(require_permission("events"))):
     result = await db.events.delete_one({"id": event_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Event not found")

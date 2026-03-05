@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from models.page import PageCreate, PageUpdate, PageResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -34,7 +34,7 @@ async def get_page_by_slug(slug: str):
 
 
 @router.post("", response_model=PageResponse)
-async def create_page(page: PageCreate, current_user: dict = Depends(get_current_user)):
+async def create_page(page: PageCreate, current_user: dict = Depends(require_permission("pages"))):
     existing = await db.pages.find_one({"slug": page.slug})
     if existing:
         raise HTTPException(status_code=400, detail="Page with this slug already exists")
@@ -51,7 +51,7 @@ async def create_page(page: PageCreate, current_user: dict = Depends(get_current
 
 
 @router.put("/{page_id}", response_model=PageResponse)
-async def update_page(page_id: str, page: PageUpdate, current_user: dict = Depends(get_current_user)):
+async def update_page(page_id: str, page: PageUpdate, current_user: dict = Depends(require_permission("pages"))):
     existing = await db.pages.find_one({"id": page_id})
     if not existing:
         raise HTTPException(status_code=404, detail="Page not found")
@@ -64,7 +64,7 @@ async def update_page(page_id: str, page: PageUpdate, current_user: dict = Depen
 
 
 @router.delete("/{page_id}")
-async def delete_page(page_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_page(page_id: str, current_user: dict = Depends(require_permission("pages"))):
     result = await db.pages.delete_one({"id": page_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Page not found")

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from typing import List, Optional
 from models.album import PhotoCreate, PhotoUpdate, PhotoResponse
-from auth import get_current_user
+from auth import get_current_user, require_permission
 from database import db
 from routes.logs import create_log
 import uuid
@@ -38,7 +38,7 @@ async def get_photo_by_id(photo_id: str):
 
 
 @router.post("", response_model=PhotoResponse)
-async def create_photo(photo: PhotoCreate, current_user: dict = Depends(get_current_user)):
+async def create_photo(photo: PhotoCreate, current_user: dict = Depends(require_permission("gallery"))):
     photo_id = str(uuid.uuid4())
     photo_doc = {
         "id": photo_id,
@@ -55,7 +55,7 @@ async def create_photo(photo: PhotoCreate, current_user: dict = Depends(get_curr
 
 
 @router.post("/upload")
-async def upload_photo(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
+async def upload_photo(file: UploadFile = File(...), current_user: dict = Depends(require_permission("gallery"))):
     contents = await file.read()
     base64_data = base64.b64encode(contents).decode('utf-8')
     content_type = file.content_type or "image/jpeg"
@@ -64,7 +64,7 @@ async def upload_photo(file: UploadFile = File(...), current_user: dict = Depend
 
 
 @router.put("/{photo_id}", response_model=PhotoResponse)
-async def update_photo(photo_id: str, photo: PhotoUpdate, current_user: dict = Depends(get_current_user)):
+async def update_photo(photo_id: str, photo: PhotoUpdate, current_user: dict = Depends(require_permission("gallery"))):
     update_data = {k: v for k, v in photo.model_dump().items() if v is not None}
     result = await db.photos.update_one({"id": photo_id}, {"$set": update_data})
     if result.matched_count == 0:
@@ -75,7 +75,7 @@ async def update_photo(photo_id: str, photo: PhotoUpdate, current_user: dict = D
 
 
 @router.delete("/{photo_id}")
-async def delete_photo(photo_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_photo(photo_id: str, current_user: dict = Depends(require_permission("gallery"))):
     result = await db.photos.delete_one({"id": photo_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Photo not found")
