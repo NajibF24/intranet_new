@@ -3,6 +3,7 @@ from typing import List, Optional
 from models.employee import EmployeeCreate, EmployeeUpdate, EmployeeResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
@@ -37,6 +38,7 @@ async def create_employee(employee: EmployeeCreate, current_user: dict = Depends
     employee_id = str(uuid.uuid4())
     employee_doc = {"id": employee_id, **employee.model_dump()}
     await db.employees.insert_one(employee_doc)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_employee", "content", f"Created employee: {employee.name}")
     return EmployeeResponse(**employee_doc)
 
 
@@ -47,6 +49,7 @@ async def update_employee(employee_id: str, employee: EmployeeUpdate, current_us
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Employee not found")
     updated = await db.employees.find_one({"id": employee_id}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_employee", "content", f"Updated employee: {updated.get('name', employee_id)}")
     return EmployeeResponse(**updated)
 
 
@@ -55,4 +58,5 @@ async def delete_employee(employee_id: str, current_user: dict = Depends(get_cur
     result = await db.employees.delete_one({"id": employee_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Employee not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_employee", "content", f"Deleted employee: {employee_id}")
     return {"message": "Employee deleted successfully"}

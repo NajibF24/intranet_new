@@ -3,6 +3,7 @@ from typing import List
 from models.menu import MenuItemCreate, MenuItemUpdate, MenuItemResponse, ReorderRequest
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 
 router = APIRouter(prefix="/menus", tags=["Menus"])
@@ -45,6 +46,7 @@ async def create_menu_item(item: MenuItemCreate, current_user: dict = Depends(ge
         **item.model_dump()
     }
     await db.menus.insert_one(menu_data)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_menu", "content", f"Created menu item: {item.label}")
     menu_data["children"] = []
     return MenuItemResponse(**menu_data)
 
@@ -56,6 +58,7 @@ async def reorder_menus(request: ReorderRequest, current_user: dict = Depends(ge
             {"id": item["id"]},
             {"$set": {"order": item["order"], "parent_id": item.get("parent_id")}}
         )
+    await create_log(current_user["email"], current_user.get("user_id", ""), "reorder_menu", "content", "Reordered menu items")
     return {"message": "Menu reordered successfully"}
 
 
@@ -67,6 +70,7 @@ async def update_menu_item(menu_id: str, item: MenuItemUpdate, current_user: dic
     update_data = {k: v for k, v in item.model_dump().items() if v is not None}
     await db.menus.update_one({"id": menu_id}, {"$set": update_data})
     updated = await db.menus.find_one({"id": menu_id}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_menu", "content", f"Updated menu item: {updated.get('label', menu_id)}")
     updated["children"] = []
     return MenuItemResponse(**updated)
 
@@ -77,4 +81,5 @@ async def delete_menu_item(menu_id: str, current_user: dict = Depends(get_curren
     result = await db.menus.delete_one({"id": menu_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Menu item not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_menu", "content", f"Deleted menu item: {menu_id}")
     return {"message": "Menu item deleted successfully"}

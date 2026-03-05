@@ -3,6 +3,7 @@ from typing import List, Optional
 from models.event import EventCreate, EventUpdate, EventResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 from datetime import datetime, timezone
 
@@ -35,6 +36,7 @@ async def create_event(event: EventCreate, current_user: dict = Depends(get_curr
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.events.insert_one(event_doc)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_event", "content", f"Created event: {event.title}")
     return EventResponse(**event_doc)
 
 
@@ -45,6 +47,7 @@ async def update_event(event_id: str, event: EventUpdate, current_user: dict = D
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Event not found")
     updated = await db.events.find_one({"id": event_id}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_event", "content", f"Updated event: {updated.get('title', event_id)}")
     return EventResponse(**updated)
 
 
@@ -53,4 +56,5 @@ async def delete_event(event_id: str, current_user: dict = Depends(get_current_u
     result = await db.events.delete_one({"id": event_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Event not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_event", "content", f"Deleted event: {event_id}")
     return {"message": "Event deleted successfully"}

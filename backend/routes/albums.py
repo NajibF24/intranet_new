@@ -3,6 +3,7 @@ from typing import List
 from models.album import AlbumCreate, AlbumUpdate, AlbumResponse, PhotoResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 from datetime import datetime, timezone
 
@@ -45,6 +46,7 @@ async def create_album(album: AlbumCreate, current_user: dict = Depends(get_curr
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.albums.insert_one(album_doc)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_album", "content", f"Created album: {album.title}")
     return AlbumResponse(**album_doc, photo_count=0)
 
 
@@ -57,6 +59,7 @@ async def update_album(album_id: str, album: AlbumUpdate, current_user: dict = D
     updated = await db.albums.find_one({"id": album_id}, {"_id": 0})
     photo_count = await db.photos.count_documents({"album_id": album_id})
     updated["photo_count"] = photo_count
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_album", "content", f"Updated album: {updated.get('title', album_id)}")
     return AlbumResponse(**updated)
 
 
@@ -66,4 +69,5 @@ async def delete_album(album_id: str, current_user: dict = Depends(get_current_u
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Album not found")
     await db.photos.update_many({"album_id": album_id}, {"$set": {"album_id": None}})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_album", "content", f"Deleted album: {album_id}")
     return {"message": "Album deleted successfully"}

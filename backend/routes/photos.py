@@ -3,6 +3,7 @@ from typing import List, Optional
 from models.album import PhotoCreate, PhotoUpdate, PhotoResponse
 from auth import get_current_user
 from database import db
+from routes.logs import create_log
 import uuid
 import base64
 from datetime import datetime, timezone
@@ -45,6 +46,7 @@ async def create_photo(photo: PhotoCreate, current_user: dict = Depends(get_curr
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.photos.insert_one(photo_doc)
+    await create_log(current_user["email"], current_user.get("user_id", ""), "create_photo", "content", f"Created photo: {photo.title}")
     album_title = None
     if photo.album_id:
         album = await db.albums.find_one({"id": photo.album_id}, {"_id": 0})
@@ -68,6 +70,7 @@ async def update_photo(photo_id: str, photo: PhotoUpdate, current_user: dict = D
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Photo not found")
     updated = await db.photos.find_one({"id": photo_id}, {"_id": 0})
+    await create_log(current_user["email"], current_user.get("user_id", ""), "update_photo", "content", f"Updated photo: {updated.get('title', photo_id)}")
     return PhotoResponse(**updated)
 
 
@@ -76,4 +79,5 @@ async def delete_photo(photo_id: str, current_user: dict = Depends(get_current_u
     result = await db.photos.delete_one({"id": photo_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Photo not found")
+    await create_log(current_user["email"], current_user.get("user_id", ""), "delete_photo", "content", f"Deleted photo: {photo_id}")
     return {"message": "Photo deleted successfully"}
