@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Pencil, Trash2, Search, Calendar, MapPin } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Calendar, MapPin, Maximize2, Minimize2, Eye, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../components/ui/dialog';
@@ -27,6 +27,8 @@ export const AdminEvents = () => {
   const [editingEvent, setEditingEvent] = useState(null);
   const [formData, setFormData] = useState(emptyEvent);
   const [saving, setSaving] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -208,83 +210,166 @@ export const AdminEvents = () => {
       )}
 
       {/* Add/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
-            <DialogDescription>Fill in the details for the event.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Title *</label>
-              <Input
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Event title"
-                data-testid="event-title-input"
-              />
+      {isDialogOpen && (
+        <div className={'fixed inset-0 z-50 flex items-center justify-center ' + (isFullscreen ? '' : 'p-4')}>
+          <div className="absolute inset-0 bg-black/50" onClick={() => { setIsDialogOpen(false); setIsFullscreen(false); setShowPreview(false); }} />
+          <div
+            className={'relative bg-white flex flex-col shadow-xl transition-all duration-300 ' +
+              (isFullscreen ? 'w-full h-full' : 'max-w-2xl w-full max-h-[90vh] rounded-xl')}
+            data-testid="event-dialog"
+          >
+            {/* Dialog Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 flex-shrink-0">
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">{editingEvent ? 'Edit Event' : 'Add Event'}</h2>
+                <p className="text-sm text-slate-500">Fill in the details for the event</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowPreview(!showPreview)}
+                  className={'px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ' +
+                    (showPreview ? 'bg-[#0C765B] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200')}
+                  data-testid="event-preview-toggle"
+                >
+                  <Eye className="w-4 h-4" />
+                  Preview
+                </button>
+                <button
+                  onClick={() => setIsFullscreen(!isFullscreen)}
+                  className="p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                  data-testid="event-fullscreen-toggle"
+                >
+                  {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </button>
+                <button
+                  onClick={() => { setIsDialogOpen(false); setIsFullscreen(false); setShowPreview(false); }}
+                  className="p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Description *</label>
-              <Suspense fallback={<div className="h-32 bg-slate-100 rounded-lg animate-pulse" />}>
-                <RichTextEditor
-                  value={formData.description}
-                  onChange={(value) => setFormData({ ...formData, description: value })}
-                  placeholder="Event description..."
-                  dataTestId="event-description-input"
-                />
-              </Suspense>
+
+            {/* Dialog Body */}
+            <div className="flex-1 overflow-hidden flex">
+              {/* Editor Panel */}
+              <div className={'overflow-y-auto p-6 ' + (showPreview ? 'w-1/2 border-r border-slate-200' : 'w-full')}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Title *</label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="Event title"
+                      data-testid="event-title-input"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Description *</label>
+                    <Suspense fallback={<div className="h-32 bg-slate-100 rounded-lg animate-pulse" />}>
+                      <RichTextEditor
+                        value={formData.description}
+                        onChange={(value) => setFormData({ ...formData, description: value })}
+                        placeholder="Event description..."
+                        dataTestId="event-description-input"
+                      />
+                    </Suspense>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Date *</label>
+                    <Input
+                      type="date"
+                      value={formData.event_date}
+                      onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                      data-testid="event-date-input"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Type</label>
+                    <Select
+                      value={formData.event_type}
+                      onValueChange={(value) => setFormData({ ...formData, event_type: value })}
+                    >
+                      <SelectTrigger data-testid="event-type-select">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="event">Event</SelectItem>
+                        <SelectItem value="holiday">Holiday</SelectItem>
+                        <SelectItem value="birthday">Birthday</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Location</label>
+                    <Input
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      placeholder="Event location (optional)"
+                      data-testid="event-location-input"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Live Preview Panel */}
+              {showPreview && (
+                <div className="w-1/2 overflow-y-auto bg-white" data-testid="event-live-preview">
+                  <div className="sticky top-0 bg-slate-50 px-4 py-2 border-b border-slate-200 z-10">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                      <Eye className="w-3.5 h-3.5" /> Live Preview
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                      <div className="p-5 border-b border-slate-100">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="px-2.5 py-0.5 bg-[#0C765B]/10 text-[#0C765B] text-xs font-semibold rounded-full capitalize">{formData.event_type}</span>
+                          {formData.location && (
+                            <span className="text-xs text-slate-400 flex items-center gap-1">
+                              <MapPin className="w-3 h-3" /> {formData.location}
+                            </span>
+                          )}
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-900 mb-1">
+                          {formData.title || 'Untitled Event'}
+                        </h2>
+                        {formData.event_date && (
+                          <p className="text-sm text-slate-500 flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
+                            {format(parseISO(formData.event_date), 'EEEE, MMMM d, yyyy')}
+                          </p>
+                        )}
+                      </div>
+                      <div className="p-5">
+                        <div
+                          className="prose prose-sm prose-slate max-w-none"
+                          dangerouslySetInnerHTML={{ __html: formData.description || '<p class="text-slate-400">Start writing description to see the preview...</p>' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Date *</label>
-              <Input
-                type="date"
-                value={formData.event_date}
-                onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
-                data-testid="event-date-input"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Type</label>
-              <Select
-                value={formData.event_type}
-                onValueChange={(value) => setFormData({ ...formData, event_type: value })}
+
+            {/* Dialog Footer */}
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 flex-shrink-0">
+              <Button variant="outline" onClick={() => { setIsDialogOpen(false); setIsFullscreen(false); setShowPreview(false); }}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="bg-[#0C765B] hover:bg-[#095E49]"
+                data-testid="save-event-btn"
               >
-                <SelectTrigger data-testid="event-type-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="event">Event</SelectItem>
-                  <SelectItem value="holiday">Holiday</SelectItem>
-                  <SelectItem value="birthday">Birthday</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Location</label>
-              <Input
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                placeholder="Event location (optional)"
-                data-testid="event-location-input"
-              />
+                {saving ? 'Saving...' : 'Save'}
+              </Button>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-[#0C765B] hover:bg-[#095E49]"
-              data-testid="save-event-btn"
-            >
-              {saving ? 'Saving...' : 'Save'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   );
 };
