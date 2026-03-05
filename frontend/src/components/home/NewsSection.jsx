@@ -42,11 +42,7 @@ export const NewsSection = () => {
   if (news.length === 0) return null;
 
   // ArcelorMittal layout: each featured row = text LEFT, image RIGHT
-  // Rows alternate: odd has description, even has just date
   const renderFeaturedRow = (article, index) => {
-    const hasDescription = index % 2 === 0;
-    const slideFrom = index % 2 === 0 ? -60 : 60;
-
     return (
       <div
         key={article.id}
@@ -55,28 +51,26 @@ export const NewsSection = () => {
       >
         {/* Text side — always LEFT */}
         <motion.div
-          initial={{ opacity: 0, x: slideFrom }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col justify-center px-10 lg:px-16 xl:px-20 py-14 lg:py-20"
           data-testid={`featured-text-${index}`}
         >
-          <h2 className="text-[1.7rem] lg:text-[2.1rem] xl:text-[2.4rem] font-bold text-white leading-[1.2] mb-5 tracking-tight">
+          <h2 className="text-[1.7rem] lg:text-[2.1rem] xl:text-[2.4rem] font-bold text-white leading-[1.2] mb-4 tracking-tight">
             {article.title}
           </h2>
 
-          {hasDescription && article.summary && (
-            <p className="text-white/60 text-[0.95rem] leading-relaxed mb-7 line-clamp-3">
+          {article.summary && (
+            <p className="text-white/60 text-[0.95rem] leading-relaxed mb-4 line-clamp-3">
               {article.summary}
             </p>
           )}
 
-          {!hasDescription && (
-            <p className="text-white/40 text-sm mb-7">
-              {format(new Date(article.created_at), 'MMMM d, yyyy')}
-            </p>
-          )}
+          <p className="text-white/40 text-sm mb-7">
+            {format(new Date(article.created_at), 'MMMM d, yyyy')}
+          </p>
 
           <Link
             to={`/news/${article.id}`}
@@ -88,12 +82,12 @@ export const NewsSection = () => {
           </Link>
         </motion.div>
 
-        {/* Image side — always RIGHT, 4:3 ratio */}
+        {/* Image side — always RIGHT */}
         <motion.div
-          initial={{ opacity: 0, x: -slideFrom }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          initial={{ opacity: 0, scale: 1.03 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden"
           data-testid={`featured-image-${index}`}
         >
@@ -125,7 +119,8 @@ export const NewsSection = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-between mb-10"
             >
               <h3 className="text-2xl font-bold text-slate-900">Latest News</h3>
@@ -145,8 +140,8 @@ export const NewsSection = () => {
                   key={article.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                  viewport={{ once: true, margin: "-20px" }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                   className="group"
                   data-testid={`news-card-${index}`}
                 >
