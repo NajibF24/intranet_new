@@ -214,12 +214,12 @@ export const AdminEvents = () => {
         <div className={'fixed inset-0 z-50 flex items-center justify-center ' + (isFullscreen ? '' : 'p-4')}>
           <div className="absolute inset-0 bg-black/50" onClick={() => { setIsDialogOpen(false); setIsFullscreen(false); setShowPreview(false); }} />
           <div
-            className={'relative bg-white flex flex-col shadow-xl transition-all duration-300 ' +
-              (isFullscreen ? 'w-full h-full' : 'max-w-2xl w-full max-h-[90vh] rounded-xl')}
+            className={'relative bg-white shadow-xl transition-all duration-300 ' +
+              (isFullscreen ? 'w-full h-screen' : 'max-w-2xl w-full max-h-[90vh] rounded-xl')}
             data-testid="event-dialog"
           >
             {/* Dialog Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 flex-shrink-0">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
               <div>
                 <h2 className="text-lg font-bold text-slate-900">{editingEvent ? 'Edit Event' : 'Add Event'}</h2>
                 <p className="text-sm text-slate-500">Fill in the details for the event</p>
@@ -251,7 +251,7 @@ export const AdminEvents = () => {
             </div>
 
             {/* Dialog Body */}
-            <div className="flex-1 overflow-hidden flex">
+            <div className="overflow-hidden flex" style={{ height: 'calc(100% - 130px)' }}>
               {/* Editor Panel */}
               <div className={'overflow-y-auto p-6 ' + (showPreview ? 'w-1/2 border-r border-slate-200' : 'w-full')}>
                 <div className="space-y-4">
@@ -354,7 +354,7 @@ export const AdminEvents = () => {
             </div>
 
             {/* Dialog Footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 flex-shrink-0">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-white">
               <Button variant="outline" onClick={() => { setIsDialogOpen(false); setIsFullscreen(false); setShowPreview(false); }}>
                 Cancel
               </Button>
