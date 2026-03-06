@@ -4,6 +4,8 @@ from typing import Optional
 
 class HeroSettingsUpdate(BaseModel):
     hero_image_url: Optional[str] = None
+    hero_images: Optional[list] = None
+    hero_rotation_interval: Optional[int] = None
     hero_video_url: Optional[str] = None
     background_type: Optional[str] = None
     video_muted: Optional[bool] = None
@@ -27,6 +29,8 @@ class HeroSettingsResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str
     hero_image_url: str
+    hero_images: list = []
+    hero_rotation_interval: int = 5
     hero_video_url: str = ""
     background_type: str = "image"
     video_muted: bool = True
