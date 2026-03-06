@@ -36,21 +36,23 @@ export function Header() {
   var isTransparentMode = navbarTransparent && !isScrolled;
 
   var hdrCls = 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ';
-  hdrCls += isTransparentMode ? 'bg-transparent' : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-100';
+  hdrCls += isTransparentMode ? 'bg-gradient-to-b from-black/50 via-black/20 to-transparent' : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-100';
 
   var btnCls = isTransparentMode
-    ? 'text-white/90 hover:text-white hover:bg-white/10'
+    ? 'text-white hover:text-white hover:bg-white/15'
     : 'text-slate-700 hover:text-[#0C765B] hover:bg-[#0C765B]/5';
+
+  var textShadow = isTransparentMode ? { textShadow: '0 1px 3px rgba(0,0,0,0.6)' } : {};
 
   return (
     <header className={hdrCls} data-testid="main-header">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0" data-testid="header-logo">
-            <img src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" alt="GYS Logo" className="h-12 w-auto object-contain" />
+            <img src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" alt="GYS Logo" className="h-12 w-auto object-contain" style={isTransparentMode ? { filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))' } : {}} />
             <div className="hidden md:block">
-              <p className={'font-bold text-base tracking-tight whitespace-nowrap ' + (isTransparentMode ? 'text-white' : 'text-slate-900')}>PT Garuda Yamato Steel</p>
-              <p className={'text-xs ' + (isTransparentMode ? 'text-white/70' : 'text-slate-500')}>Intranet Portal</p>
+              <p className={'font-bold text-base tracking-tight whitespace-nowrap ' + (isTransparentMode ? 'text-white' : 'text-slate-900')} style={textShadow}>PT Garuda Yamato Steel</p>
+              <p className={'text-xs ' + (isTransparentMode ? 'text-white/80' : 'text-slate-500')} style={textShadow}>Intranet Portal</p>
             </div>
           </Link>
 
@@ -59,11 +61,11 @@ export function Header() {
               var Ic = ICONS[item.icon];
               var kids = item.children || [];
               if (kids.length === 0) {
-                return React.createElement(Link, { key: item.id, to: item.path || '/', className: 'flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ' + btnCls }, Ic ? React.createElement(Ic, { className: 'w-4 h-4' }) : null, item.label);
+                return React.createElement(Link, { key: item.id, to: item.path || '/', className: 'flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ' + btnCls, style: textShadow }, Ic ? React.createElement(Ic, { className: 'w-4 h-4' }) : null, item.label);
               }
               return (
                 <div key={item.id} className="relative group" onMouseEnter={function() { setActiveDD(idx); }} onMouseLeave={function() { setActiveDD(null); }}>
-                  <button className={'flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ' + btnCls} data-testid={'nav-item-' + item.label.toLowerCase().replace(/[\s/]+/g, '-')}>
+                  <button className={'flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ' + btnCls} style={textShadow} data-testid={'nav-item-' + item.label.toLowerCase().replace(/[\s/]+/g, '-')}>
                     {Ic ? React.createElement(Ic, { className: 'w-4 h-4' }) : null}
                     <span>{item.label}</span>
                     <ChevronDown className={'w-4 h-4 transition-transform ' + (activeDD === idx ? 'rotate-180' : '')} />
