@@ -98,7 +98,7 @@ export const AdminLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-[#0C765B] to-[#074737] z-50 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-[#0C765B] to-[#074737] z-50 transform transition-transform lg:translate-x-0 flex flex-col ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         data-testid="admin-sidebar"
@@ -119,7 +119,7 @@ export const AdminLayout = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
+        <nav className="flex-1 overflow-y-auto p-4 space-y-1">
           {sidebarItems
             .filter((item) => {
               if (item.adminOnly) return user.role === 'admin';
@@ -134,7 +134,7 @@ export const AdminLayout = () => {
                 key={index}
                 to={item.path}
                 onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
+                className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-all text-sm ${
                   isActive
                     ? 'bg-white text-[#0C765B]'
                     : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -150,10 +150,10 @@ export const AdminLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-          <div className="flex items-center space-x-3 mb-4 px-4">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
+        <div className="flex-shrink-0 p-4 border-t border-white/10">
+          <div className="flex items-center space-x-3 mb-3 px-4">
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+              <Users className="w-4 h-4 text-white" />
             </div>
             <div>
               <p className="text-white font-medium text-sm">{user.name}</p>
@@ -162,7 +162,7 @@ export const AdminLayout = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-3 px-4 py-3 w-full text-white/80 hover:bg-white/10 hover:text-white rounded-xl transition-all"
+            className="flex items-center space-x-3 px-4 py-2.5 w-full text-white/80 hover:bg-white/10 hover:text-white rounded-xl transition-all text-sm"
             data-testid="admin-logout-btn"
           >
             <LogOut className="w-5 h-5" />
