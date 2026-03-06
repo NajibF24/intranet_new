@@ -140,7 +140,7 @@ export var HeroSection = function() {
   var isVideo = heroSettings.background_type === 'video' && heroSettings.hero_video_url;
 
   return (
-    <section className="relative h-screen min-h-[600px] sm:min-h-[700px] overflow-hidden bg-slate-900" data-testid="hero-section">
+    <section className="relative aspect-video sm:aspect-auto sm:h-screen sm:min-h-[700px] overflow-hidden" data-testid="hero-section">
       {isReady && (
         <React.Fragment>
           {/* Background Media */}
@@ -154,7 +154,7 @@ export var HeroSection = function() {
                     key={currentSlide}
                     src={images[currentSlide]}
                     alt="Hero"
-                    className="absolute inset-0 w-full h-full object-contain"
+                    className="absolute inset-0 w-full h-full object-cover"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
