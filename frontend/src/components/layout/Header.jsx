@@ -7,34 +7,6 @@ import { Level2Item, MobileSection } from './NavParts';
 
 var ICONS = { 'building': Building2, 'file-text': FileText, 'users': Users, 'message-square': MessageSquare };
 
-var neonStyle = document.createElement('style');
-neonStyle.textContent = [
-  '@keyframes neonBreathe {',
-  '  0%, 100% { text-shadow: 0 0 4px rgba(12,118,91,0.4), 0 0 8px rgba(12,118,91,0.2); }',
-  '  50% { text-shadow: 0 0 8px rgba(12,118,91,0.8), 0 0 20px rgba(12,118,91,0.4), 0 0 30px rgba(12,118,91,0.2); }',
-  '}',
-  '@keyframes neonBorderBreathe {',
-  '  0%, 100% { box-shadow: 0 0 4px rgba(12,118,91,0.3), inset 0 0 4px rgba(12,118,91,0.1); }',
-  '  50% { box-shadow: 0 0 10px rgba(12,118,91,0.5), 0 0 20px rgba(12,118,91,0.2), inset 0 0 6px rgba(12,118,91,0.15); }',
-  '}',
-  '.neon-nav-item {',
-  '  animation: neonBreathe 3s ease-in-out infinite;',
-  '  color: #e0fff5 !important;',
-  '}',
-  '.neon-nav-item:hover {',
-  '  text-shadow: 0 0 10px rgba(12,118,91,1), 0 0 25px rgba(12,118,91,0.6), 0 0 40px rgba(12,118,91,0.3) !important;',
-  '  background: rgba(12,118,91,0.15) !important;',
-  '}',
-  '.neon-header-bar {',
-  '  animation: neonBorderBreathe 3s ease-in-out infinite;',
-  '  border-bottom: 1px solid rgba(12,118,91,0.3);',
-  '}',
-].join('\n');
-if (!document.getElementById('neon-navbar-styles')) {
-  neonStyle.id = 'neon-navbar-styles';
-  document.head.appendChild(neonStyle);
-}
-
 export function Header() {
   var [isScrolled, setIsScrolled] = useState(window.scrollY > 20);
   var [mobileOpen, setMobileOpen] = useState(false);
@@ -64,28 +36,23 @@ export function Header() {
   var isTransparentMode = navbarTransparent && !isScrolled;
 
   var hdrCls = 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ';
-  hdrCls += isTransparentMode
-    ? 'bg-gradient-to-b from-black/40 via-black/15 to-transparent neon-header-bar'
-    : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-100';
+  hdrCls += isTransparentMode ? 'bg-gradient-to-b from-black/50 via-black/20 to-transparent' : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-100';
 
   var btnCls = isTransparentMode
-    ? 'neon-nav-item px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap'
-    : 'text-slate-700 hover:text-[#0C765B] hover:bg-[#0C765B]/5 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap';
+    ? 'text-white hover:text-white hover:bg-white/15'
+    : 'text-slate-700 hover:text-[#0C765B] hover:bg-[#0C765B]/5';
+
+  var textShadow = isTransparentMode ? { textShadow: '0 1px 3px rgba(0,0,0,0.6)' } : {};
 
   return (
     <header className={hdrCls} data-testid="main-header">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0" data-testid="header-logo">
-            <img
-              src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png"
-              alt="GYS Logo"
-              className="h-12 w-auto object-contain"
-              style={isTransparentMode ? { filter: 'drop-shadow(0 0 6px rgba(12,118,91,0.5))' } : {}}
-            />
+            <img src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" alt="GYS Logo" className="h-12 w-auto object-contain" style={isTransparentMode ? { filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))' } : {}} />
             <div className="hidden md:block">
-              <p className={'font-bold text-base tracking-tight whitespace-nowrap ' + (isTransparentMode ? 'neon-nav-item' : 'text-slate-900')}>PT Garuda Yamato Steel</p>
-              <p className={'text-xs ' + (isTransparentMode ? 'text-emerald-200/80' : 'text-slate-500')} style={isTransparentMode ? { textShadow: '0 0 6px rgba(12,118,91,0.4)' } : {}}>Intranet Portal</p>
+              <p className={'font-bold text-base tracking-tight whitespace-nowrap ' + (isTransparentMode ? 'text-white' : 'text-slate-900')} style={textShadow}>PT Garuda Yamato Steel</p>
+              <p className={'text-xs ' + (isTransparentMode ? 'text-white/80' : 'text-slate-500')} style={textShadow}>Intranet Portal</p>
             </div>
           </Link>
 
@@ -94,11 +61,11 @@ export function Header() {
               var Ic = ICONS[item.icon];
               var kids = item.children || [];
               if (kids.length === 0) {
-                return React.createElement(Link, { key: item.id, to: item.path || '/', className: 'flex items-center space-x-1 ' + btnCls }, Ic ? React.createElement(Ic, { className: 'w-4 h-4' }) : null, item.label);
+                return React.createElement(Link, { key: item.id, to: item.path || '/', className: 'flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ' + btnCls, style: textShadow }, Ic ? React.createElement(Ic, { className: 'w-4 h-4' }) : null, item.label);
               }
               return (
                 <div key={item.id} className="relative group" onMouseEnter={function() { setActiveDD(idx); }} onMouseLeave={function() { setActiveDD(null); }}>
-                  <button className={'flex items-center space-x-1 ' + btnCls} data-testid={'nav-item-' + item.label.toLowerCase().replace(/[\s/]+/g, '-')}>
+                  <button className={'flex items-center space-x-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ' + btnCls} style={textShadow} data-testid={'nav-item-' + item.label.toLowerCase().replace(/[\s/]+/g, '-')}>
                     {Ic ? React.createElement(Ic, { className: 'w-4 h-4' }) : null}
                     <span>{item.label}</span>
                     <ChevronDown className={'w-4 h-4 transition-transform ' + (activeDD === idx ? 'rotate-180' : '')} />
@@ -117,7 +84,7 @@ export function Header() {
             })}
           </nav>
 
-          <button className={'lg:hidden p-2 rounded-lg ' + (isTransparentMode ? 'neon-nav-item' : 'text-slate-700')} onClick={function() { setMobileOpen(!mobileOpen); }} data-testid="mobile-menu-toggle">
+          <button className={'lg:hidden p-2 rounded-lg ' + (isTransparentMode ? 'text-white' : 'text-slate-700')} onClick={function() { setMobileOpen(!mobileOpen); }} data-testid="mobile-menu-toggle">
             {mobileOpen ? React.createElement(X, { className: 'w-6 h-6' }) : React.createElement(Menu, { className: 'w-6 h-6' })}
           </button>
         </div>
