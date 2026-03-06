@@ -5,7 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 // Public Pages
 import { HomePage } from "./pages/HomePage";
-import { OverviewPage, PhilosophyPage, HistoryPage } from "./pages/CorporatePages";
+import { PhilosophyPage, HistoryPage } from "./pages/CorporatePages";
 import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
 import { ITServicesPage, HRServicesPage, FAServicesPage } from "./pages/ServicePages";
 import { NewsPage } from "./pages/NewsPage";
@@ -42,7 +42,6 @@ function App() {
             <Route path="/" element={<HomePage />} />
             
             {/* Corporate Routes */}
-            <Route path="/corporate/overview" element={<OverviewPage />} />
             <Route path="/corporate/philosophy" element={<PhilosophyPage />} />
             <Route path="/corporate/history" element={<HistoryPage />} />
             

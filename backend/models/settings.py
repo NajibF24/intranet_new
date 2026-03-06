@@ -23,6 +23,7 @@ class HeroSettingsUpdate(BaseModel):
     show_gradient_overlay: Optional[bool] = None
     show_floating_cards: Optional[bool] = None
     show_welcome_badge: Optional[bool] = None
+    navbar_transparent: Optional[bool] = None
 
 
 class HeroSettingsResponse(BaseModel):
@@ -48,6 +49,7 @@ class HeroSettingsResponse(BaseModel):
     show_gradient_overlay: bool = True
     show_floating_cards: bool = True
     show_welcome_badge: bool = True
+    navbar_transparent: bool = True
 
 
 class TickerSettingsUpdate(BaseModel):

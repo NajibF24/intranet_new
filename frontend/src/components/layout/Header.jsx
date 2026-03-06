@@ -12,6 +12,7 @@ export function Header() {
   var [mobileOpen, setMobileOpen] = useState(false);
   var [activeDD, setActiveDD] = useState(null);
   var [items, setItems] = useState([]);
+  var [navbarTransparent, setNavbarTransparent] = useState(true);
   var loc = useLocation();
 
   useEffect(function() {
@@ -25,14 +26,21 @@ export function Header() {
 
   useEffect(function() {
     apiService.getMenus({ visible_only: true }).then(function(r) { setItems(r.data); }).catch(function() {});
+    apiService.getHeroSettings().then(function(r) {
+      if (r.data && r.data.navbar_transparent !== undefined) {
+        setNavbarTransparent(r.data.navbar_transparent);
+      }
+    }).catch(function() {});
   }, []);
 
-  var hdrCls = 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ';
-  hdrCls += isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-100' : 'bg-transparent';
+  var isTransparentMode = navbarTransparent && !isScrolled;
 
-  var btnCls = isScrolled
-    ? 'text-slate-700 hover:text-[#0C765B] hover:bg-[#0C765B]/5'
-    : 'text-white/90 hover:text-white hover:bg-white/10';
+  var hdrCls = 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ';
+  hdrCls += isTransparentMode ? 'bg-transparent' : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-100';
+
+  var btnCls = isTransparentMode
+    ? 'text-white/90 hover:text-white hover:bg-white/10'
+    : 'text-slate-700 hover:text-[#0C765B] hover:bg-[#0C765B]/5';
 
   return (
     <header className={hdrCls} data-testid="main-header">
@@ -41,8 +49,8 @@ export function Header() {
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0" data-testid="header-logo">
             <img src="https://customer-assets.emergentagent.com/job_intranet-hub-12/artifacts/hotpzocu_Logo%20GYS.png" alt="GYS Logo" className="h-12 w-auto object-contain" />
             <div className="hidden md:block">
-              <p className={'font-bold text-base tracking-tight whitespace-nowrap ' + (isScrolled ? 'text-slate-900' : 'text-white')}>PT Garuda Yamato Steel</p>
-              <p className={'text-xs ' + (isScrolled ? 'text-slate-500' : 'text-white/70')}>Intranet Portal</p>
+              <p className={'font-bold text-base tracking-tight whitespace-nowrap ' + (isTransparentMode ? 'text-white' : 'text-slate-900')}>PT Garuda Yamato Steel</p>
+              <p className={'text-xs ' + (isTransparentMode ? 'text-white/70' : 'text-slate-500')}>Intranet Portal</p>
             </div>
           </Link>
 
@@ -74,7 +82,7 @@ export function Header() {
             })}
           </nav>
 
-          <button className={'lg:hidden p-2 rounded-lg ' + (isScrolled ? 'text-slate-700' : 'text-white')} onClick={function() { setMobileOpen(!mobileOpen); }} data-testid="mobile-menu-toggle">
+          <button className={'lg:hidden p-2 rounded-lg ' + (isTransparentMode ? 'text-white' : 'text-slate-700')} onClick={function() { setMobileOpen(!mobileOpen); }} data-testid="mobile-menu-toggle">
             {mobileOpen ? React.createElement(X, { className: 'w-6 h-6' }) : React.createElement(Menu, { className: 'w-6 h-6' })}
           </button>
         </div>

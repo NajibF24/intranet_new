@@ -27,6 +27,7 @@ HERO_DEFAULTS = {
     "show_gradient_overlay": True,
     "show_floating_cards": True,
     "show_welcome_badge": True,
+    "navbar_transparent": True,
 }
 
 TICKER_DEFAULTS = {

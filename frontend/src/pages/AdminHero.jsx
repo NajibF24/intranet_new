@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Image as ImageIcon, Type, Link as LinkIcon, Eye, Sparkles, Upload, Video, Volume2, VolumeX, EyeOff, X, Clock, Plus } from 'lucide-react';
+import { Save, Image as ImageIcon, Type, Link as LinkIcon, Eye, Sparkles, Upload, Video, Volume2, VolumeX, EyeOff, X, Clock, Plus, Navigation } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Switch } from '../components/ui/switch';
@@ -43,6 +43,7 @@ export var AdminHero = function() {
     show_gradient_overlay: true,
     show_floating_cards: true,
     show_welcome_badge: true,
+    navbar_transparent: true,
   });
   var [loading, setLoading] = useState(true);
   var [saving, setSaving] = useState(false);
@@ -305,6 +306,26 @@ export var AdminHero = function() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Navbar Settings */}
+          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-slate-200">
+            <h3 className="font-semibold text-slate-900 mb-4 flex items-center">
+              <Navigation className="w-5 h-5 mr-2 text-[#0C765B]" /> Navbar Settings
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-medium text-slate-700">Transparent Navbar</span>
+                  <p className="text-xs text-slate-500">When enabled, navbar is transparent over hero and becomes solid on scroll. When disabled, navbar is always solid.</p>
+                </div>
+                <Switch
+                  checked={settings.navbar_transparent}
+                  onCheckedChange={function(checked) { setSettings({...settings, navbar_transparent: checked}); }}
+                  data-testid="navbar-transparent-toggle"
+                />
+              </div>
             </div>
           </div>
 
