@@ -41,8 +41,19 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 
 ### Phase 7 - Navbar Transparency & Image Responsive (Completed - Mar 6, 2026)
 - Added CMS toggle for transparent/solid navbar (Hero Settings > Navbar Settings)
-- Hero images now use `object-contain` to show full 16:9 without cropping on any device
+- Hero images use `object-cover` with `aspect-video` on mobile for responsive display
 - Removed redundant CorporateOverview.jsx page and menu item
+
+### Phase 8 - CMS Finalization & 404 Page (Completed - Mar 6, 2026)
+- Verified CMS Page Management works end-to-end: templates (8 types), block-based editor (16 block types), page creation/edit, dynamic rendering at `/page/:slug`
+- Added catch-all 404 "Page Not Found" page for unknown routes with Back to Home and Go Back buttons
+- Fixed seed data to remove obsolete Corporate Overview menu item
+
+## CMS Page Management Features
+- **8 Templates:** Blank, Corporate, Landing, Service, Team, Article/Blog, Photo Gallery, Contact
+- **16 Block Types:** hero_banner, hero_simple, text, image, cards, features, stats, testimonial, cta, quote, accordion, two_column, divider, team_grid, image_gallery, rich_text
+- **Block Editor:** Drag/reorder, expand/collapse, add/remove blocks, page settings (title, slug, publish status)
+- **Dynamic Rendering:** Published pages accessible at `/page/:slug`
 
 ## Key API Endpoints
 - `POST /api/auth/login` - Login (returns permissions in user object)
@@ -50,23 +61,16 @@ Build a full-featured, dynamic intranet portal for PT Garuda Yamato Steel (GYS).
 - `GET/PUT /api/settings/hero` - Hero settings (includes `navbar_transparent` field)
 - `GET/PUT /api/settings/ticker` - Ticker settings
 - `GET /api/logs`, `GET /api/logs/count` - Activity logs (admin only)
+- `GET /api/templates` - 8 page templates
+- `GET/POST /api/pages` - List/create pages
+- `GET/PUT/DELETE /api/pages/:id` - Page CRUD
+- `GET /api/pages/slug/:slug` - Fetch page by slug (for dynamic rendering)
 - All CRUD endpoints enforce `require_permission(section)` on write operations
 
-## Permissions Model
-```
-Admin:  role="admin"  → full access, permissions field ignored
-Editor: role="editor" → permissions=["news","events",...] → can read + write assigned sections
-Viewer: role="viewer" → permissions=["gallery",...] → can read assigned sections only
-```
-
 ## Prioritized Backlog
-### P1
-- Finalize CMS Page Management: templates, block-based editor
-- Ensure CMS-created pages render on frontend
-
 ### P2
+- Convert static corporate pages to CMS-editable templates
 - Additional block types or design refinements
-- Catch-all 404 page for unknown routes
 
 ## Credentials
 - Admin: admin@gys.co.id / admin123

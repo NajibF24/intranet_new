@@ -32,6 +32,9 @@ import { AdminLogs } from "./pages/AdminLogs";
 // Dynamic CMS Page
 import { DynamicPage } from "./pages/DynamicPage";
 
+// 404 Page
+import { NotFoundPage } from "./pages/NotFoundPage";
+
 function App() {
   return (
     <AuthProvider>
@@ -80,6 +83,9 @@ function App() {
 
             {/* Dynamic CMS Pages */}
             <Route path="/page/:slug" element={<DynamicPage />} />
+
+            {/* 404 Catch-all */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
         <Toaster 

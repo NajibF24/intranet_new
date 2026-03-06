@@ -127,9 +127,8 @@ async def seed_data():
 
         menu_items = [
             {"id": corporate_id, "label": "Corporate Identity", "path": "", "icon": "building", "parent_id": None, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "Corporate Overview", "path": "/corporate/overview", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
-            {"id": str(uuid.uuid4()), "label": "Corporate Philosophy", "path": "/corporate/philosophy", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
-            {"id": str(uuid.uuid4()), "label": "Corporate History & Group Structure", "path": "/corporate/history", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 2},
+            {"id": str(uuid.uuid4()), "label": "Corporate Philosophy", "path": "/corporate/philosophy", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
+            {"id": str(uuid.uuid4()), "label": "Corporate History & Group Structure", "path": "/corporate/history", "icon": "", "parent_id": corporate_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
             {"id": operational_id, "label": "Operational/Compliance", "path": "", "icon": "file-text", "parent_id": None, "is_visible": True, "open_in_new_tab": False, "order": 1},
             {"id": str(uuid.uuid4()), "label": "Standard Operating Procedures", "path": "/compliance/sop", "icon": "", "parent_id": operational_id, "is_visible": True, "open_in_new_tab": False, "order": 0},
             {"id": str(uuid.uuid4()), "label": "Company Policies", "path": "/compliance/policies", "icon": "", "parent_id": operational_id, "is_visible": True, "open_in_new_tab": False, "order": 1},
