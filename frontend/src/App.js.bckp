@@ -6,8 +6,8 @@ import { AuthProvider } from "./context/AuthContext";
 // Public Pages
 import { HomePage } from "./pages/HomePage";
 import { OverviewPage, PhilosophyPage, HistoryPage } from "./pages/CorporatePages";
-// import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
-import { SOPPage, PoliciesPage, SafetyPage, DepartmentDetailPage } from "./pages/CompliancePages";
+import { SOPPage, PoliciesPage, SafetyPage } from "./pages/CompliancePages";
+
 // UPDATE: Import komponen UnifiedPortalPage saja
 import { UnifiedPortalPage } from "./pages/ServicePages";
 
@@ -30,12 +30,9 @@ import { AdminTicker } from "./pages/AdminTicker";
 import { AdminPages } from "./pages/AdminPages";
 import { AdminPageEditor } from "./pages/AdminPageEditor";
 import { AdminMenus } from "./pages/AdminMenus";
-import { AdminLogs } from "./pages/AdminLogs";
+
 // Dynamic CMS Page
 import { DynamicPage } from "./pages/DynamicPage";
-
-// 404 Page
-import { NotFoundPage } from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -53,7 +50,6 @@ function App() {
             
             {/* Compliance Routes */}
             <Route path="/compliance/sop" element={<SOPPage />} />
-            <Route path="/compliance/department/:deptId" element={<DepartmentDetailPage />} />
             <Route path="/compliance/policies" element={<PoliciesPage />} />
             <Route path="/compliance/safety" element={<SafetyPage />} />
             
@@ -80,7 +76,6 @@ function App() {
               <Route path="pages" element={<AdminPages />} />
               <Route path="pages/:pageId/edit" element={<AdminPageEditor />} />
               <Route path="menus" element={<AdminMenus />} />
-              <Route path="logs" element={<AdminLogs />} />
             </Route>
 
             {/* Dynamic CMS Pages */}

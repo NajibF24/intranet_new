@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, ArrowLeft, Tag, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Calendar, ArrowLeft, Tag, Share2, Instagram, Linkedin } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { apiService } from '../lib/api';
@@ -141,15 +141,25 @@ export const NewsDetailPage = () => {
                 Share this article
               </span>
               <div className="flex space-x-3">
-                <button className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
-                  <Facebook className="w-5 h-5" />
-                </button>
-                <button className="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center hover:bg-sky-600 transition-colors">
-                  <Twitter className="w-5 h-5" />
-                </button>
-                <button className="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center hover:bg-blue-800 transition-colors">
+                {/* Link LinkedIn */}
+                <a 
+                  href="https://www.linkedin.com/company/pt-garuda-yamato-steel/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center hover:bg-blue-800 transition-colors"
+                >
                   <Linkedin className="w-5 h-5" />
-                </button>
+                </a>
+
+                {/* Link Instagram (Ganti URL-nya sesuai akun IG perusahaan jika perlu) */}
+                <a 
+                  href="https://www.instagram.com/garudayamatosteel/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-pink-600 text-white flex items-center justify-center hover:bg-pink-700 transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
               </div>
             </div>
           </div>

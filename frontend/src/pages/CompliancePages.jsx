@@ -1,101 +1,286 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { PageContainer } from '../components/layout/PageContainer';
-import { FileText, AlertTriangle, Shield, CheckCircle, ChevronDown } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { 
+  FileText, AlertTriangle, Shield, CheckCircle, 
+  Target, Building2, UserCircle, Cog, Scale, CircleCheck, 
+  Network, Workflow, Download, FileBox, MessageSquare, Bot, X, Send
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const SOPCategory = ({ title, count, items, defaultOpen }) => {
-  const [isOpen, setIsOpen] = React.useState(defaultOpen || false);
-  
+// --- Data ---
+const departmentsData = [
+  {
+    id: 'sms',
+    title: 'SMS',
+    fullName: 'Steel Melting Shop',
+    icon: Target,
+    description: 'Access procedures, operational guidelines, and policies for the Steel Melting Shop.',
+    lastUpdated: 'April 2026',
+    procedures: [
+      'SMS_Standard_Operating_Procedure_v1.pdf',
+      'SMS_Hot_Metal_Handling_Guide.pdf',
+      'Furnace_Maintenance_Protocol.pdf'
+    ],
+    policies: [
+      'SMS_General_Safety_Policy.pdf',
+      'PPE_Requirements_Steel_Melting.pdf',
+      'Scrap_Inspection_Policy.pdf'
+    ]
+  },
+  {
+    id: 'bp',
+    title: 'BP',
+    fullName: '',
+    icon: Building2,
+    description: 'View BP operational manuals and quality standards.',
+    lastUpdated: 'March 2026',
+    procedures: ['BP_Operations_Manual.pdf'],
+    policies: ['BP_Quality_Standard.pdf']
+  },
+  {
+    id: 'lsm',
+    title: 'LSM',
+    fullName: '',
+    icon: FileBox,
+    description: 'Maintain LSM protocols and procedures.',
+    lastUpdated: 'February 2026',
+    procedures: ['LSM_Operations_Procedure.pdf'],
+    policies: []
+  },
+  {
+    id: 'ssc',
+    title: 'SSC',
+    fullName: '',
+    icon: UserCircle,
+    description: 'SSC Service guidelines and reporting processes.',
+    lastUpdated: 'January 2026',
+    procedures: ['SSC_Reporting_Procedure.pdf'],
+    policies: ['SSC_Service_Guidelines.pdf']
+  },
+  {
+    id: 'iso',
+    title: 'ISO Management System',
+    fullName: '',
+    icon: Shield,
+    description: 'Access ISO 9001, 14001, and 45001 standards.',
+    lastUpdated: 'April 2026',
+    procedures: [],
+    policies: [
+      'ISO_9001_Quality_Management.pdf',
+      'ISO_14001_Environmental_Management.pdf',
+      'ISO_45001_OHS.pdf'
+    ]
+  },
+  {
+    id: 'procurement',
+    title: 'Procurement',
+    fullName: '',
+    icon: Cog,
+    description: 'Vendor selection and purchase order workflows.',
+    lastUpdated: 'March 2026',
+    procedures: ['Purchase_Order_Workflow.pdf'],
+    policies: ['Vendor_Selection_Policy.pdf']
+  },
+  {
+    id: 'sales',
+    title: 'Sales',
+    fullName: '',
+    icon: Target,
+    description: 'Client onboarding and sales contract procedures.',
+    lastUpdated: 'April 2026',
+    procedures: ['Client_Onboarding_Process.pdf'],
+    policies: ['Sales_Contract_Approval_Policy.pdf']
+  },
+  {
+    id: 'hrga',
+    title: 'HRGA',
+    fullName: '',
+    icon: Workflow,
+    description: 'Employee lifecycle and general affairs guidelines.',
+    lastUpdated: 'March 2026',
+    procedures: ['Leave_Request_Procedure.pdf'],
+    policies: ['Employee_Code_of_Conduct.pdf', 'Recruitment_Policy.pdf']
+  },
+  {
+    id: 'it',
+    title: 'IT',
+    fullName: 'Information Technology',
+    icon: Network,
+    description: 'IT security, device tracking, and user support.',
+    lastUpdated: 'February 2026',
+    procedures: ['AI_AIRA_Assistant_Usage.pdf', 'IT_Device_Tracking_Guide.pdf'],
+    policies: ['Information_Security_Policy.pdf']
+  },
+  {
+    id: 'gdu-scm',
+    title: 'GDU & SCM',
+    fullName: 'Supply Chain Management',
+    icon: Cog,
+    description: 'Supply chain logistics and material handling.',
+    lastUpdated: 'January 2026',
+    procedures: ['Material_Handling_Operations.pdf'],
+    policies: ['Logistics_Policy.pdf']
+  },
+  {
+    id: 'finance',
+    title: 'Finance & Accounting',
+    fullName: '',
+    icon: FileText,
+    description: 'Expense reimbursement and financial closing protocols.',
+    lastUpdated: 'April 2026',
+    procedures: ['Monthly_Financial_Closing.pdf', 'Expense_Reimbursement_Procedure.pdf'],
+    policies: ['Financial_Authorization_Policy.pdf']
+  },
+  {
+    id: 'legal',
+    title: 'Legal',
+    fullName: '',
+    icon: Scale,
+    description: 'Contract review and NDA guidelines.',
+    lastUpdated: 'March 2026',
+    procedures: ['Contract_Review_Process.pdf'],
+    policies: ['NDA_Guidelines.pdf']
+  },
+  {
+    id: 'qaqc',
+    title: 'QA/QC',
+    fullName: 'Quality Assurance / Quality Control',
+    icon: CircleCheck,
+    description: 'Product quality inspection and testing procedures.',
+    lastUpdated: 'February 2026',
+    procedures: ['Defect_Identification_Reporting.pdf'],
+    policies: ['Product_Quality_Inspection_Policy.pdf']
+  }
+];
+
+// --- Components ---
+
+// Bot Assistant Component
+const AiraAssistantBot = ({ dept }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { sender: 'bot', text: `Hi! I'm your AIRA Assistant. What would you like to know about the ${dept.title} documents?` }
+  ]);
+  const [input, setInput] = useState('');
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    
+    // Tambahkan pesan user
+    setMessages([...messages, { sender: 'user', text: input }]);
+    setInput('');
+    
+    // Simulasi balasan bot
+    setTimeout(() => {
+      setMessages(prev => [...prev, { 
+        sender: 'bot', 
+        text: `I'm analyzing the ${dept.title} documents to find the answer for you. (This is a simulated response)` 
+      }]);
+    }, 1000);
+  };
+
   return (
-    <div className="border border-slate-200 rounded-xl overflow-hidden mb-4">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
-      >
-        <div className="flex items-center space-x-3">
-          <FileText className="w-5 h-5 text-[#0C765B]" />
-          <span className="font-semibold text-slate-900">{title}</span>
-          <span className="text-sm text-slate-500">({count} documents)</span>
-        </div>
-        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      {isOpen && (
-        <div className="px-6 pb-4">
-          <ul className="space-y-3">
-            {items.map((item, idx) => (
-              <li key={idx} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                <span className="text-slate-700">{item}</span>
-                <button className="text-[#0C765B] text-sm font-medium hover:underline">View Document</button>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="fixed bottom-6 right-6 z-50">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="bg-white rounded-2xl shadow-2xl w-80 sm:w-96 overflow-hidden flex flex-col border border-slate-200 mb-4 h-[450px]"
+          >
+            {/* Bot Header */}
+            <div className="bg-[#0C765B] p-4 flex justify-between items-center text-white">
+              <div className="flex items-center space-x-2">
+                <div className="bg-white/20 p-2 rounded-lg">
+                  <Bot className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm">AIRA Assistant</h3>
+                  <p className="text-xs text-green-100">Document Analyzer</p>
+                </div>
+              </div>
+              <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1.5 rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Chat Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+              {messages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.sender === 'user' ? 'bg-[#0C765B] text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-700 rounded-tl-sm'}`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Input Area */}
+            <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-100 flex items-center space-x-2">
+              <input 
+                type="text" 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about these documents..." 
+                className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#0C765B]/20 outline-none"
+              />
+              <button 
+                type="submit" 
+                disabled={!input.trim()}
+                className="bg-[#0C765B] text-white p-2.5 rounded-xl hover:bg-[#0a614b] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!isOpen && (
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(true)} 
+          className="bg-[#0C765B] text-white p-4 rounded-full shadow-lg hover:bg-[#0a614b] transition-colors flex items-center space-x-2"
+        >
+          <Bot className="w-6 h-6" />
+        </motion.button>
       )}
     </div>
   );
 };
 
-export const SOPPage = () => {
-  return (
-    <div className="min-h-screen bg-white" data-testid="sop-page">
-      <Header />
-      <PageContainer
-        title="Standard Operating Procedures"
-        subtitle="Comprehensive guidelines ensuring consistent, safe, and efficient operations across all departments."
-        breadcrumbs={[
-          { label: 'Operational/Compliance', path: '/compliance' },
-          { label: 'SOP' },
-        ]}
-        category="compliance"
-      >
-        <SOPCategory 
-          title="Production Operations" 
-          count={4}
-          defaultOpen={true}
-          items={[
-            'Hot Rolling Mill Standard Operating Procedure',
-            'Cold Rolling Mill Standard Operating Procedure',
-            'Quality Control Inspection Procedure',
-            'Material Handling and Storage Guidelines',
-          ]}
-        />
-        <SOPCategory 
-          title="Safety & Emergency" 
-          count={4}
-          items={[
-            'Emergency Evacuation Procedure',
-            'Fire Safety Protocol',
-            'Chemical Handling Guidelines',
-            'Personal Protective Equipment (PPE) Requirements',
-          ]}
-        />
-        <SOPCategory 
-          title="Administrative" 
-          count={4}
-          items={[
-            'Document Control Procedure',
-            'Visitor Management Protocol',
-            'Asset Management Guidelines',
-            'Procurement Request Process',
-          ]}
-        />
-        <SOPCategory 
-          title="Environmental" 
-          count={4}
-          items={[
-            'Waste Management Procedure',
-            'Emission Monitoring Protocol',
-            'Water Treatment Guidelines',
-            'Environmental Incident Reporting',
-          ]}
-        />
-      </PageContainer>
-      <Footer />
+const DepartmentCard = ({ dept, delay, onClick }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 30 }} 
+    animate={{ opacity: 1, y: 0 }} 
+    transition={{ duration: 0.5, delay }} 
+    onClick={onClick}
+    className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg hover:border-[#0C765B]/30 transition-all cursor-pointer flex flex-col h-full group"
+  >
+    <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4 flex-shrink-0 group-hover:scale-110 transition-transform">
+      <dept.icon className="w-6 h-6 text-[#0C765B]" />
     </div>
-  );
-};
+    <div className="flex-grow">
+      <h3 className="text-lg font-bold text-slate-900 mb-1">{dept.title}</h3>
+      {dept.fullName && <p className="text-xs font-semibold text-[#0C765B] mb-2">{dept.fullName}</p>}
+      <p className="text-slate-600 text-sm mb-4">{dept.description}</p>
+    </div>
+    <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+      <span className="text-xs text-slate-500">
+        {dept.procedures.length + dept.policies.length} Documents
+      </span>
+      <span className="text-[#0C765B] text-sm font-medium group-hover:underline flex items-center">
+        Open
+      </span>
+    </div>
+  </motion.div>
+);
 
 const PolicyCard = ({ icon: Icon, title, description, lastUpdated, delay }) => (
   <motion.div 
@@ -107,7 +292,7 @@ const PolicyCard = ({ icon: Icon, title, description, lastUpdated, delay }) => (
     <div className="w-12 h-12 bg-[#0C765B]/10 rounded-xl flex items-center justify-center mb-4">
       <Icon className="w-6 h-6 text-[#0C765B]" />
     </div>
-    <h3 className="text-lg font-bold text-slate-900 mb-2">{title}</h3>
+    <h3 className="text-lg font-bold text-slate-900 mb-2">{title} Policy</h3>
     <p className="text-slate-600 text-sm mb-4">{description}</p>
     <div className="flex items-center justify-between pt-4 border-t border-slate-100">
       <span className="text-xs text-slate-500">Last updated: {lastUpdated}</span>
@@ -115,6 +300,140 @@ const PolicyCard = ({ icon: Icon, title, description, lastUpdated, delay }) => (
     </div>
   </motion.div>
 );
+
+const SafetyRule = ({ number, text }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.4, delay: number * 0.05 }}
+    className="flex items-center space-x-4 p-4 bg-slate-50 rounded-xl"
+  >
+    <div className="w-8 h-8 bg-[#0C765B] rounded-full flex items-center justify-center flex-shrink-0">
+      <span className="text-white font-bold text-sm">{number}</span>
+    </div>
+    <p className="text-slate-700">{text}</p>
+  </motion.div>
+);
+
+// --- Pages ---
+
+// 1. Department Detail Page (Halaman Baru)
+export const DepartmentDetailPage = () => {
+  const { deptId } = useParams();
+  const dept = departmentsData.find(d => d.id === deptId);
+
+  if (!dept) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <h2 className="text-2xl font-bold text-slate-700">Department Not Found</h2>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white" data-testid="dept-detail-page">
+      <Header />
+      <PageContainer
+        title={`${dept.title} Documents`}
+        subtitle={dept.fullName ? `${dept.fullName} - ${dept.description}` : dept.description}
+        breadcrumbs={[
+          { label: 'Procedures & Policies', path: '/compliance/sop' },
+          { label: dept.title },
+        ]}
+        category="compliance"
+      >
+        <div className="max-w-4xl">
+          {/* Procedures Section */}
+          <div className="mb-10">
+            <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center border-b border-slate-100 pb-4">
+              <span className="w-2 h-6 bg-[#0C765B] rounded-full mr-3"></span>
+              Standard Operating Procedures
+            </h3>
+            <div className="space-y-3">
+              {dept.procedures.map((doc, idx) => (
+                <div key={idx} className="flex items-center justify-between p-5 bg-slate-50 rounded-xl hover:bg-[#0C765B]/5 transition-colors group cursor-pointer border border-transparent hover:border-[#0C765B]/20">
+                  <div className="flex items-center space-x-4 overflow-hidden">
+                    <FileText className="w-6 h-6 text-red-500 flex-shrink-0" />
+                    <span className="text-slate-700 font-medium truncate">{doc}</span>
+                  </div>
+                  <button className="text-slate-400 group-hover:text-[#0C765B] transition-colors flex-shrink-0 ml-4 flex items-center space-x-2">
+                    <span className="text-sm font-medium hidden sm:block">Download</span>
+                    <Download className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+              {dept.procedures.length === 0 && (
+                <p className="text-slate-500 italic p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">No procedures currently available for this department.</p>
+              )}
+            </div>
+          </div>
+
+          {/* Policies Section */}
+          <div>
+            <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center border-b border-slate-100 pb-4">
+              <span className="w-2 h-6 bg-amber-500 rounded-full mr-3"></span>
+              Department Policies
+            </h3>
+            <div className="space-y-3">
+              {dept.policies.map((doc, idx) => (
+                <div key={idx} className="flex items-center justify-between p-5 bg-slate-50 rounded-xl hover:bg-amber-50 transition-colors group cursor-pointer border border-transparent hover:border-amber-200">
+                  <div className="flex items-center space-x-4 overflow-hidden">
+                    <FileText className="w-6 h-6 text-red-500 flex-shrink-0" />
+                    <span className="text-slate-700 font-medium truncate">{doc}</span>
+                  </div>
+                  <button className="text-slate-400 group-hover:text-amber-600 transition-colors flex-shrink-0 ml-4 flex items-center space-x-2">
+                    <span className="text-sm font-medium hidden sm:block">Download</span>
+                    <Download className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+              {dept.policies.length === 0 && (
+                <p className="text-slate-500 italic p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">No policies currently available for this department.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </PageContainer>
+      
+      {/* Include the floating bot configured for this specific department */}
+      <AiraAssistantBot dept={dept} />
+      
+      <Footer />
+    </div>
+  );
+};
+
+// 2. Main SOP Page (Sekarang ini menjadi pintu gerbang menuju DepartmentDetailPage)
+export const SOPPage = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-white" data-testid="sop-page">
+      <Header />
+      <PageContainer
+        title="Procedures & Policies"
+        subtitle="Access all department Standard Operating Procedures and Policies documentation."
+        breadcrumbs={[
+          { label: 'Procedures & Policies', path: '/compliance' },
+          { label: 'Procedures & Policies' },
+        ]}
+        category="compliance"
+      >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {departmentsData.map((dept, idx) => (
+            <DepartmentCard 
+              key={dept.id}
+              dept={dept}
+              delay={idx * 0.05}
+              onClick={() => navigate(`/compliance/department/${dept.id}`)}
+            />
+          ))}
+        </div>
+      </PageContainer>
+      <Footer />
+    </div>
+  );
+};
 
 export const PoliciesPage = () => {
   return (
@@ -124,7 +443,7 @@ export const PoliciesPage = () => {
         title="Company Policies"
         subtitle="Essential policies that govern our operations and guide employee conduct at PT Garuda Yamato Steel."
         breadcrumbs={[
-          { label: 'Operational/Compliance', path: '/compliance' },
+          { label: 'Procedures & Policies', path: '/compliance' },
           { label: 'Policies' },
         ]}
         category="compliance"
@@ -165,20 +484,6 @@ export const PoliciesPage = () => {
   );
 };
 
-const SafetyRule = ({ number, text }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.4, delay: number * 0.05 }}
-    className="flex items-center space-x-4 p-4 bg-slate-50 rounded-xl"
-  >
-    <div className="w-8 h-8 bg-[#0C765B] rounded-full flex items-center justify-center flex-shrink-0">
-      <span className="text-white font-bold text-sm">{number}</span>
-    </div>
-    <p className="text-slate-700">{text}</p>
-  </motion.div>
-);
-
 export const SafetyPage = () => {
   return (
     <div className="min-h-screen bg-white" data-testid="safety-page">
@@ -187,7 +492,7 @@ export const SafetyPage = () => {
         title="Safety Guidelines"
         subtitle="Your safety is our top priority. Follow these guidelines to ensure a safe working environment."
         breadcrumbs={[
-          { label: 'Operational/Compliance', path: '/compliance' },
+          { label: 'Procedures & Policies', path: '/compliance' },
           { label: 'Safety Guidelines' },
         ]}
         category="compliance"

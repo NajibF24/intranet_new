@@ -20,7 +20,6 @@ services:
       - mongodb
 
   # Frontend Web
-# Frontend Web
   frontend:
     build: ./frontend
     ports:
@@ -30,9 +29,19 @@ services:
       # 2. Gunakan IP Server GYS (jangan localhost)
       # 3. JANGAN tambahkan /api di ujungnya
       - REACT_APP_BACKEND_URL=https://mygys.gyssteel.com:8000
+      
+      # --- TAMBAHKAN BARIS INI UNTUK FIX WEBSOCKET / BLANK PAGE ---
+      - WDS_SOCKET_PORT=0 # Memaksa websocket mengikuti port URL web (443/HTTPS), bukan 3000
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true # Mencegah error 'Invalid Host Header' dari Nginx
+      - FAST_REFRESH=false # (Opsional) Mematikan fitur auto-reload dev server yang sering crash di production
+      # -----------------------------------------------------------
+      
     depends_on:
       - backend
     stdin_open: true
     tty: true
+
 volumes:
   mongodb_data:
+    external: true
+    name: gys-intranet_mongodb_data
