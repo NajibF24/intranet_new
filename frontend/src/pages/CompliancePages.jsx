@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
@@ -6,9 +6,32 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { 
   FileText, AlertTriangle, Shield, CheckCircle, 
   Target, Building2, UserCircle, Cog, Scale, CircleCheck, 
-  Network, Workflow, Download, FileBox, MessageSquare, Bot, X, Send
+  Network, Workflow, Download, FileBox, MessageSquare, Bot, X, Send,
+  Minimize2, Maximize2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// ── Config Bot ────────────────────────────────────────────────
+const BOT_ID     = '69ae8ac11243a25591412b11';
+const BOT_ORIGIN = 'https://chat.gyssteel.com';
+const ACCENT     = '%23007857';
+
+// Map dept.id → nama folder OneDrive (harus sama persis dengan folder di OneDrive)
+const DEPT_FOLDER_MAP = {
+  'sms':         '01. GYS_Steel Melting Shop-1 (SMS-1)',
+  'bp':          '02. GYS_Beam Plant (BP)',
+  'lsm':         '03. GYS_Light Section Mill (LSM)',
+  'ssc':         '04. GYS_Steel Service Center (SSC)',
+  'iso':         '05. GYS_ISO (Management System)',
+  'procurement': '06. GYS_PROCUREMENT (PRC)',
+  'sales':       '07. GYS_SALES (SLS)',
+  'hrga':        '08. GYS_HRGA',
+  'it':          '09. GYS_IT SYSTEM (IT)',
+  'gdu-scm':     '11. GYS_GDU & SCM',
+  'finance':     '12. GYS_Finance & Accounting',
+  'legal':       '13. GYS_Legal (LGL)',
+  'qaqc':        '14. GYS_QAQC',
+};
 
 // --- Data ---
 const departmentsData = [
@@ -33,7 +56,7 @@ const departmentsData = [
   {
     id: 'bp',
     title: 'BP',
-    fullName: '',
+    fullName: 'Beam Plant',
     icon: Building2,
     description: 'View BP operational manuals and quality standards.',
     lastUpdated: 'March 2026',
@@ -43,7 +66,7 @@ const departmentsData = [
   {
     id: 'lsm',
     title: 'LSM',
-    fullName: '',
+    fullName: 'Light Section Mill',
     icon: FileBox,
     description: 'Maintain LSM protocols and procedures.',
     lastUpdated: 'February 2026',
@@ -53,7 +76,7 @@ const departmentsData = [
   {
     id: 'ssc',
     title: 'SSC',
-    fullName: '',
+    fullName: 'Steel Service Center',
     icon: UserCircle,
     description: 'SSC Service guidelines and reporting processes.',
     lastUpdated: 'January 2026',
@@ -63,7 +86,7 @@ const departmentsData = [
   {
     id: 'iso',
     title: 'ISO Management System',
-    fullName: '',
+    fullName: 'Management System',
     icon: Shield,
     description: 'Access ISO 9001, 14001, and 45001 standards.',
     lastUpdated: 'April 2026',
@@ -77,7 +100,7 @@ const departmentsData = [
   {
     id: 'procurement',
     title: 'Procurement',
-    fullName: '',
+    fullName: 'Procurement (PRC)',
     icon: Cog,
     description: 'Vendor selection and purchase order workflows.',
     lastUpdated: 'March 2026',
@@ -87,7 +110,7 @@ const departmentsData = [
   {
     id: 'sales',
     title: 'Sales',
-    fullName: '',
+    fullName: 'Sales (SLS)',
     icon: Target,
     description: 'Client onboarding and sales contract procedures.',
     lastUpdated: 'April 2026',
@@ -97,7 +120,7 @@ const departmentsData = [
   {
     id: 'hrga',
     title: 'HRGA',
-    fullName: '',
+    fullName: 'Human Resources & General Affairs',
     icon: Workflow,
     description: 'Employee lifecycle and general affairs guidelines.',
     lastUpdated: 'March 2026',
@@ -127,7 +150,7 @@ const departmentsData = [
   {
     id: 'finance',
     title: 'Finance & Accounting',
-    fullName: '',
+    fullName: 'Finance & Accounting',
     icon: FileText,
     description: 'Expense reimbursement and financial closing protocols.',
     lastUpdated: 'April 2026',
@@ -137,7 +160,7 @@ const departmentsData = [
   {
     id: 'legal',
     title: 'Legal',
-    fullName: '',
+    fullName: 'Legal (LGL)',
     icon: Scale,
     description: 'Contract review and NDA guidelines.',
     lastUpdated: 'March 2026',
@@ -156,104 +179,140 @@ const departmentsData = [
   }
 ];
 
-// --- Components ---
-
-// Bot Assistant Component
+// ── Bot Embed Component ───────────────────────────────────────
 const AiraAssistantBot = ({ dept }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: 'bot', text: `Hi! I'm your AIRA Assistant. What would you like to know about the ${dept.title} documents?` }
-  ]);
-  const [input, setInput] = useState('');
+  const [isOpen,      setIsOpen]      = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [iframeReady, setIframeReady] = useState(false);
+  const [iframeKey,   setIframeKey]   = useState(0);
+  const iframeRef = useRef(null);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    
-    // Tambahkan pesan user
-    setMessages([...messages, { sender: 'user', text: input }]);
-    setInput('');
-    
-    // Simulasi balasan bot
-    setTimeout(() => {
-      setMessages(prev => [...prev, { 
-        sender: 'bot', 
-        text: `I'm analyzing the ${dept.title} documents to find the answer for you. (This is a simulated response)` 
-      }]);
-    }, 1000);
+  const folderName = DEPT_FOLDER_MAP[dept.id] || dept.title;
+  const deptLabel  = dept.fullName || dept.title;
+
+  // iframe src — tanpa ctx param, context dikirim via postMessage
+  const iframeSrc = `${BOT_ORIGIN}/embed/${BOT_ID}?theme=light&accent=${ACCENT}&brand=true`;
+
+  // Kirim context dept ke bot via postMessage setelah iframe siap
+  const sendDeptContext = () => {
+    if (!iframeRef.current?.contentWindow) return;
+    iframeRef.current.contentWindow.postMessage(
+      {
+        type:       'GYS_DEPT_CONTEXT',
+        dept:       dept.id,
+        deptLabel,
+        folderName,
+        // Pesan sistem tersembunyi — bot akan inject ini sebagai context awal
+        systemNote: `User sedang berada di halaman departemen "${deptLabel}". ` +
+                    `Fokuskan jawaban pada dokumen SOP dan Policy dari folder "${folderName}". ` +
+                    `Jika pertanyaan tidak relevan dengan departemen ini, tetap jawab namun ` +
+                    `sebutkan departemen yang lebih tepat.`,
+      },
+      BOT_ORIGIN
+    );
   };
+
+  // Kirim context saat iframe pertama kali ready
+  const handleIframeLoad = () => {
+    setIframeReady(true);
+    // Beri sedikit delay agar bot widget selesai inisialisasi
+    setTimeout(sendDeptContext, 800);
+  };
+
+  // Kirim ulang context saat dept berubah (user navigasi antar dept)
+  useEffect(() => {
+    setIframeReady(false);
+    setIframeKey(prev => prev + 1); // reload iframe
+  }, [dept.id]);
+
+  // Kirim ulang saat bot dibuka (kalau sudah ready sebelumnya)
+  useEffect(() => {
+    if (isOpen && iframeReady) {
+      setTimeout(sendDeptContext, 400);
+    }
+  }, [isOpen]);
+
+  const chatWidth  = isMaximized ? 'w-[520px]' : 'w-80 sm:w-96';
+  const chatHeight = isMaximized ? 'h-[700px]' : 'h-[500px]';
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="bg-white rounded-2xl shadow-2xl w-80 sm:w-96 overflow-hidden flex flex-col border border-slate-200 mb-4 h-[450px]"
+            transition={{ duration: 0.2 }}
+            className={`bg-white rounded-2xl shadow-2xl ${chatWidth} overflow-hidden flex flex-col border border-slate-200 mb-4 ${chatHeight} transition-all duration-200`}
           >
-            {/* Bot Header */}
-            <div className="bg-[#0C765B] p-4 flex justify-between items-center text-white">
-              <div className="flex items-center space-x-2">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <Bot className="w-5 h-5" />
+            {/* Header */}
+            <div className="bg-[#0C765B] px-4 py-3 flex justify-between items-center text-white flex-shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="bg-white/20 p-1.5 rounded-lg">
+                  <Bot className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">AIRA Assistant</h3>
-                  <p className="text-xs text-green-100">Document Analyzer</p>
+                  <h3 className="font-bold text-sm leading-tight">AIRA Assistant</h3>
+                  <p className="text-[10px] text-green-100 truncate max-w-[180px]">
+                    📂 {deptLabel}
+                  </p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1.5 rounded-lg transition-colors">
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                {/* Maximize / minimize */}
+                <button
+                  onClick={() => setIsMaximized(v => !v)}
+                  className="hover:bg-white/20 p-1.5 rounded-lg transition-colors"
+                  title={isMaximized ? 'Perkecil' : 'Perbesar'}
+                >
+                  {isMaximized
+                    ? <Minimize2 className="w-3.5 h-3.5" />
+                    : <Maximize2 className="w-3.5 h-3.5" />}
+                </button>
+                {/* Close */}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="hover:bg-white/20 p-1.5 rounded-lg transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
-            {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
-              {messages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.sender === 'user' ? 'bg-[#0C765B] text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-700 rounded-tl-sm'}`}>
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Input Area */}
-            <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-100 flex items-center space-x-2">
-              <input 
-                type="text" 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about these documents..." 
-                className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#0C765B]/20 outline-none"
-              />
-              <button 
-                type="submit" 
-                disabled={!input.trim()}
-                className="bg-[#0C765B] text-white p-2.5 rounded-xl hover:bg-[#0a614b] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </form>
+            {/* Bot iframe — embed bot asli */}
+            <iframe
+              key={iframeKey}
+              ref={iframeRef}
+              src={iframeSrc}
+              onLoad={handleIframeLoad}
+              className="flex-1 w-full border-0 bg-white"
+              title={`AIRA Assistant — ${deptLabel}`}
+              allow="clipboard-write"
+            />
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Floating button */}
       {!isOpen && (
-        <motion.button 
+        <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(true)} 
-          className="bg-[#0C765B] text-white p-4 rounded-full shadow-lg hover:bg-[#0a614b] transition-colors flex items-center space-x-2"
+          onClick={() => setIsOpen(true)}
+          className="bg-[#0C765B] text-white pl-4 pr-5 py-3 rounded-full shadow-lg hover:bg-[#0a614b] transition-colors flex items-center gap-2.5"
         >
-          <Bot className="w-6 h-6" />
+          <Bot className="w-5 h-5 flex-shrink-0" />
+          <span className="font-semibold text-sm whitespace-nowrap">
+            Tanya AIRA
+          </span>
         </motion.button>
       )}
     </div>
   );
 };
+
+// --- Komponen lain tidak berubah ---
 
 const DepartmentCard = ({ dept, delay, onClick }) => (
   <motion.div 
@@ -317,7 +376,7 @@ const SafetyRule = ({ number, text }) => (
 
 // --- Pages ---
 
-// 1. Department Detail Page (Halaman Baru)
+// 1. Department Detail Page
 export const DepartmentDetailPage = () => {
   const { deptId } = useParams();
   const dept = departmentsData.find(d => d.id === deptId);
@@ -335,7 +394,7 @@ export const DepartmentDetailPage = () => {
       <Header />
       <PageContainer
         title={`${dept.title} Documents`}
-        subtitle={dept.fullName ? `${dept.fullName} - ${dept.description}` : dept.description}
+        subtitle={dept.fullName ? `${dept.fullName} — ${dept.description}` : dept.description}
         breadcrumbs={[
           { label: 'Procedures & Policies', path: '/compliance/sop' },
           { label: dept.title },
@@ -343,6 +402,16 @@ export const DepartmentDetailPage = () => {
         category="compliance"
       >
         <div className="max-w-4xl">
+
+          {/* Banner hint bot */}
+          <div className="mb-8 flex items-center gap-3 bg-[#0C765B]/5 border border-[#0C765B]/20 rounded-xl px-5 py-3.5">
+            <Bot className="w-5 h-5 text-[#0C765B] flex-shrink-0" />
+            <p className="text-sm text-slate-600">
+              Punya pertanyaan tentang dokumen <strong>{dept.fullName || dept.title}</strong>?{' '}
+              <span className="text-[#0C765B] font-semibold">Klik tombol AIRA</span> di pojok kanan bawah — bot akan otomatis fokus ke departemen ini.
+            </p>
+          </div>
+
           {/* Procedures Section */}
           <div className="mb-10">
             <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center border-b border-slate-100 pb-4">
@@ -363,7 +432,9 @@ export const DepartmentDetailPage = () => {
                 </div>
               ))}
               {dept.procedures.length === 0 && (
-                <p className="text-slate-500 italic p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">No procedures currently available for this department.</p>
+                <p className="text-slate-500 italic p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                  No procedures currently available for this department.
+                </p>
               )}
             </div>
           </div>
@@ -388,22 +459,24 @@ export const DepartmentDetailPage = () => {
                 </div>
               ))}
               {dept.policies.length === 0 && (
-                <p className="text-slate-500 italic p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">No policies currently available for this department.</p>
+                <p className="text-slate-500 italic p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                  No policies currently available for this department.
+                </p>
               )}
             </div>
           </div>
         </div>
       </PageContainer>
-      
-      {/* Include the floating bot configured for this specific department */}
+
+      {/* Bot embed asli — otomatis tahu dept yang aktif */}
       <AiraAssistantBot dept={dept} />
-      
+
       <Footer />
     </div>
   );
 };
 
-// 2. Main SOP Page (Sekarang ini menjadi pintu gerbang menuju DepartmentDetailPage)
+// 2. Main SOP Page
 export const SOPPage = () => {
   const navigate = useNavigate();
 
@@ -449,34 +522,10 @@ export const PoliciesPage = () => {
         category="compliance"
       >
         <div className="grid md:grid-cols-2 gap-6">
-          <PolicyCard 
-            icon={Shield}
-            title="Information Security Policy"
-            description="Guidelines for protecting company data and information systems from unauthorized access."
-            lastUpdated="January 2026"
-            delay={0}
-          />
-          <PolicyCard 
-            icon={AlertTriangle}
-            title="Health & Safety Policy"
-            description="Our commitment to maintaining a safe and healthy workplace for all employees."
-            lastUpdated="December 2025"
-            delay={0.1}
-          />
-          <PolicyCard 
-            icon={FileText}
-            title="Code of Conduct"
-            description="Standards of behavior and ethical guidelines for all GYS employees and partners."
-            lastUpdated="November 2025"
-            delay={0.2}
-          />
-          <PolicyCard 
-            icon={CheckCircle}
-            title="Quality Assurance Policy"
-            description="Our framework for ensuring consistent product quality and continuous improvement."
-            lastUpdated="October 2025"
-            delay={0.3}
-          />
+          <PolicyCard icon={Shield}    title="Information Security Policy" description="Guidelines for protecting company data and information systems from unauthorized access." lastUpdated="January 2026" delay={0} />
+          <PolicyCard icon={AlertTriangle} title="Health & Safety Policy" description="Our commitment to maintaining a safe and healthy workplace for all employees." lastUpdated="December 2025" delay={0.1} />
+          <PolicyCard icon={FileText}  title="Code of Conduct"            description="Standards of behavior and ethical guidelines for all GYS employees and partners." lastUpdated="November 2025" delay={0.2} />
+          <PolicyCard icon={CheckCircle} title="Quality Assurance Policy" description="Our framework for ensuring consistent product quality and continuous improvement." lastUpdated="October 2025" delay={0.3} />
         </div>
       </PageContainer>
       <Footer />
@@ -504,12 +553,11 @@ export const SafetyPage = () => {
               <h3 className="font-bold text-amber-900 mb-2">Safety First</h3>
               <p className="text-amber-800">
                 At PT Garuda Yamato Steel, we believe that every accident is preventable. 
-                Safety is not just a policy - it is a core value that guides everything we do.
+                Safety is not just a policy — it is a core value that guides everything we do.
               </p>
             </div>
           </div>
         </div>
-
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Essential Safety Rules</h2>
         <div className="space-y-4">
           <SafetyRule number={1} text="Always wear appropriate Personal Protective Equipment (PPE)" />
