@@ -6,19 +6,22 @@ services:
       - "27018:27017"
     volumes:
       - mongodb_data:/data/db
-
   # Backend API
   backend:
     build: ./backend
     ports:
       - "127.0.0.1:8001:8000"
+    env_file:
+      - .env
     environment:
-      - MONGO_URL=mongodb://mongodb:27017
-      - DB_NAME=intranet_db
-      - JWT_SECRET=gys-intranet-secret-key-2024
+      MONGO_URL: mongodb://mongodb:27017
+      DB_NAME: intranet_db
+      JWT_SECRET: gys-intranet-secret-key-2024
+      LDAP_ENABLED: "true"
+      LDAP_TLS_REJECT_UNAUTHORIZED: "false"
+      LDAP_SEARCH_BASE: DC=gyssteel,DC=com
     depends_on:
       - mongodb
-
   # Frontend Web
   frontend:
     build: ./frontend
@@ -29,18 +32,15 @@ services:
       # 2. Gunakan IP Server GYS (jangan localhost)
       # 3. JANGAN tambahkan /api di ujungnya
       - REACT_APP_BACKEND_URL=https://mygys.gyssteel.com:8000
-      
       # --- TAMBAHKAN BARIS INI UNTUK FIX WEBSOCKET / BLANK PAGE ---
       - WDS_SOCKET_PORT=0 # Memaksa websocket mengikuti port URL web (443/HTTPS), bukan 3000
       - DANGEROUSLY_DISABLE_HOST_CHECK=true # Mencegah error 'Invalid Host Header' dari Nginx
       - FAST_REFRESH=false # (Opsional) Mematikan fitur auto-reload dev server yang sering crash di production
       # -----------------------------------------------------------
-      
     depends_on:
       - backend
     stdin_open: true
     tty: true
-
 volumes:
   mongodb_data:
     external: true
