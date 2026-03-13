@@ -1,13 +1,10 @@
 import os
 import sys
-
 # Add backend directory to Python path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from database import client
-
 from routes.auth import router as auth_router
 from routes.users import router as users_router
 from routes.news import router as news_router
@@ -20,16 +17,14 @@ from routes.pages import router as pages_router
 from routes.menus import router as menus_router
 from routes.seed import router as seed_router
 from routes.logs import router as logs_router
+from routes.onedrive import router as onedrive_router  # NEW
 
 app = FastAPI(title="GYS Intranet API")
-
 api_router = APIRouter(prefix="/api")
-
 
 @api_router.get("/")
 async def root():
     return {"message": "GYS Intranet API", "version": "1.0.0"}
-
 
 # Include all route modules
 api_router.include_router(auth_router)
@@ -44,6 +39,7 @@ api_router.include_router(pages_router)
 api_router.include_router(menus_router)
 api_router.include_router(seed_router)
 api_router.include_router(logs_router)
+api_router.include_router(onedrive_router)  # NEW
 
 app.include_router(api_router)
 
@@ -54,7 +50,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
