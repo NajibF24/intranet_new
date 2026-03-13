@@ -16,6 +16,7 @@ class UserUpdate(BaseModel):
     name: Optional[str] = None
     role: Optional[str] = None
     permissions: Optional[List[str]] = None
+    can_edit: Optional[bool] = None   # Admin bisa override akses edit untuk LDAP user
 
 
 class UserLogin(BaseModel):
@@ -28,5 +29,8 @@ class UserResponse(BaseModel):
     id: str
     email: str
     name: str
-    role: str
+    role: str                          # "admin" | "editor" | "viewer"
     permissions: List[str] = []
+    auth_type: str = "local"           # "local" | "ldap"
+    can_edit: bool = False             # True jika admin grant akses edit ke LDAP viewer
+    ldap_ous: List[str] = []           # OU list dari AD (info only)
